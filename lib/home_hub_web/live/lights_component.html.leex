@@ -1,0 +1,41 @@
+<div class="component light-component">
+  <div class="part">
+    <%= if @light.on do %>
+      <% light_suffix =
+        case @light.level do
+          100 -> "-full"
+          75 -> "-almost-full"
+          50 -> "-half"
+          25 -> "-part-full"
+          _ -> ""
+        end
+      %>
+      <a phx-click="light_off" phx-target="<%= @myself %>" phx-value-name="<%= @id %>">
+        <img class="icon icon-on-yellow" src="/images/icons/light-bulb<%= light_suffix %>.svg">
+      </a>
+    <% else %>
+        <a phx-click="light_on" phx-target="<%= @myself %>" phx-value-name="<%= @id %>" phx-value-level="<%= @light.last_level %>">
+          <img class="icon icon-action" src="/images/icons/light-bulb.svg">
+        </a>
+    <% end %>
+  </div>
+
+  <div class="part">
+    <%= @light.title %>
+  </div>
+
+
+  <%= for level <- [25, 50, 75, 100] do %>
+    <div class="part controls">
+      <button phx-click="light_on" phx-target="<%= @myself %>" phx-value-name="<%= @id %>" phx-value-level="<%= level %>" type="button">
+        <%= level %>
+      </button>
+    </div>
+  <% end %>
+
+  <%= if @light.on do %>
+    <div class="part controls">
+      <button phx-click="light_off" phx-target="<%= @myself %>" phx-value-name="<%= @id %>" type="button">Off</button>
+    </div>
+  <% end %>
+</div>

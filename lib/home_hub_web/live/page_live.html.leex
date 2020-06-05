@@ -1,0 +1,17 @@
+<%= live_component @socket, HomeHubWeb.MenuComponent, status: @status %>
+
+<%= for {name, light} <- @lights do %>
+  <%= live_component @socket, HomeHubWeb.LightsComponent, id: name, light: light %>
+<% end %>
+
+<div class="component switch-component">
+<%= for {name, switch} <- @switches do %>
+  <%= live_component @socket, HomeHubWeb.SwitchesComponent, id: name, switch: switch %>
+<% end %>
+</div>
+
+<%= live_component @socket, HomeHubWeb.ThermostatComponent, id: :thermostat, status: @status %>
+
+<!-- <iframe src="http://homebridge.local:3000/d-solo/zGUKPVzGZ/hub?orgId=1&panelId=2&refresh=1m" width="450" height="200" frameborder="0"></iframe> -->
+
+<!-- <iframe src="http://meye-6061efb3.local/picture/1/frame/"></iframe> -->

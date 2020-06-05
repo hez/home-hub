@@ -1,0 +1,27 @@
+<%= live_component @socket, HomeHubWeb.MenuComponent %>
+
+<%
+grafana_panel_opts = %{
+    from: "now-24h",
+    refresh: "1m",
+    theme: "dark"}
+  |> Enum.map(&("#{elem(&1, 0)}=#{elem(&1,1)}"))
+  |> Enum.join("&")
+%>
+
+<div class="flex flex-row">
+  <div>
+    <!-- Thermostat current temp -->
+    <iframe src="http://homebridge.local:3000/d-solo/_MbQ34Zgk/details?<%= grafana_panel_opts %>&orgId=1&panelId=3" width="250" height="200" frameborder="0"></iframe>
+  </div>
+
+  <div>
+    <!-- Outside current temp -->
+    <iframe src="http://homebridge.local:3000/d-solo/_MbQ34Zgk/details?<%= grafana_panel_opts %>&orgId=1&panelId=2" width="250" height="200" frameborder="0"></iframe>
+  </div>
+
+  <div>
+    <!-- Thermostat/Outside humidity -->
+    <iframe src="http://homebridge.local:3000/d-solo/_MbQ34Zgk/details?<%= grafana_panel_opts %>&orgId=1&panelId=5" width="280" height="200" frameborder="0"></iframe>
+  </div>
+</div>

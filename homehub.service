@@ -1,0 +1,10 @@
+ [Unit]
+ Description=Homehub Service
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/home/pi/home-hub/bin/start.sh
+
+ [Install]
+ WantedBy=multi-user.target
