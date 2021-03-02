@@ -5,6 +5,7 @@
  [Service]
  Type=idle
  ExecStart=/home/pi/home-hub/bin/start.sh
+ Restart=on-failure
 
  [Install]
  WantedBy=multi-user.target
