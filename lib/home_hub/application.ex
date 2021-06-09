@@ -64,10 +64,10 @@ defmodule HomeHub.Application do
 
   defp fetch_buttons, do: Application.get_env(:home_hub, :buttons, [])
 
-  defp phoscon_url, do: Application.get_env(:home_hub, :phoscon_url)
-
   # credo:disable-for-next-line
   if Mix.env() == :prod do
+    defp phoscon_url, do: Application.get_env(:home_hub, :phoscon_url)
+
     defp app_children do
       [{RpiScreenDimmer, []}, {PhosconAPI.WebSocket, url: phoscon_url()}]
     end
