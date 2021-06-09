@@ -50,7 +50,7 @@ defmodule HomeHub.MixProject do
       {:circuits_gpio, "~> 0.4"},
       {:dht, "~> 0.1"},
       {:gettext, "~> 0.11"},
-      {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.2"},
+      {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.3"},
       {:instream, "~> 1.0"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.5.1"},
