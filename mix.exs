@@ -63,7 +63,7 @@ defmodule HomeHub.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
-      {:tzdata, "~> 1.0.3"},
+      {:tzdata, "~> 1.1.0"},
       {:phoscon_api, github: "hez/phoscon_api", tag: "v0.2.0"},
       # Stateless HTTP switch
       {:quantum, "~> 3.0"}
