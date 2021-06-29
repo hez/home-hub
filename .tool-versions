@@ -1,3 +1,4 @@
-elixir 1.11.3-otp-23
-erlang 23.2.1
-nodejs 12.13.1
+elixir 1.12.1-otp-24
+erlang 24.0.2
+nodejs 14.17.0
+direnv 2.28.0

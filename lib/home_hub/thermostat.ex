@@ -85,7 +85,7 @@ defmodule HomeHub.Thermostat do
       |> update_state_from_pid(state)
       |> log(label: :new_state_from_poll)
 
-    state.handler.update(state.status)
+    call_handler(state)
 
     queue_poll()
     # apply(handler, :poll, [status])
@@ -129,4 +129,6 @@ defmodule HomeHub.Thermostat do
   @spec update_status(map(), atom(), any()) :: map()
   defp update_status(%{status: status} = state, key, value),
     do: %{state | status: Map.put(status, key, value)}
+
+  defp call_handler(%{handler: handler, status: status}), do: handler.update(status)
 end
