@@ -47,7 +47,7 @@ defmodule HomeHub.MixProject do
       # Prod only
       {:rpi_screen_dimmer, github: "hez/rpi-screen-dimmer", tag: "v0.1.0", only: :prod},
       # Everything else
-      {:circuits_gpio, "~> 0.4"},
+      {:circuits_gpio, "~> 1.0"},
       {:dht, "~> 0.1"},
       {:gettext, "~> 0.11"},
       {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.3"},
