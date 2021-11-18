@@ -18,7 +18,7 @@ defmodule HomeHub.Thermostat.Handler do
     )
   end
 
-  @spec update(%Status{}) :: any()
+  @spec update(Status.t()) :: any()
   def update(status), do: GenServer.cast(@name, {:update, status})
 
   @impl true
@@ -33,13 +33,13 @@ defmodule HomeHub.Thermostat.Handler do
     {:noreply, state}
   end
 
-  @spec handle_heat(map(), %Status{}) :: map()
+  @spec handle_heat(map(), Status.t()) :: map()
   defp handle_heat(state, %Status{heater_on: heating}) do
     state.heater_io.update(heating)
     state
   end
 
-  @spec handle_fan(map(), %HomeHub.Thermostat.Status{}) :: map()
+  @spec handle_fan(map(), Status.t()) :: map()
   defp handle_fan(state, %Status{fan_on: fan}) do
     state.fan_io.update(fan)
     state
