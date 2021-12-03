@@ -1,0 +1,45 @@
+<div class="component thermostat-component">
+  <div class="part">
+    <%= if @status.heating do %>
+      <a phx-click="furnace_off" phx-target={@myself}>
+        <img class="icon icon-on-orange" src={Routes.static_path(@socket, "/images/icons/toggle-on.svg")}>
+      </a>
+    <% else %>
+      <a phx-click="furnace_on" phx-target={@myself}>
+        <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/toggle-off.svg")}>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="part">
+    Furnace
+  </div>
+
+  <%= if @status.heater_on do %>
+    <div class="part">
+      <img class="icon" src={Routes.static_path(@socket, "/images/icons/hot.png")}>
+    </div>
+  <% end %>
+  <%= if @status.fan_on do %>
+    <div class="part">
+      <img class="icon" src={Routes.static_path(@socket, "/images/icons/fan.png")}>
+    </div>
+  <% end %>
+
+  <%= if @status.heating do %>
+    <div class="part">
+      <a phx-click="target_down" phx-target={@myself}>
+        <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/caret-down-square-fill.svg")}>
+      </a>
+    </div>
+    <% class = "part#{if @status.target > @status.temperature, do: " text-red-600"}" %>
+    <div class={class}>
+      <%= @status.target %>&#176;C
+    </div>
+    <div class="part">
+      <a phx-click="target_up" phx-target={@myself}>
+        <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/caret-up-square-fill.svg")}>
+      </a>
+    </div>
+  <% end %>
+</div>
