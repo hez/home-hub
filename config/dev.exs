@@ -22,7 +22,8 @@ config :home_hub, HomeHubWeb.Endpoint,
   secret_key_base: "f/aRPM2ziWeUW6dHHt00ydmRY8cwRSSYcOQF/8IIwlCz96RtCHE9HgR1lU2NBzB3",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyTempSensor, []}
