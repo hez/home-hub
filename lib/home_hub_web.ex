@@ -88,6 +88,7 @@ defmodule HomeHubWeb do
       import Phoenix.View
 
       import HomeHubWeb.ErrorHelpers
+      import HomeHubWeb.LiveHelpers
       import HomeHubWeb.Gettext
       alias HomeHubWeb.Router.Helpers, as: Routes
     end
