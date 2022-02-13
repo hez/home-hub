@@ -59,9 +59,9 @@ defmodule HomeHub.Thermostat do
       |> update_pid_set_point()
       |> update_pid()
       |> get_pid_output()
-      |> tap(&Logger.debug(&1, label: :new_pid_value))
+      |> tap(&Logger.debug(inspect(&1), label: :new_pid_value))
       |> update_state_from_pid(state)
-      |> tap(&Logger.debug(&1, label: :new_state_from_poll))
+      |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
     queue_poll()
