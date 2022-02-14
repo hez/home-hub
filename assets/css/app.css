@@ -42,24 +42,36 @@
 /* Image manipulation */
 
 img.icon {
-  height: 50px;
-  min-width: 50px;
+  height: 4rem;
+  min-width: 4rem;
   /* Invert for Dark theme */
-  filter: invert(.8);
+  filter: invert(80%);
 }
 
 img.icon-action {
-  filter: invert(.5) sepia(1) saturate(5) hue-rotate(175deg);
+  filter: invert(.5) sepia(70%) saturate(5) hue-rotate(175deg);
 }
 
-img.icon-on-orange{
-  filter: invert(.7) sepia(1) saturate(30);
+img.icon-on-gray {
+  filter: invert(.5);
 }
 
 img.icon-on-red {
-  filter: invert(.4) sepia(1) saturate(90);
+  filter: invert(.7) sepia(70%) saturate(100);
+}
+
+img.icon-on-orange{
+  filter: invert(.7) sepia(100%) saturate(30);
 }
 
 img.icon-on-yellow {
-  filter: invert(.7) sepia(1) saturate(10);
+  filter: invert(.7) sepia(100%) saturate(10);
+}
+
+img.icon-on-blue {
+  filter: invert(.6) sepia(80%) saturate(100) hue-rotate(200deg);
+}
+
+img.icon-on-green {
+  filter: invert(.7) sepia(100%) saturate(90) hue-rotate(150deg);
 }

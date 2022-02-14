@@ -1,42 +1,37 @@
-<div class="component flex flex-row">
-  <div class="px-4 py-2 mt-2 mb-2 text-4xl">
+<div class="component flex flex-row m-8">
+  <div class="px-4 py-2" phx-click="furnace_toggle" phx-target={@myself}>
     <%= if @status.heating do %>
-      <a phx-click="furnace_off" phx-target={@myself}>
-        <img class="icon icon-on-orange" src={Routes.static_path(@socket, "/images/icons/toggle-on.svg")}>
-      </a>
+      <img class="icon icon-on-orange" src={Routes.static_path(@socket, "/images/icons/toggle-on.svg")}>
     <% else %>
-      <a phx-click="furnace_on" phx-target={@myself}>
-        <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/toggle-off.svg")}>
-      </a>
+      <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/toggle-off.svg")}>
     <% end %>
   </div>
 
-  <div class="px-4 py-2 mt-2 mb-2 text-4xl">
+  <div class="px-4 py-2 text-6xl" phx-click="furnace_toggle" phx-target={@myself}>
     Furnace
   </div>
 
-  <%= if @status.heater_on do %>
-    <div class="px-4 py-2 mt-2 mb-2 text-4xl">
-      <img class="icon icon-on-red" src={Routes.static_path(@socket, "/images/icons/fire.svg")}>
-    </div>
-  <% end %>
-  <%= if @status.fan_on do %>
-    <div class="px-4 py-2 mt-2 mb-2 text-4xl">
-      <img class="icon" src={Routes.static_path(@socket, "/images/icons/fan.svg")}>
-    </div>
-  <% end %>
+  <% heater_classes = "icon " <> if @status.heater_on, do: "icon-on-red", else: "icon-on-gray" %>
+  <div class="px-4 py-2">
+    <img class={heater_classes} src={Routes.static_path(@socket, "/images/icons/fire.svg")}>
+  </div>
+
+  <% fan_classes = "icon " <> if @status.fan_on, do: "icon-on-blue", else: "icon-on-gray" %>
+  <div class="px-4 py-2">
+    <img class={fan_classes} src={Routes.static_path(@socket, "/images/icons/fan.svg")}>
+  </div>
 
   <%= if @status.heating do %>
-    <div class="px-4 py-2 mt-2 mb-2 text-4xl">
+    <div class="px-4 py-2">
       <a phx-click="target_down" phx-target={@myself}>
         <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/caret-down-square-fill.svg")}>
       </a>
     </div>
-    <% class = "px-4 py-2 mt-2 mb-2 text-4xl#{if @status.target > @status.temperature, do: " text-red-600"}" %>
-    <div class={class}>
+    <% temp_classes = "px-4 py-2 text-6xl#{if @status.target > @status.temperature, do: " text-red-600"}" %>
+    <div class={temp_classes}>
       <%= @status.target %>&#176;C
     </div>
-    <div class="px-4 py-2 mt-2 mb-2 text-4xl">
+    <div class="px-4 py-2">
       <a phx-click="target_up" phx-target={@myself}>
         <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/caret-up-square-fill.svg")}>
       </a>

@@ -2,15 +2,12 @@ defmodule HomeHubWeb.ThermostatComponent do
   use HomeHubWeb, :live_component
 
   @impl true
-  def handle_event("furnace_on", _, socket) do
-    HomeHub.Thermostat.start_heat()
-    updated_thermostat()
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("furnace_off", _, socket) do
-    HomeHub.Thermostat.stop_heat()
+  def handle_event("furnace_toggle", _, socket) do
+    if socket.assigns.status.heating do
+      HomeHub.Thermostat.stop_heat()
+    else
+      HomeHub.Thermostat.start_heat()
+    end
     updated_thermostat()
     {:noreply, socket}
   end

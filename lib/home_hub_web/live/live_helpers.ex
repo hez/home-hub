@@ -40,8 +40,8 @@ defmodule HomeHubWeb.LiveHelpers do
       </section>
       <section class="container">
         <%= if @status do %>
-          <div class="flex flex-row-reverse">
-            <div class="text-2xl">
+          <div class="flex flex-row-reverse m-4">
+            <div class="text-4xl">
               Current: <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
               at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
             </div>
