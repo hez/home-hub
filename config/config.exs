@@ -23,7 +23,16 @@ config :home_hub, HomeHubWeb.Endpoint,
 
 config :home_hub,
        :temperature_sensor_implementation,
-       {HomeHub.Thermostat.TemperatureSensor, [dht_pin: 17]}
+       {HomeHub.Thermostat.TemperatureSensor, [dht_pin: 18]}
+
+config :home_hub,
+       :heater_io_implementation,
+       {HomeHub.Thermostat.HeaterIO, [fan_pin: 17, heater_pin: 27]}
+
+# config :home_hub,
+#    dht_pin: 18,
+#    fan_pin: 17,
+#    heater_pin: 27
 
 # Configures the mailer
 #

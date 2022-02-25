@@ -1,4 +1,20 @@
 defmodule HomeHub.Thermostat do
+  @moduledoc """
+  ```mermaid
+  sequenceDiagram
+    participant Temperature Sensor
+    participant Thermostat
+    participant PubSub
+    Temperature Sensor->>PubSub: %{temperature: new_t, humidity: new_h}
+    PubSub->>Thermostat: New temp/hum
+    Thermostat->>Thermostat: Update Pid
+    Thermostat->>Thermostat: Update State from Pid
+    Thermostat->>PubSub: Heater state update
+    Thermostat->>PubSub: Fan state update
+    Thermostat->>PubSub: New state
+  ```
+  """
+
   use GenServer
 
   require Logger
@@ -105,14 +121,14 @@ defmodule HomeHub.Thermostat do
 
   # Heating turned ON
   defp update_state_from_pid(pid_val, %{status: %{heating: true}} = state) when pid_val > 0 do
-    Thermostat.PubSub.broadcast(:fan, true)
-    Thermostat.PubSub.broadcast(:heater, true)
+    Thermostat.PubSub.broadcast(:fan, {:fan, true})
+    Thermostat.PubSub.broadcast(:heater, {:heater, true})
     state |> update_status(:fan_on, true) |> update_status(:heater_on, true)
   end
 
   defp update_state_from_pid(_, state) do
-    Thermostat.PubSub.broadcast(:fan, false)
-    Thermostat.PubSub.broadcast(:heater, false)
+    Thermostat.PubSub.broadcast(:fan, {:fan, false})
+    Thermostat.PubSub.broadcast(:heater, {:heater, false})
     state |> update_status(:fan_on, false) |> update_status(:heater_on, false)
   end
 end

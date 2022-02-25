@@ -13,6 +13,7 @@ defmodule HomeHub.Thermostat.Supervisor do
   }
 
   @temp_sensor_impl Application.compile_env!(:home_hub, :temperature_sensor_implementation)
+  @heater_io_impl Application.compile_env!(:home_hub, :heater_io_implementation)
 
   def start_link(opts), do: Supervisor.start_link(@name, opts, name: @name)
 
@@ -22,6 +23,7 @@ defmodule HomeHub.Thermostat.Supervisor do
       {Phoenix.PubSub, name: HomeHub.Thermostat.PubSub},
       {Pidex.PdxServer, settings: @pid_settings, ts_unit: :millisecond},
       @temp_sensor_impl,
+      @heater_io_impl,
       HomeHub.Thermostat
     ]
 
