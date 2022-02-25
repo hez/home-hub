@@ -20,6 +20,19 @@ defmodule HomeHubWeb.Router do
     live "/", PageLive, :index
   end
 
+  scope "/", HomeHubWeb do
+    pipe_through :api
+
+    get "/status", API.HomebrigeThermostatController, :status
+
+    get "/targetHeatingCoolingState/:target",
+        API.HomebrigeThermostatController,
+        :heating_cooling_state
+
+    get "/targetTemperature/:target", API.HomebrigeThermostatController, :target_temperature
+    get "/targetRelativeHumidity/:target", API.HomebrigeThermostatController, :target_humidity
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", HomeHubWeb do
   #   pipe_through :api

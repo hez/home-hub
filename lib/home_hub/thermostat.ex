@@ -23,6 +23,7 @@ defmodule HomeHub.Thermostat do
   end
 
   def status, do: GenServer.call(@name, :status)
+  def homebridge_status, do: Thermostat.Homebridge.convert(status())
   def start_heat, do: GenServer.cast(@name, {:set_heating, true})
   def stop_heat, do: GenServer.cast(@name, {:set_heating, false})
 
