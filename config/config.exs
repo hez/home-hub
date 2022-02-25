@@ -16,7 +16,7 @@ config :home_hub,
 
 # Configures the endpoint
 config :home_hub, HomeHubWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: nil, port: 4000],
   render_errors: [view: HomeHubWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: HomeHub.PubSub,
   live_view: [signing_salt: "u0O+jAdz"]
