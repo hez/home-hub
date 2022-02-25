@@ -7,7 +7,7 @@
     <% end %>
   </div>
 
-  <div class="px-4 py-2 text-6xl" phx-click="furnace_toggle" phx-target={@myself}>
+  <div class="px-4 py-2 text-4xl" phx-click="furnace_toggle" phx-target={@myself}>
     Furnace
   </div>
 
@@ -27,7 +27,7 @@
         <img class="icon icon-action" src={Routes.static_path(@socket, "/images/icons/caret-down-square-fill.svg")}>
       </a>
     </div>
-    <% temp_classes = "px-4 py-2 text-6xl#{if @status.target > @status.temperature, do: " text-red-600"}" %>
+    <% temp_classes = "px-4 py-2 text-4xl#{if @status.target > @status.temperature, do: " text-red-600"}" %>
     <div class={temp_classes}>
       <%= @status.target %>&#176;C
     </div>

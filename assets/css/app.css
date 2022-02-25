@@ -42,8 +42,8 @@
 /* Image manipulation */
 
 img.icon {
-  height: 4rem;
-  min-width: 4rem;
+  height: 3rem;
+  min-width: 3rem;
   /* Invert for Dark theme */
   filter: invert(80%);
 }

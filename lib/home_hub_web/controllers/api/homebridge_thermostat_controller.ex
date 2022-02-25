@@ -39,4 +39,3 @@ defmodule HomeHubWeb.API.HomebrigeThermostatController do
   # NOTE unsupported
   def target_humidity(conn, _params), do: render(conn, "target_humidity.json")
 end
-

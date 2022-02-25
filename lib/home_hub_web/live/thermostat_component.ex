@@ -8,6 +8,7 @@ defmodule HomeHubWeb.ThermostatComponent do
     else
       HomeHub.Thermostat.start_heat()
     end
+
     updated_thermostat()
     {:noreply, socket}
   end
