@@ -1,5 +1,7 @@
 defmodule HomeHub.Thermostat do
   @moduledoc """
+  `Thermostat`
+
   ```mermaid
   sequenceDiagram
     participant Temperature Sensor

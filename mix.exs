@@ -10,7 +10,16 @@ defmodule HomeHub.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      # Docs
+      name: "Home Hub",
+      source_url: "https://github.com/hez/home-hub",
+      homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
+      docs: [
+        main: "HomeHub",
+        extras: ["README.md"],
+        before_closing_body_tag: &before_closing_body_tag/1
+      ]
     ]
   end
 
@@ -36,6 +45,7 @@ defmodule HomeHub.MixProject do
       # Dev and test
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
       # Prod
       {:circuits_gpio, "~> 1.0"},
       {:dht, "~> 0.1"},
@@ -75,5 +85,35 @@ defmodule HomeHub.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
+  end
+
+  defp before_closing_body_tag(:html) do
+    IO.inspect("here", label: :mermaid)
+    """
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.3/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        mermaid.initialize({ startOnLoad: false });
+        let id = 0;
+        for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+          const preEl = codeEl.parentElement;
+          const graphDefinition = codeEl.textContent;
+          const graphEl = document.createElement("div");
+          const graphId = "mermaid-graph-" + id++;
+          mermaid.render(graphId, graphDefinition, function (svgSource, bindListeners) {
+            graphEl.innerHTML = svgSource;
+            bindListeners && bindListeners(graphEl);
+            preEl.insertAdjacentElement("afterend", graphEl);
+            preEl.remove();
+          });
+        }
+      });
+    </script>
+    """
+  end
+
+  defp before_closing_body_tag(_) do
+    IO.inspect("argh!", label: :mermaid)
+    ""
   end
 end
