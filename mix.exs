@@ -43,6 +43,7 @@ defmodule HomeHub.MixProject do
   defp deps do
     [
       # Dev and test
+      {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
@@ -89,6 +90,7 @@ defmodule HomeHub.MixProject do
 
   defp before_closing_body_tag(:html) do
     IO.inspect("here", label: :mermaid)
+
     """
     <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.3/dist/mermaid.min.js"></script>
     <script>

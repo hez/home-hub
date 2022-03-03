@@ -2,7 +2,7 @@ import Config
 
 # Configure your database
 config :home_hub, HomeHub.Repo,
-  database: Path.expand("../home_hub_dev.db", Path.dirname(__ENV__.file)),
+  database: Path.expand("../data/home_hub_dev.db", Path.dirname(__ENV__.file)),
   pool_size: 5,
   show_sensitive_data_on_connection_error: true
 

@@ -36,3 +36,10 @@ npm-debug.log
 *.db
 *.db-*
 
+# SQLite DB
+home_hub.sqlite*
+home_hub.*
+
+# Private env file
+.envrc.private
+
