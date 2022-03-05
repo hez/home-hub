@@ -1,10 +1,10 @@
 defmodule HomeHubWeb.LiveHelpers do
   @moduledoc false
-  #import Phoenix.LiveView
+  # import Phoenix.LiveView
   import Phoenix.LiveView.Helpers
 
-  #alias LiveBeatsWeb.Router.Helpers, as: Routes
-  #alias Phoenix.LiveView.JS
+  # alias LiveBeatsWeb.Router.Helpers, as: Routes
+  # alias Phoenix.LiveView.JS
 
   def nav_menu(assigns) do
     ~H"""

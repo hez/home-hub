@@ -15,7 +15,9 @@ defmodule HomeHub.ReportingConnection do
     humid_data = %{tags: %{host: @tag_host}, measurement: "humidity", fields: %{value: hum}}
 
     case write(%{points: [temp_data, humid_data], database: @database}) do
-      :ok -> :ok
+      :ok ->
+        :ok
+
       error ->
         Logger.warn(inspect(error))
         error
