@@ -1,4 +1,5 @@
-defmodule HomeHubWeb.PageLive do
+defmodule HomeHubWeb.DashboardLive do
+  @moduledoc false
   use HomeHubWeb, :live_view
   alias HomeHub.Thermostat
   require Logger

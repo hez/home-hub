@@ -17,7 +17,7 @@ defmodule HomeHubWeb.Router do
   scope "/", HomeHubWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    live "/", DashboardLive, :index
   end
 
   scope "/", HomeHubWeb do
