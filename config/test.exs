@@ -17,6 +17,8 @@ config :home_hub, HomeHubWeb.Endpoint,
   secret_key_base: "wn9MH6RMXYheEdAV0m4DxLvKqDpSLJQIqMUU//5bQUl1HFcJZnqub2/FcPRh0gGs",
   server: false
 
+config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyTempSensor, []}
+
 # In test we don't send emails.
 config :home_hub, HomeHub.Mailer, adapter: Swoosh.Adapters.Test
 
