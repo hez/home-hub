@@ -55,6 +55,7 @@ defmodule HomeHub.MixProject do
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.19"},
       # {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.4"},
+      {:instream, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.6.2"},
       {:phoenix_ecto, "~> 4.4"},

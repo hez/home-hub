@@ -29,6 +29,20 @@ config :home_hub,
        :heater_io_implementation,
        {HomeHub.Thermostat.HeaterIO, [fan_pin: 17, heater_pin: 27]}
 
+config :home_hub, HomeHub.ReportingConnection,
+  tag_host: "thermostat",
+  database: "climate",
+  host: System.get_env("INFLUXDB_HOST"),
+  pool: [max_overflow: 10, size: 50],
+  port: 8086,
+  scheme: "http",
+  auth: [
+    method: :basic,
+    username: System.get_env("INFLUXDB_USERNAME"),
+    password: System.get_env("INFLUXDB_PASSWORD")
+  ],
+  writer: Instream.Writer.Line
+
 # config :home_hub,
 #    dht_pin: 18,
 #    fan_pin: 17,

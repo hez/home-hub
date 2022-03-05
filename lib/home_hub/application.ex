@@ -16,9 +16,10 @@ defmodule HomeHub.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: HomeHub.PubSub},
       # Start the Endpoint (http/https)
-      HomeHubWeb.Endpoint
+      HomeHubWeb.Endpoint,
       # Start a worker by calling: HomeHub.Worker.start_link(arg)
       # {HomeHub.Worker, arg}
+      HomeHub.ReportingConnection
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
