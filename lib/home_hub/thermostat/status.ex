@@ -1,4 +1,5 @@
 defmodule HomeHub.Thermostat.Status do
+  @moduledoc false
   defstruct fan_on: false,
             heater_on: false,
             heating: false,

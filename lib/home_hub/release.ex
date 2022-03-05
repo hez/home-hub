@@ -1,4 +1,5 @@
 defmodule HomeHub.Release do
+  @moduledoc false
   @app :home_hub
 
   def migrate do

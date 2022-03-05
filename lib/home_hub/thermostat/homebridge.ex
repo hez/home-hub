@@ -1,4 +1,5 @@
 defmodule HomeHub.Thermostat.Homebridge do
+  @moduledoc false
   def convert(state) do
     %{
       currentHeatingCoolingState: heating_state(state),

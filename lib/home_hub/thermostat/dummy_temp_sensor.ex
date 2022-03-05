@@ -1,4 +1,5 @@
 defmodule HomeHub.Thermostat.DummyTempSensor do
+  @moduledoc false
   use GenServer
   alias HomeHub.Thermostat
 

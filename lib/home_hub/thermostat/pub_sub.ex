@@ -1,4 +1,5 @@
 defmodule HomeHub.Thermostat.PubSub do
+  @moduledoc false
   @topics %{
     fan: "fan_io_update",
     heater: "heater_io_update",
