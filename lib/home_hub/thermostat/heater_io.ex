@@ -1,4 +1,7 @@
 defmodule HomeHub.Thermostat.HeaterIO do
+  @moduledoc """
+  Interface to the GPIO pins that control the heater and fan.
+  """
   use GenServer
   alias HomeHub.Thermostat
   require Logger

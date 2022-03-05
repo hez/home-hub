@@ -1,4 +1,5 @@
 defmodule HomeHub.Thermostat.Supervisor do
+  @moduledoc false
   use Supervisor
 
   @name __MODULE__

@@ -1,4 +1,8 @@
 defmodule HomeHub.Thermostat.TemperatureSensor do
+  @moduledoc """
+  Starts the DHT service and subscribes to the DHT telemetry messages
+  rebroadcasting them in to the Thermostat.PubSub.
+  """
   use GenServer
   require Logger
   alias HomeHub.Thermostat

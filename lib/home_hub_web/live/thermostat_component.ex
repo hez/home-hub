@@ -1,4 +1,5 @@
 defmodule HomeHubWeb.ThermostatComponent do
+  @moduledoc false
   use HomeHubWeb, :live_component
 
   @impl true
