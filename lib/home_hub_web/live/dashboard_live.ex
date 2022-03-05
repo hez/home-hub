@@ -1,8 +1,8 @@
 defmodule HomeHubWeb.DashboardLive do
   @moduledoc false
   use HomeHubWeb, :live_view
-  alias HomeHub.Thermostat
   require Logger
+  alias HomeHub.Thermostat
 
   @impl true
   def mount(_params, _session, socket) do
@@ -19,7 +19,5 @@ defmodule HomeHubWeb.DashboardLive do
   @impl true
   def handle_info(:refresh, socket), do: {:noreply, assign_status(socket)}
 
-  defp assign_status(socket) do
-    assign(socket, status: Thermostat.status())
-  end
+  defp assign_status(socket), do: assign(socket, status: Thermostat.status())
 end

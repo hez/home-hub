@@ -3,7 +3,7 @@ defmodule HomeHubWeb.LiveHelpers do
   # import Phoenix.LiveView
   import Phoenix.LiveView.Helpers
 
-  # alias LiveBeatsWeb.Router.Helpers, as: Routes
+  alias HomeHubWeb.Router.Helpers, as: Routes
   # alias Phoenix.LiveView.JS
 
   def nav_menu(assigns) do
@@ -13,20 +13,10 @@ defmodule HomeHubWeb.LiveHelpers do
         <nav role="navigation">
           <ul class="flex">
             <li class="flex-1 mr-2">
-              <a
-                class="text-center block rounded text-3xl py-2 px-4 bg-gray-800 border-gray-800 text-blue-300 hover:border-gray-200 hover:bg-gray-200"
-                href="/"
-              >
-                Home
-              </a>
+              <%= live_redirect "Home", to: Routes.dashboard_path(HomeHubWeb.Endpoint, :index), class: "text-center block rounded text-3xl py-2 px-4 bg-gray-800 border-gray-800 text-blue-300 hover:border-gray-200 hover:bg-gray-200" %>
             </li>
             <li class="flex-1 mr-2">
-              <a
-                class="text-center block rounded text-3xl py-2 px-4 bg-gray-800 border-gray-800 text-blue-300 hover:border-gray-200 hover:bg-gray-200"
-                href="/current"
-              >
-                Current
-              </a>
+              <%= live_redirect "Current", to: Routes.current_path(HomeHubWeb.Endpoint, :index), class: "text-center block rounded text-3xl py-2 px-4 bg-gray-800 border-gray-800 text-blue-300 hover:border-gray-200 hover:bg-gray-200" %>
             </li>
             <li class="flex-1 mr-2">
               <a
