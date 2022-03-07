@@ -9,8 +9,8 @@ defmodule HomeHub.Thermostat.HeaterIO do
   @name __MODULE__
 
   def start_link(opts) do
-    {:ok, heater} = Circuits.GPIO.open(Keyword.get(opts, :heater_pin), :output)
-    {:ok, fan} = Circuits.GPIO.open(Keyword.get(opts, :fan_pin), :output)
+    {:ok, heater} = opts |> Keyword.get(:heater_pin) |> open_circuit()
+    {:ok, fan} = opts |> Keyword.get(:fan_pin) |> open_circuit()
 
     GenServer.start_link(@name, %{fan_circuit: fan, heater_circuit: heater}, name: @name)
   end
@@ -38,4 +38,6 @@ defmodule HomeHub.Thermostat.HeaterIO do
 
   def write(circuit, true), do: Circuits.GPIO.write(circuit, 1)
   def write(circuit, false), do: Circuits.GPIO.write(circuit, 0)
+
+  defp open_circuit(pin), do: Circuits.GPIO.open(pin, :output)
 end
