@@ -11,6 +11,10 @@ defmodule HomeHub.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:mix, :ex_unit],
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ],
       # Docs
       name: "Home Hub",
       source_url: "https://github.com/hez/home-hub",
@@ -44,6 +48,7 @@ defmodule HomeHub.MixProject do
     [
       # Dev and test
       {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_doc, "~> 0.27", only: [:dev], runtime: false},

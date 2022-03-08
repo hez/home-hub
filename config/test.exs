@@ -18,6 +18,7 @@ config :home_hub, HomeHubWeb.Endpoint,
   server: false
 
 config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyTempSensor, []}
+config :home_hub, :heater_io_implementation, {HomeHub.Thermostat.DummyHeater, []}
 
 # In test we don't send emails.
 config :home_hub, HomeHub.Mailer, adapter: Swoosh.Adapters.Test
