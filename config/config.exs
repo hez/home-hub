@@ -43,10 +43,37 @@ config :home_hub, HomeHub.ReportingConnection,
   ],
   writer: Instream.Writer.Line
 
-# config :home_hub,
-#    dht_pin: 18,
-#    fan_pin: 17,
-#    heater_pin: 27
+config :homebridge_webhook,
+  base_url: System.get_env("HOMEBRIDGE_WEBHOOK_URL"),
+  username: System.get_env("HOMEBRIDGE_WEBHOOK_USERNAME", "admin"),
+  password: System.get_env("HOMEBRIDGE_WEBHOOK_PASSWORD", "admin")
+
+config :home_hub, :switches, [
+  %{
+    name: "Morning",
+    accessory_id: "thermostatvirtualswitch",
+    button_name: "One",
+    event: :single_press
+  },
+  %{
+    name: "Bedtime",
+    accessory_id: "thermostatvirtualswitch",
+    button_name: "Two",
+    event: :single_press
+  },
+  %{
+    name: "Leaving",
+    accessory_id: "thermostatvirtualswitch",
+    button_name: "Three",
+    event: :single_press
+  },
+  %{
+    name: "Test",
+    accessory_id: "thermostatvirtualswitch",
+    button_name: "Four",
+    event: :single_press
+  }
+]
 
 # Configures the mailer
 #

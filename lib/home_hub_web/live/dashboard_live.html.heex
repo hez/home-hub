@@ -1,3 +1,9 @@
 <.nav_menu status={@status} />
 
 <.live_component module={HomeHubWeb.ThermostatComponent} id={:thermostat} status={@status} />
+
+<div class="component flex flex-row m-8">
+<%= for {_name, switch} <- HomeHub.Homebridge.Switches.all() do %>
+  <.live_component module={HomeHubWeb.HomebridgeSwitchComponent} id={switch.name} switch={switch} />
+<% end %>
+</div>
