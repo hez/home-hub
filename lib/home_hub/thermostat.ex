@@ -1,20 +1,6 @@
 defmodule HomeHub.Thermostat do
   @moduledoc """
   `Thermostat`
-
-  ```mermaid
-  sequenceDiagram
-    participant Temperature Sensor
-    participant Thermostat
-    participant PubSub
-    Temperature Sensor->>PubSub: %{temperature: new_t, humidity: new_h}
-    PubSub->>Thermostat: New temp/hum
-    Thermostat->>Thermostat: Update Pid
-    Thermostat->>Thermostat: Update State from Pid
-    Thermostat->>PubSub: Heater state update
-    Thermostat->>PubSub: Fan state update
-    Thermostat->>PubSub: New state
-  ```
   """
 
   use GenServer
