@@ -59,7 +59,7 @@ defmodule HomeHub.MixProject do
       {:ecto_sqlite3, "~> 0.7"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.19"},
-      # {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.4"},
+      {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.4"},
       {:instream, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.6.2"},
@@ -95,8 +95,6 @@ defmodule HomeHub.MixProject do
   end
 
   defp before_closing_body_tag(:html) do
-    IO.inspect("here", label: :mermaid)
-
     """
     <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.3/dist/mermaid.min.js"></script>
     <script>
@@ -120,8 +118,5 @@ defmodule HomeHub.MixProject do
     """
   end
 
-  defp before_closing_body_tag(_) do
-    IO.inspect("argh!", label: :mermaid)
-    ""
-  end
+  defp before_closing_body_tag(_), do: ""
 end

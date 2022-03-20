@@ -13,6 +13,7 @@ defmodule HomeHub.Application do
       # Start the Telemetry supervisor
       HomeHubWeb.Telemetry,
       HomeHub.Thermostat.Supervisor,
+      HomeHub.Homebridge.Supervisor,
       # Start the PubSub system
       {Phoenix.PubSub, name: HomeHub.PubSub},
       # Start the Endpoint (http/https)
