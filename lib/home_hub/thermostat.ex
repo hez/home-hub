@@ -47,12 +47,18 @@ defmodule HomeHub.Thermostat do
   def handle_call(:status, _from, state), do: {:reply, state.status, state}
 
   @impl true
-  def handle_cast({:set_heating, value}, state) when is_boolean(value),
-    do: {:noreply, update_status(state, :heating, value)}
+  def handle_cast({:set_heating, value}, state) when is_boolean(value) do
+    state = update_status(state, :heating, value)
+    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    {:noreply, state}
+  end
 
   @impl true
-  def handle_cast({:set_target, new_target}, state),
-    do: {:noreply, update_status(state, :target, new_target)}
+  def handle_cast({:set_target, new_target}, state) do
+    state = update_status(state, :target, new_target)
+    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    {:noreply, state}
+  end
 
   @impl true
   def handle_info(:poll, %{status: %{heating: heating, heater_on: heater, fan_on: fan}} = state)

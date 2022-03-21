@@ -16,8 +16,5 @@ defmodule HomeHubWeb.DashboardLive do
   @impl true
   def handle_info({:thermostat, status}, socket), do: {:noreply, assign(socket, status: status)}
 
-  @impl true
-  def handle_info(:refresh, socket), do: {:noreply, assign_status(socket)}
-
   defp assign_status(socket), do: assign(socket, status: Thermostat.status())
 end
