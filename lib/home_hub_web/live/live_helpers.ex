@@ -50,6 +50,7 @@ defmodule HomeHubWeb.LiveHelpers do
       |> assign_new(:phx_target, fn -> nil end)
       |> assign_new(:label, fn -> "Button" end)
       |> assign_new(:value, fn -> assigns.label end)
+      |> assign_new(:inner_block, fn -> nil end)
 
     ~H"""
     <button
@@ -57,7 +58,11 @@ defmodule HomeHubWeb.LiveHelpers do
       phx-click={@phx_click}
       phx-target={@phx_target}
       value={@value}>
-      <%= @label %>
+      <%= if is_nil(@inner_block) do %>
+        <%= @label %>
+      <% else %>
+        <%= render_slot(@inner_block) %>
+      <% end %>
     </button>
     """
   end
