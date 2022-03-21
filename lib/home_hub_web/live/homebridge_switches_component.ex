@@ -8,7 +8,7 @@ defmodule HomeHubWeb.HomebridgeSwitchesComponent do
   def render(assigns) do
     ~H"""
     <div class="component flex flex-row m-8">
-      <%= for {_name, switch} <- @switches do %>
+      <%= for switch <- @switches do %>
         <.button phx_click="press" phx_target={@myself} label={switch.name} />
       <% end %>
     </div>
