@@ -8,7 +8,7 @@ defmodule HomeHubWeb.HomebridgeSwitchComponent do
   def render(assigns) do
     ~H"""
     <button
-        class="rounded-full bg-blue-800 font-bold text-2xl border-blue-800 py-2 px-8 m-4"
+        class="rounded-full bg-sky-800 font-bold text-2xl border-sky-800 py-2 px-8 m-4"
         phx-click="press"
         phx-target={@myself}
         value={@switch.name}>
@@ -22,7 +22,7 @@ defmodule HomeHubWeb.HomebridgeSwitchComponent do
     Logger.debug("#{button_name} button pressed")
 
     case Homebridge.Switches.press(button_name) do
-      {:error, error} -> Logger.error("error pressing button #{inspect(error)}")
+      {:error, error} -> Logger.error("error pressing '#{button_name}' button #{inspect(error)}")
       _ -> :ok
     end
 
