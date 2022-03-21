@@ -43,6 +43,25 @@ defmodule HomeHubWeb.LiveHelpers do
     """
   end
 
+  def button(assigns) do
+    assigns =
+      assigns
+      |> assign_new(:phx_click, fn -> "" end)
+      |> assign_new(:phx_target, fn -> nil end)
+      |> assign_new(:label, fn -> "Button" end)
+      |> assign_new(:value, fn -> assigns.label end)
+
+    ~H"""
+    <button
+      class="rounded-full bg-sky-800 font-bold text-2xl border-sky-800 py-2 px-8 m-4"
+      phx-click={@phx_click}
+      phx-target={@phx_target}
+      value={@value}>
+      <%= @label %>
+    </button>
+    """
+  end
+
   def toggle(assigns) do
     assigns =
       assigns

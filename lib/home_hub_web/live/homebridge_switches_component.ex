@@ -1,4 +1,4 @@
-defmodule HomeHubWeb.HomebridgeSwitchComponent do
+defmodule HomeHubWeb.HomebridgeSwitchesComponent do
   @moduledoc false
   use HomeHubWeb, :live_component
   require Logger
@@ -7,13 +7,11 @@ defmodule HomeHubWeb.HomebridgeSwitchComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <button
-      class="rounded-full bg-sky-800 font-bold text-2xl border-sky-800 py-2 px-8 m-4"
-      phx-click="press"
-      phx-target={@myself}
-      value={@switch.name}>
-      <%= @switch.name %>
-    </button>
+    <div class="component flex flex-row m-8">
+      <%= for {_name, switch} <- @switches do %>
+        <.button phx_click="press" phx_target={@myself} label={switch.name} />
+      <% end %>
+    </div>
     """
   end
 
