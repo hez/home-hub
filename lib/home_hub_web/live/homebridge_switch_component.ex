@@ -8,10 +8,10 @@ defmodule HomeHubWeb.HomebridgeSwitchComponent do
   def render(assigns) do
     ~H"""
     <button
-        class="rounded-full bg-sky-800 font-bold text-2xl border-sky-800 py-2 px-8 m-4"
-        phx-click="press"
-        phx-target={@myself}
-        value={@switch.name}>
+      class="rounded-full bg-sky-800 font-bold text-2xl border-sky-800 py-2 px-8 m-4"
+      phx-click="press"
+      phx-target={@myself}
+      value={@switch.name}>
       <%= @switch.name %>
     </button>
     """
