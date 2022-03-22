@@ -29,7 +29,7 @@ defmodule HomeHub.Homebridge.Switches do
   @spec get(String.t()) :: t()
   def get(name), do: Agent.get(@name, &Map.get(&1, name))
 
-  @spec all() :: map()
+  @spec all() :: list()
   def all, do: @name |> Agent.get(& &1) |> Map.values()
 
   @spec press(String.t()) :: HomebridgeWebhook.result()
