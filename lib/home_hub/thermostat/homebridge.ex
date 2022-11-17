@@ -1,5 +1,9 @@
 defmodule HomeHub.Thermostat.Homebridge do
-  @moduledoc false
+  @moduledoc """
+  Homebridge utility functions to interface with the
+  [homebridge-thermostat](https://github.com/PJCzx/homebridge-thermostat#readme)
+  plugin.
+  """
   def convert(state) do
     %{
       currentHeatingCoolingState: heating_state(state),

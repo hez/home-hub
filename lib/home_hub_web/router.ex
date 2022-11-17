@@ -5,7 +5,7 @@ defmodule HomeHubWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {HomeHubWeb.LayoutView, :root}
+    plug :put_root_layout, {HomeHubWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -14,24 +14,22 @@ defmodule HomeHubWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", HomeHubWeb do
+    pipe_through :api
+
+    scope "/homebridge" do
+      get "/status", HomebridgeController, :status
+      get "/targetHeatingCoolingState/:target", HomebridgeController, :heating_cooling_state
+      get "/targetTemperature/:target", HomebridgeController, :target_temperature
+      get "/targetRelativeHumidity/:target", HomebridgeController, :target_humidity
+    end
+  end
+
   scope "/", HomeHubWeb do
     pipe_through :browser
 
     live "/", DashboardLive, :index
-    live "/current", CurrentLive, :index
-  end
-
-  scope "/", HomeHubWeb do
-    pipe_through :api
-
-    get "/status", API.HomebrigeThermostatController, :status
-
-    get "/targetHeatingCoolingState/:target",
-        API.HomebrigeThermostatController,
-        :heating_cooling_state
-
-    get "/targetTemperature/:target", API.HomebrigeThermostatController, :target_temperature
-    get "/targetRelativeHumidity/:target", API.HomebrigeThermostatController, :target_humidity
+    # live "/current", CurrentLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -39,30 +37,19 @@ defmodule HomeHubWeb.Router do
   #   pipe_through :api
   # end
 
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
+  # Enable LiveDashboard and Swoosh mailbox preview in development
+  if Application.compile_env(:home_hub, :dev_routes) do
+    # If you want to use the LiveDashboard in production, you should put
+    # it behind authentication and allow only admins to access it.
+    # If your application does not have an admins-only section yet,
+    # you can use Plug.BasicAuth to set up some basic authentication
+    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: HomeHubWeb.Telemetry
-    end
-  end
-
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
     scope "/dev" do
       pipe_through :browser
 
+      live_dashboard "/dashboard", metrics: HomeHubWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

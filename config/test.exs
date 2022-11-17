@@ -14,17 +14,17 @@ config :home_hub, HomeHub.Repo,
 # you can enable the server option below.
 config :home_hub, HomeHubWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "wn9MH6RMXYheEdAV0m4DxLvKqDpSLJQIqMUU//5bQUl1HFcJZnqub2/FcPRh0gGs",
+  secret_key_base: "B6J9b9RJTdDToq4hme8Alb7GgZczpoEgUO+Khk/b2MH+vZyLPsISw8YfZlLQTkpW",
   server: false
-
-config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyTempSensor, []}
-config :home_hub, :heater_io_implementation, {HomeHub.Thermostat.DummyHeater, []}
 
 # In test we don't send emails.
 config :home_hub, HomeHub.Mailer, adapter: Swoosh.Adapters.Test
 
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
+
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

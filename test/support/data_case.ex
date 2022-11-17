@@ -29,9 +29,16 @@ defmodule HomeHub.DataCase do
   end
 
   setup tags do
+    HomeHub.DataCase.setup_sandbox(tags)
+    :ok
+  end
+
+  @doc """
+  Sets up the sandbox based on the test tags.
+  """
+  def setup_sandbox(tags) do
     pid = SQL.Sandbox.start_owner!(HomeHub.Repo, shared: not tags[:async])
     on_exit(fn -> SQL.Sandbox.stop_owner(pid) end)
-    :ok
   end
 
   @doc """

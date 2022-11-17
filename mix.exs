@@ -5,25 +5,11 @@ defmodule HomeHub.MixProject do
     [
       app: :home_hub,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      dialyzer: [
-        plt_add_apps: [:mix, :ex_unit],
-        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
-      ],
-      # Docs
-      name: "Home Hub",
-      source_url: "https://github.com/hez/home-hub",
-      homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
-      docs: [
-        main: "HomeHub",
-        extras: ["README.md"],
-        before_closing_body_tag: &before_closing_body_tag/1
-      ]
+      deps: deps()
     ]
   end
 
@@ -48,30 +34,30 @@ defmodule HomeHub.MixProject do
     [
       # Dev and test
       {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
-      # Prod
+      # Everything else
       {:circuits_gpio, "~> 1.0"},
       {:dht, "~> 0.1"},
-      {:ecto_sql, "~> 3.7"},
-      {:ecto_sqlite3, "~> 0.7"},
-      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
-      {:gettext, "~> 0.19"},
-      {:homebridge_webhook, github: "hez/elixir-homebridge-webhook-client", tag: "v0.1.4"},
-      {:instream, "~> 1.0"},
+      {:ecto_sql, "~> 3.6"},
+      {:ecto_sqlite3, ">= 0.0.0"},
+      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:finch, "~> 0.13"},
+      {:gettext, "~> 0.20"},
+      {:heroicons, "~> 0.5"},
       {:jason, "~> 1.2"},
-      {:phoenix, "~> 1.6.2"},
+      {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_dashboard, "~> 0.6"},
-      {:phoenix_live_view, "~> 0.17"},
+      {:phoenix_live_dashboard, "~> 0.7.2"},
+      {:phoenix_live_view, "~> 0.18.3"},
       {:pidex, github: "hez/pidex", branch: "feature/debug-touchups"},
       {:pigpiox, github: "hez/pigpiox", runtime: false},
       {:plug_cowboy, "~> 2.5"},
-      {:swoosh, "~> 1.6"},
-      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:swoosh, "~> 1.3"},
+      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:tzdata, "~> 1.1.0"}
@@ -93,30 +79,4 @@ defmodule HomeHub.MixProject do
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
-
-  defp before_closing_body_tag(:html) do
-    """
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.3/dist/mermaid.min.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        mermaid.initialize({ startOnLoad: false });
-        let id = 0;
-        for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
-          const preEl = codeEl.parentElement;
-          const graphDefinition = codeEl.textContent;
-          const graphEl = document.createElement("div");
-          const graphId = "mermaid-graph-" + id++;
-          mermaid.render(graphId, graphDefinition, function (svgSource, bindListeners) {
-            graphEl.innerHTML = svgSource;
-            bindListeners && bindListeners(graphEl);
-            preEl.insertAdjacentElement("afterend", graphEl);
-            preEl.remove();
-          });
-        }
-      });
-    </script>
-    """
-  end
-
-  defp before_closing_body_tag(_), do: ""
 end

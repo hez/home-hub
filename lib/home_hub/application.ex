@@ -8,19 +8,20 @@ defmodule HomeHub.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      HomeHub.Repo,
       # Start the Telemetry supervisor
       HomeHubWeb.Telemetry,
-      HomeHub.Thermostat.Supervisor,
-      HomeHub.Homebridge.Supervisor,
+      # Start the Ecto repository
+      HomeHub.Repo,
+      {HomeHub.Thermostat.Supervisor,
+       heater_io_config: [fan_pin: 17, heater_pin: 27, dht_pin: 18]},
       # Start the PubSub system
       {Phoenix.PubSub, name: HomeHub.PubSub},
+      # Start Finch
+      {Finch, name: HomeHub.Finch},
       # Start the Endpoint (http/https)
-      HomeHubWeb.Endpoint,
+      HomeHubWeb.Endpoint
       # Start a worker by calling: HomeHub.Worker.start_link(arg)
       # {HomeHub.Worker, arg}
-      HomeHub.ReportingConnection
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
