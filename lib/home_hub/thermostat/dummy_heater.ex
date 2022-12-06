@@ -1,18 +1,20 @@
-defmodule HomeHub.Thermostat.DummyHeater do
-  @moduledoc false
-  use GenServer
-  require Logger
+if Mix.env() == :test or Mix.env() == :dev do
+  defmodule HomeHub.Thermostat.DummyHeater do
+    @moduledoc false
+    use GenServer
+    require Logger
 
-  @name __MODULE__
+    @name __MODULE__
 
-  def start_link(opts), do: GenServer.start_link(__MODULE__, opts, name: @name)
+    def start_link(opts), do: GenServer.start_link(__MODULE__, opts, name: @name)
 
-  @impl true
-  def init(_opts), do: {:ok, nil}
+    @impl true
+    def init(_opts), do: {:ok, nil}
 
-  @impl true
-  def handle_info({key, val}, state) do
-    Logger.debug("Turning #{key} to new value #{inspect(val)}")
-    {:noreply, state}
+    @impl true
+    def handle_info({key, val}, state) do
+      Logger.debug("Turning #{key} to new value #{inspect(val)}")
+      {:noreply, state}
+    end
   end
 end

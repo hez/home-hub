@@ -27,7 +27,7 @@ defmodule HomeHub.Thermostat do
   end
 
   def status, do: GenServer.call(@name, :status)
-  def homebridge_status, do: Thermostat.Homebridge.convert(status())
+
   def start_heat, do: GenServer.cast(@name, {:set_heating, true})
   def stop_heat, do: GenServer.cast(@name, {:set_heating, false})
 
@@ -71,7 +71,7 @@ defmodule HomeHub.Thermostat do
       |> update_pid()
       |> get_pid_output()
       |> tap(&Logger.debug(inspect(&1), label: :new_pid_value))
-      |> update_state_from_pid(state)
+      |> update_state_and_broadcast(state)
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
@@ -114,13 +114,14 @@ defmodule HomeHub.Thermostat do
   defp get_pid_output(_), do: Pidex.PdxServer.output(pidex_pid())
 
   # Heating turned ON
-  defp update_state_from_pid(pid_val, %{status: %{heating: true}} = state) when pid_val > 0 do
+  defp update_state_and_broadcast(pid_val, %{status: %{heating: true}} = state)
+       when pid_val > 0 do
     Thermostat.PubSub.broadcast(:fan, {:fan, true})
     Thermostat.PubSub.broadcast(:heater, {:heater, true})
     state |> update_status(:fan_on, true) |> update_status(:heater_on, true)
   end
 
-  defp update_state_from_pid(_, state) do
+  defp update_state_and_broadcast(_, state) do
     Thermostat.PubSub.broadcast(:fan, {:fan, false})
     Thermostat.PubSub.broadcast(:heater, {:heater, false})
     state |> update_status(:fan_on, false) |> update_status(:heater_on, false)

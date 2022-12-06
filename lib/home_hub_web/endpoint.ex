@@ -7,7 +7,8 @@ defmodule HomeHubWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_home_hub_key",
-    signing_salt: "Xa/IwUtd"
+    signing_salt: "1BnWrozL",
+    same_site: "Lax"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -20,7 +21,7 @@ defmodule HomeHubWeb.Endpoint do
     at: "/",
     from: :home_hub,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: HomeHubWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

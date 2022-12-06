@@ -4,6 +4,7 @@ import Config
 config :home_hub, HomeHub.Repo,
   database: Path.expand("../data/home_hub_dev.db", Path.dirname(__ENV__.file)),
   pool_size: 5,
+  stacktrace: true,
   show_sensitive_data_on_connection_error: true
 
 # For development, we disable any cache and enable
@@ -19,14 +20,11 @@ config :home_hub, HomeHubWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "f/aRPM2ziWeUW6dHHt00ydmRY8cwRSSYcOQF/8IIwlCz96RtCHE9HgR1lU2NBzB3",
+  secret_key_base: "mqnSRQLKNH2KJmr+MB/Gwb10N8IpM2LWG4Frs4UE3Kqn0YcTf1CJBh/j+BRZslV2",
   watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
-
-config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyTempSensor, []}
 
 # ## SSL Support
 #
@@ -36,7 +34,6 @@ config :home_hub, :temperature_sensor_implementation, {HomeHub.Thermostat.DummyT
 #
 #     mix phx.gen.cert
 #
-# Note that this task requires Erlang/OTP 20 or later.
 # Run `mix help phx.gen.cert` for more information.
 #
 # The `http:` config above can be replaced with:
@@ -63,8 +60,11 @@ config :home_hub, HomeHubWeb.Endpoint,
     ]
   ]
 
+# Enable dev routes for dashboard and mailbox
+config :home_hub, dev_routes: true
+
 # Do not include metadata nor timestamps in development logs
-# config :logger, :console, format: "[$level] $message\n"
+config :logger, :console, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -72,3 +72,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
