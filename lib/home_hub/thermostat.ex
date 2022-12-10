@@ -116,13 +116,13 @@ defmodule HomeHub.Thermostat do
   # Heating turned ON
   defp update_state_and_broadcast(pid_val, %{status: %{heating: true}} = state)
        when pid_val > 0 do
-    Thermostat.PubSub.broadcast(:fan, {:fan, true})
+    # Thermostat.PubSub.broadcast(:fan, {:fan, true})
     Thermostat.PubSub.broadcast(:heater, {:heater, true})
     state |> update_status(:fan_on, true) |> update_status(:heater_on, true)
   end
 
   defp update_state_and_broadcast(_, state) do
-    Thermostat.PubSub.broadcast(:fan, {:fan, false})
+    # Thermostat.PubSub.broadcast(:fan, {:fan, false})
     Thermostat.PubSub.broadcast(:heater, {:heater, false})
     state |> update_status(:fan_on, false) |> update_status(:heater_on, false)
   end
