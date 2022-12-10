@@ -1,0 +1,5 @@
+export INFLUXDB_HOST=
+export INFLUXDB_USERNAME=
+export INFLUXDB_PASSWORD=
+
+# vi:syntax=bash
