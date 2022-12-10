@@ -56,6 +56,7 @@ defmodule HomeHub.MixProject do
       {:pidex, github: "hez/pidex", branch: "feature/debug-touchups"},
       {:pigpiox, github: "hez/pigpiox", runtime: false},
       {:plug_cowboy, "~> 2.5"},
+      {:rpi_screen_dimmer, github: "hez/rpi-screen-dimmer", tag: "v0.1.1", only: :prod},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
