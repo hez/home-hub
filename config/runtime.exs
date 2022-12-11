@@ -20,6 +20,20 @@ if System.get_env("PHX_SERVER") do
   config :home_hub, HomeHubWeb.Endpoint, server: true
 end
 
+# InfluxDB v1.x
+config :home_hub, HomeHub.ReportingConnection,
+  tag_host: "thermostat",
+  version: :v1,
+  database: "climate",
+  host: System.get_env("INFLUXDB_HOST"),
+  port: 8086,
+  scheme: "http",
+  auth: [
+    method: :basic,
+    username: System.get_env("INFLUXDB_USERNAME"),
+    password: System.get_env("INFLUXDB_PASSWORD")
+  ]
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||

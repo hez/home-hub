@@ -22,8 +22,8 @@ defmodule HomeHub.Thermostat.Supervisor do
       {Pidex.PdxServer, settings: @pid_settings, ts_unit: :millisecond},
       temp_sensor_impl(opts),
       heater_io_impl(opts),
-      HomeHub.Thermostat
-      # HomeHub.Thermostat.Reporter
+      HomeHub.Thermostat,
+      HomeHub.Thermostat.Reporter
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

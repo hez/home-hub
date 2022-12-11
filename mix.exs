@@ -47,6 +47,7 @@ defmodule HomeHub.MixProject do
       {:finch, "~> 0.13"},
       {:gettext, "~> 0.20"},
       {:heroicons, "~> 0.5"},
+      {:instream, "~> 2.2"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
