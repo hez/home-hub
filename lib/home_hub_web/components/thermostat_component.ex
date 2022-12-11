@@ -31,7 +31,7 @@ defmodule HomeHubWeb.ThermostatComponent do
 
   def render(assigns) do
     ~H"""
-    <div class="component flex flex-row m-8">
+    <div class="component flex flex-row mx-2">
       <.toggle on={@status.heating} phx_click="furnace_toggle" phx_target={@myself}>
         Furnace
       </.toggle>
