@@ -10,14 +10,15 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
   - Present a web UI on a Raspberry Pi touch screen with [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view)
     - Day time dependent dimming via [rpi-screen-dimmer](https://github.com/hez/rpi-screen-dimmer)
     - Layout and styling via simple [Tailwindcss](https://tailwindcss.com)
-  <img width="870" alt="Screen Shot Furance Off" src="https://user-images.githubusercontent.com/244021/103706957-a0513d00-4f62-11eb-966a-fe8d7fec9785.png">
-  <img width="873" alt="Screen Shot Furnace On" src="https://user-images.githubusercontent.com/244021/103707099-e7d7c900-4f62-11eb-988a-b9223f1d8025.png">
+      <img width="793" alt="Screenshot 2022-12-11 at 14 07 22" src="https://user-images.githubusercontent.com/244021/206931738-3fdeb222-cfda-4e97-a05f-70801621564e.png">
+      <img width="794" alt="Screenshot 2022-12-11 at 14 08 03" src="https://user-images.githubusercontent.com/244021/206931744-a8bfb89a-a07a-4650-8a98-fc6e0151eb94.png">
+
 - Homebridge integration
   - Present virtual Homebridge switchs [HTTP Webhooks plugin](https://github.com/benzman81/homebridge-http-webhooks)
   - Present as a thermostat to homebridge via [Thermostat plugin](https://github.com/PJCzx/homebridge-thermostat)
 - Present historical data collected via InfluxDB and Grafana via [Climate Sensors](https://github.com/jrstarke/esp8266-climate-sensors) and [home-hub-logger](https://github.com/hez/home-hub-logger)
-  <img width="871" alt="Screen Shot Current Temps" src="https://user-images.githubusercontent.com/244021/103707291-338a7280-4f63-11eb-8175-bb3a2a1427b6.png">
-  <img width="792" alt="Screen Shot Historical Temps" src="https://user-images.githubusercontent.com/244021/103707533-a1369e80-4f63-11eb-9de7-d4a97820bf2e.png">
+  <img width="781" alt="Screenshot 2022-12-11 at 14 08 18" src="https://user-images.githubusercontent.com/244021/206931768-60cafc84-ef8c-4661-9951-bf68049c0053.png">
+
 
 
 ### Missing
