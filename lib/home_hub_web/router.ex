@@ -28,8 +28,10 @@ defmodule HomeHubWeb.Router do
   scope "/", HomeHubWeb do
     pipe_through :browser
 
-    live "/", DashboardLive, :index
-    # live "/current", CurrentLive, :index
+    live_session :default, on_mount: [HomeHubWeb.Nav, HomeHubWeb.ThermostatStatus] do
+      live "/", DashboardLive
+      live "/current", CurrentLive
+    end
   end
 
   # Other scopes may use custom stacks.
