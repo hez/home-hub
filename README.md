@@ -36,9 +36,8 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 
 ## Building a Release
 
-_Add env `VAN=1` if compile the van ver._
-
 - `MIX_ENV=prod mix compile`
+- `MIX_ENV=prod mix assets.deploy`
 - `MIX_ENV=prod mix release`
 - if service is already running, restart `sudo systemctl restart homehub.service`
 
@@ -69,4 +68,12 @@ you can control the thermostat with HomeKit.
       "maxTemp": 24,
       "minTemp": 10
   }
+```
+
+## Pi config
+
+- disable screen blanking `sudo raspi-config` "Display Options -> Screen Blanking"
+- Packages
+```
+apt-get install libssl-dev automake autoconf
 ```
