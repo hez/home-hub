@@ -1,5 +1,9 @@
 <.live_component module={HomeHubWeb.ThermostatComponent} id={:thermostat} status={@status} />
 
+<div class="pt-10">
+  <.live_component module={HomeHubWeb.HAPButtonsComponent} id={:hap_buttons} />
+</div>
+
 <div class="flex pt-12 justify-end">
   <%= Float.round(@status.pid, 3) %>
 </div>

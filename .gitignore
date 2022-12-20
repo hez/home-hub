@@ -32,6 +32,9 @@ home_hub-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# HAP info
+hap_data/
+
 # Database files
 *.db
 *.db-*

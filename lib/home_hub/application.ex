@@ -20,9 +20,10 @@ defmodule HomeHub.Application do
         # Start Finch
         {Finch, name: HomeHub.Finch},
         # Start the Endpoint (http/https)
-        HomeHubWeb.Endpoint
+        HomeHubWeb.Endpoint,
         # Start a worker by calling: HomeHub.Worker.start_link(arg)
         # {HomeHub.Worker, arg}
+        HomeHub.HAP.Supervisor
       ] ++ prod_children()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
