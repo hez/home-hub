@@ -5,7 +5,7 @@ defmodule HomeHubWeb.ThermostatStatus do
 
   def on_mount(:default, _params, _session, socket) do
     if connected?(socket) do
-      Thermostat.PubSub.subscribe(:thermostat)
+      Thermostat.PubSub.subscribe(:thermostat_status)
     end
 
     {:cont, assign(socket, status: Thermostat.status())}
@@ -13,8 +13,4 @@ defmodule HomeHubWeb.ThermostatStatus do
 
   ### Thermostat Pubsub callbacks
   def handle_info({:thermostat, status}, socket), do: {:noreply, assign(socket, status: status)}
-  def handle_info({:heating, _}, socket), do: {:noreply, socket}
-  def handle_info({:target, _}, socket), do: {:noreply, socket}
-  def handle_info({:temperature, _}, socket), do: {:noreply, socket}
-  def handle_info({:humidity, _}, socket), do: {:noreply, socket}
 end

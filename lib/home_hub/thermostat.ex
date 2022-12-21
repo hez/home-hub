@@ -49,7 +49,7 @@ defmodule HomeHub.Thermostat do
   def handle_cast({:set_heating, value}, state) when is_boolean(value) do
     state = update_status(state, :heating, value)
     Thermostat.PubSub.broadcast(:thermostat, {:heating, value})
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 
@@ -58,7 +58,7 @@ defmodule HomeHub.Thermostat do
     state = update_status(state, :target, new_target)
     Thermostat.PID.impl().update_set_point(new_target)
     Thermostat.PubSub.broadcast(:thermostat, {:target, new_target})
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 
@@ -75,7 +75,7 @@ defmodule HomeHub.Thermostat do
       |> update_state_and_broadcast()
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     queue_poll()
     {:noreply, state}
   end
@@ -92,7 +92,7 @@ defmodule HomeHub.Thermostat do
     state = state |> update_status(:temperature, new_t) |> update_status(:humidity, new_h)
     Thermostat.PubSub.broadcast(:thermostat, {:humidity, new_t})
     Thermostat.PubSub.broadcast(:thermostat, {:temperature, new_t})
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 

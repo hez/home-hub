@@ -106,9 +106,6 @@ defmodule HomeHub.HAP.Thermostat do
     {:noreply, state}
   end
 
-  @impl true
-  def handle_info({:thermostat, _}, state), do: {:noreply, state}
-
   ### Genserver callbacks
   @impl GenServer
   def handle_call({:set_change_token, change_token, event}, _from, state) do
