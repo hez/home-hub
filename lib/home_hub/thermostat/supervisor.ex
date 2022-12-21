@@ -1,6 +1,7 @@
 defmodule HomeHub.Thermostat.Supervisor do
   @moduledoc false
   use Supervisor
+  require Logger
   alias HomeHub.Thermostat
 
   @name __MODULE__
@@ -9,14 +10,14 @@ defmodule HomeHub.Thermostat.Supervisor do
 
   @impl true
   def init(opts) do
-    children = [
-      {Phoenix.PubSub, name: HomeHub.Thermostat.PubSub},
-      temp_sensor_impl(opts),
-      heater_io_impl(opts),
-      {Thermostat.PID.impl(), Keyword.get(opts, :pid_settings, [])},
-      Thermostat,
-      HomeHub.Thermostat.Reporter
-    ]
+    children =
+      [
+        {Phoenix.PubSub, name: HomeHub.Thermostat.PubSub},
+        temp_sensor_impl(opts),
+        heater_io_impl(opts),
+        {Thermostat.PID.impl(), Keyword.get(opts, :pid_settings, [])},
+        Thermostat
+      ] ++ thermostat_reporter()
 
     Supervisor.init(children, strategy: :one_for_one)
   end
@@ -37,6 +38,16 @@ defmodule HomeHub.Thermostat.Supervisor do
         nil -> raise "Failed to get heater_io_config"
         values -> {HomeHub.Thermostat.TemperatureSensor, values}
       end
+    end
+  end
+
+  # Check if the reporting connection has been configured, other wise don't start the reporting
+  def thermostat_reporter do
+    if HomeHub.ReportingConnection.configured?() do
+      [HomeHub.Thermostat.Reporter]
+    else
+      Logger.warn("no reporting connection config, not starting it")
+      []
     end
   end
 end

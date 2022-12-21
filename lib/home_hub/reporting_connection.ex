@@ -19,4 +19,6 @@ defmodule HomeHub.ReportingConnection do
 
   def tag_host,
     do: :home_hub |> Application.get_env(HomeHub.ReportingConnection) |> Keyword.get(:tag_host)
+
+  def configured?, do: not is_nil(config(:host))
 end
