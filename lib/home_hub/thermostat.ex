@@ -66,11 +66,12 @@ defmodule HomeHub.Thermostat do
       when heating or heater do
     Logger.debug("poll #{inspect(state)}")
 
+    pid = Thermostat.PID.output(status.temperature)
+
     state =
-      status.temperature
-      |> Thermostat.PID.output()
-      |> tap(&Logger.debug(inspect(&1), label: :new_pid_value))
-      |> update_state_and_broadcast(state)
+      state
+      |> update_status(:pid, pid)
+      |> update_state_and_broadcast()
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
@@ -99,13 +100,13 @@ defmodule HomeHub.Thermostat do
   defp queue_poll, do: Process.send_after(self(), :poll, @poll_interval)
 
   # Heating turned ON
-  defp update_state_and_broadcast(pid_val, %{status: %{heating: true}} = state)
+  defp update_state_and_broadcast(%{status: %{heating: true, pid: pid_val}} = state)
        when pid_val > 0 do
     Thermostat.PubSub.broadcast(:heater, {:heater, true})
     state |> update_status(:heater_on, true)
   end
 
-  defp update_state_and_broadcast(_, state) do
+  defp update_state_and_broadcast(state) do
     Thermostat.PubSub.broadcast(:heater, {:heater, false})
     state |> update_status(:heater_on, false)
   end
