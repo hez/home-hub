@@ -5,13 +5,13 @@ defmodule HomeHub.Thermostat.Supervisor do
 
   @name __MODULE__
 
-  @pid_settings [
+  @default_pid_settings [
     # setpoint: 0.0,
     kp: 0.2,
-    ki: 0.1
+    ki: 0.1,
     # kd: 0.0
     # action: :direct,
-    # output_limits: {nil, nil},
+    output_limits: {-5.0, 5.0}
   ]
 
   def start_link(opts), do: Supervisor.start_link(@name, opts, name: @name)
@@ -20,7 +20,7 @@ defmodule HomeHub.Thermostat.Supervisor do
   def init(opts) do
     children = [
       {Phoenix.PubSub, name: HomeHub.Thermostat.PubSub},
-      {Thermostat.PID, @pid_settings},
+      {Thermostat.PID, Keyword.get(opts, :pid_settings, @default_pid_settings)},
       temp_sensor_impl(opts),
       heater_io_impl(opts),
       HomeHub.Thermostat,
