@@ -15,9 +15,8 @@ defmodule HomeHub.Thermostat do
 
   @name __MODULE__
 
-  def start_link(_opts) do
-    GenServer.start_link(@name, %{status: %Thermostat.Status{}}, name: @name)
-  end
+  def start_link(_opts),
+    do: GenServer.start_link(@name, %{status: %Thermostat.Status{}}, name: @name)
 
   @impl true
   def init(state) do
@@ -56,22 +55,22 @@ defmodule HomeHub.Thermostat do
   @impl true
   def handle_cast({:set_target, new_target}, state) do
     state = update_status(state, :target, new_target)
+    Thermostat.PID.impl().update_set_point(new_target)
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
     {:noreply, state}
   end
 
   @impl true
-  def handle_info(:poll, %{status: %{heating: heating, heater_on: heater, fan_on: fan}} = state)
-      when heating or heater or fan do
+  def handle_info(:poll, %{status: %{heating: heating, heater_on: heater} = status} = state)
+      when heating or heater do
     Logger.debug("poll #{inspect(state)}")
+
+    output = Thermostat.PID.impl().output(status.temperature)
 
     state =
       state
-      |> update_pid_set_point()
-      |> update_pid()
-      |> get_pid_output()
-      |> tap(&Logger.debug(inspect(&1), label: :new_pid_value))
-      |> update_state_and_broadcast(state)
+      |> update_status(:pid, output)
+      |> update_state_and_broadcast()
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
@@ -93,34 +92,20 @@ defmodule HomeHub.Thermostat do
     {:noreply, state}
   end
 
-  defp pidex_pid, do: Process.whereis(Pidex.PdxServer)
-
   @spec update_status(map(), atom(), any()) :: map()
   defp update_status(%{status: status} = state, key, value),
     do: %{state | status: Map.put(status, key, value)}
 
   defp queue_poll, do: Process.send_after(self(), :poll, @poll_interval)
 
-  defp update_pid_set_point(%{status: %{target: t}} = state) do
-    Pidex.PdxServer.set(pidex_pid(), set_point: t)
-    state
-  end
-
-  defp update_pid(%{status: %{temperature: t}} = state) do
-    Pidex.PdxServer.update_async(pidex_pid(), t)
-    state
-  end
-
-  defp get_pid_output(_), do: Pidex.PdxServer.output(pidex_pid())
-
   # Heating turned ON
-  defp update_state_and_broadcast(pid_val, %{status: %{heating: true}} = state)
+  defp update_state_and_broadcast(%{status: %{heating: true, pid: pid_val}} = state)
        when pid_val > 0 do
     Thermostat.PubSub.broadcast(:heater, {:heater, true})
     state |> update_status(:heater_on, true)
   end
 
-  defp update_state_and_broadcast(_, state) do
+  defp update_state_and_broadcast(state) do
     Thermostat.PubSub.broadcast(:heater, {:heater, false})
     state |> update_status(:heater_on, false)
   end

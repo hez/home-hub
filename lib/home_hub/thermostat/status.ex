@@ -5,7 +5,8 @@ defmodule HomeHub.Thermostat.Status do
             heating: false,
             humidity: 0.0,
             target: 15.0,
-            temperature: 15.0
+            temperature: 15.0,
+            pid: 0.0
 
   @type t :: %__MODULE__{
           fan_on: boolean(),
@@ -13,6 +14,7 @@ defmodule HomeHub.Thermostat.Status do
           heating: boolean(),
           humidity: float(),
           target: float(),
-          temperature: float()
+          temperature: float(),
+          pid: float()
         }
 end

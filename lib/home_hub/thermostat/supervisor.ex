@@ -1,17 +1,9 @@
 defmodule HomeHub.Thermostat.Supervisor do
   @moduledoc false
   use Supervisor
+  alias HomeHub.Thermostat
 
   @name __MODULE__
-
-  @pid_settings %Pidex{
-    kP: 1.1,
-    kI: 1.0,
-    kD: 0.001,
-    min_point: -25.0,
-    max_point: 10.0,
-    ts_factor: 30_000.0
-  }
 
   def start_link(opts), do: Supervisor.start_link(@name, opts, name: @name)
 
@@ -19,10 +11,10 @@ defmodule HomeHub.Thermostat.Supervisor do
   def init(opts) do
     children = [
       {Phoenix.PubSub, name: HomeHub.Thermostat.PubSub},
-      {Pidex.PdxServer, settings: @pid_settings, ts_unit: :millisecond},
       temp_sensor_impl(opts),
       heater_io_impl(opts),
-      HomeHub.Thermostat,
+      {Thermostat.PID.impl(), Keyword.get(opts, :pid_settings, [])},
+      Thermostat,
       HomeHub.Thermostat.Reporter
     ]
 
