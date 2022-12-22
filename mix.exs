@@ -55,6 +55,7 @@ defmodule HomeHub.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_view, "~> 0.18.3"},
       {:pid_controller, github: "hez/pid_controller", branch: "minmax"},
+      {:pidex, github: "hez/pidex", branch: "feature/debug-touchups"},
       {:pigpiox, github: "hez/pigpiox", runtime: false},
       {:plug_cowboy, "~> 2.5"},
       {:rpi_screen_dimmer, github: "hez/rpi-screen-dimmer", tag: "v0.1.1", only: :prod},

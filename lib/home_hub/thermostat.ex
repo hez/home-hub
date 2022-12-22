@@ -15,9 +15,8 @@ defmodule HomeHub.Thermostat do
 
   @name __MODULE__
 
-  def start_link(_opts) do
-    GenServer.start_link(@name, %{status: %Thermostat.Status{}}, name: @name)
-  end
+  def start_link(_opts),
+    do: GenServer.start_link(@name, %{status: %Thermostat.Status{}}, name: @name)
 
   @impl true
   def init(state) do
@@ -56,7 +55,7 @@ defmodule HomeHub.Thermostat do
   @impl true
   def handle_cast({:set_target, new_target}, state) do
     state = update_status(state, :target, new_target)
-    Thermostat.PID.update_set_point(new_target)
+    Thermostat.PID.impl().update_set_point(new_target)
     Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
     {:noreply, state}
   end
@@ -66,11 +65,11 @@ defmodule HomeHub.Thermostat do
       when heating or heater do
     Logger.debug("poll #{inspect(state)}")
 
-    pid = Thermostat.PID.output(status.temperature)
+    output = Thermostat.PID.impl().output(status.temperature)
 
     state =
       state
-      |> update_status(:pid, pid)
+      |> update_status(:pid, output)
       |> update_state_and_broadcast()
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
