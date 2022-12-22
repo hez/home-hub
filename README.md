@@ -14,7 +14,6 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
       <img width="794" alt="Screenshot 2022-12-11 at 14 08 03" src="https://user-images.githubusercontent.com/244021/206931744-a8bfb89a-a07a-4650-8a98-fc6e0151eb94.png">
 
 - Homebridge integration
-  - Present virtual Homebridge switchs [HTTP Webhooks plugin](https://github.com/benzman81/homebridge-http-webhooks)
   - Present as a thermostat to homebridge via [Thermostat plugin](https://github.com/PJCzx/homebridge-thermostat)
 - Present historical data collected via InfluxDB and Grafana via [Climate Sensors](https://github.com/jrstarke/esp8266-climate-sensors) and [home-hub-logger](https://github.com/hez/home-hub-logger)
   <img width="781" alt="Screenshot 2022-12-11 at 14 08 18" src="https://user-images.githubusercontent.com/244021/206931768-60cafc84-ef8c-4661-9951-bf68049c0053.png">
@@ -37,9 +36,7 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 
 ## Building a Release
 
-- `MIX_ENV=prod mix compile`
-- `MIX_ENV=prod mix assets.deploy`
-- `MIX_ENV=prod mix release`
+- `MIX_ENV=prod mix build`
 - if service is already running, restart `sudo systemctl restart homehub.service`
 
 ### Installing service
