@@ -29,9 +29,12 @@ defmodule HomeHubWeb.Layouts do
 
   def outside_temperature(assigns) do
     ~H"""
-    <div class="text-4xl">
-      Outside: <b><%= Float.round(@sensors["outside-temp"].temperature, 1) %>&#176;C</b>
-      at <b><%= @sensors["outside-temp"].humidity |> Float.round(0) |> trunc() %>%</b>
+    <div class="text-4xl flex">
+      <div><.tree_icon class="h-10 w-10 mr-4" fill="fill-green-600" /></div>
+      <div>
+        <b><%= Float.round(@sensors["outside-temp"].temperature, 1) %>&#176;C</b>
+        at <b><%= @sensors["outside-temp"].humidity |> Float.round(0) |> trunc() %>%</b>
+      </div>
     </div>
     """
   end
@@ -40,9 +43,12 @@ defmodule HomeHubWeb.Layouts do
 
   def thermostat_temperature(assigns) do
     ~H"""
-    <div class="text-4xl">
-      Current: <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
-      at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
+    <div class="text-4xl flex">
+      <div><Heroicons.home class="h-10 w-10 mr-4 stroke-amber-600" /></div>
+      <div>
+        <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
+        at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
+      </div>
     </div>
     """
   end
