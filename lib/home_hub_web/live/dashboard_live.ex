@@ -7,7 +7,7 @@ defmodule HomeHubWeb.DashboardLive do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
-      Thermostat.PubSub.subscribe(:thermostat)
+      Thermostat.PubSub.subscribe(:thermostat_status)
     end
 
     {:ok, assign_status(socket)}

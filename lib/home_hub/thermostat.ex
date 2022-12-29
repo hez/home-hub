@@ -10,7 +10,7 @@ defmodule HomeHub.Thermostat do
   alias HomeHub.Thermostat
 
   @minimum_target 10
-  @maximum_target 25
+  @maximum_target 30
   @poll_interval 30 * 1000
 
   @name __MODULE__
@@ -34,7 +34,7 @@ defmodule HomeHub.Thermostat do
   def adjust_target_by(value), do: set_target(status().target + value)
 
   @spec(set_target(float()) :: :ok, {:error, atom()})
-  def set_target(target) when target > @minimum_target and target < @maximum_target do
+  def set_target(target) when target > @minimum_target and target <= @maximum_target do
     Logger.debug("#{target}", label: :new_target)
     GenServer.cast(@name, {:set_target, target})
     :ok
@@ -48,7 +48,8 @@ defmodule HomeHub.Thermostat do
   @impl true
   def handle_cast({:set_heating, value}, state) when is_boolean(value) do
     state = update_status(state, :heating, value)
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat, {:heating, value})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 
@@ -56,7 +57,8 @@ defmodule HomeHub.Thermostat do
   def handle_cast({:set_target, new_target}, state) do
     state = update_status(state, :target, new_target)
     Thermostat.PID.impl().update_set_point(new_target)
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat, {:target, new_target})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 
@@ -73,7 +75,7 @@ defmodule HomeHub.Thermostat do
       |> update_state_and_broadcast()
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     queue_poll()
     {:noreply, state}
   end
@@ -88,7 +90,9 @@ defmodule HomeHub.Thermostat do
   def handle_info(%{temperature: new_t, humidity: new_h}, state) do
     Logger.debug("got new temp and hum, #{new_t} / #{new_h}")
     state = state |> update_status(:temperature, new_t) |> update_status(:humidity, new_h)
-    Thermostat.PubSub.broadcast(:thermostat, {:thermostat, state.status})
+    Thermostat.PubSub.broadcast(:thermostat, {:humidity, new_t})
+    Thermostat.PubSub.broadcast(:thermostat, {:temperature, new_t})
+    Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
   end
 

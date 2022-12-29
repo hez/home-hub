@@ -46,6 +46,7 @@ defmodule HomeHub.MixProject do
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:finch, "~> 0.13"},
       {:gettext, "~> 0.20"},
+      {:hap, "~> 0.4"},
       {:heroicons, "~> 0.5"},
       {:instream, "~> 2.2"},
       {:jason, "~> 1.2"},
