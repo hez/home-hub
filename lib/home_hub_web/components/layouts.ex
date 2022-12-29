@@ -25,20 +25,25 @@ defmodule HomeHubWeb.Layouts do
     """
   end
 
+  attr :sensors, :map, required: false
+
+  def outside_temperature(assigns) do
+    ~H"""
+    <div class="text-4xl">
+      Outside: <b><%= Float.round(@sensors["outside-temp"].temperature, 1) %>&#176;C</b>
+      at <b><%= @sensors["outside-temp"].humidity |> Float.round(0) |> trunc() %>%</b>
+    </div>
+    """
+  end
+
   attr :status, :map, required: false
 
-  def thermostat_status(assigns) do
+  def thermostat_temperature(assigns) do
     ~H"""
-    <section class="container">
-      <%= if @status do %>
-        <div class="flex flex-row-reverse m-4">
-          <div class="text-4xl">
-            Current: <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
-            at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
-          </div>
-        </div>
-      <% end %>
-    </section>
+    <div class="text-4xl">
+      Current: <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
+      at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
+    </div>
     """
   end
 
