@@ -23,7 +23,8 @@ defmodule HomeHub.Application do
         HomeHubWeb.Endpoint,
         # Start a worker by calling: HomeHub.Worker.start_link(arg)
         # {HomeHub.Worker, arg}
-        HomeHub.HAP.Supervisor
+        HomeHub.HAP.Supervisor,
+        HomeHub.Phoscon.Supervisor
       ] ++ prod_children()
 
     # See https://hexdocs.pm/elixir/Supervisor.html

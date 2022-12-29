@@ -1,11 +1,7 @@
-defmodule HomeHub.Thermostat.PubSub do
+defmodule HomeHub.Phoscon.PubSub do
   @moduledoc false
   @topics %{
-    fan: "fan_io_update",
-    heater: "heater_io_update",
-    temperature: "temperature_update",
-    thermostat: "thermostat_update",
-    thermostat_status: "thermostat_status"
+    sensor_status: "sensor_status"
   }
 
   def subscribe(topic), do: Phoenix.PubSub.subscribe(__MODULE__, topic_name(topic))
