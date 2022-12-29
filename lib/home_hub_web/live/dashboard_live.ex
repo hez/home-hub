@@ -2,19 +2,18 @@ defmodule HomeHubWeb.DashboardLive do
   @moduledoc false
   use HomeHubWeb, :live_view
   require Logger
-  alias HomeHub.Thermostat
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket) do
-      Thermostat.PubSub.subscribe(:thermostat_status)
-    end
-
-    {:ok, assign_status(socket)}
+    {:ok, socket}
   end
 
+  ### Thermostat Pubsub callbacks
   @impl true
   def handle_info({:thermostat, status}, socket), do: {:noreply, assign(socket, status: status)}
 
-  defp assign_status(socket), do: assign(socket, status: Thermostat.status())
+  ### Phoscon Pubsub callbacks
+  @impl true
+  def handle_info({:sensor_status, status}, socket),
+    do: {:noreply, assign(socket, sensors: status)}
 end
