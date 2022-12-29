@@ -20,6 +20,11 @@ if System.get_env("PHX_SERVER") do
   config :home_hub, HomeHubWeb.Endpoint, server: true
 end
 
+# Phoscon Deconz config
+config :phoscon_api, :connection,
+  host: System.get_env("PHOSCON_HOST"),
+  api_key: System.get_env("PHOSCON_API_KEY")
+
 # InfluxDB v1.x
 config :home_hub, HomeHub.ReportingConnection,
   tag_host: "thermostat",
