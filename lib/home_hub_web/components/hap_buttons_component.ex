@@ -15,7 +15,7 @@ defmodule HomeHubWeb.HAPButtonsComponent do
   def render(assigns) do
     ~H"""
     <div class="flex py-6 justify-center">
-      <div class="grid grid-cols-3 gap-12">
+      <div class="grid grid-cols-3 gap-8">
         <.hap_button name="hap_switch_1" event="0" phx-click="switch_toggle" phx-target={@myself}>
           <div class="flex">
             <.exit_icon class="h-7 w-7 mr-3" fill="fill-orange-800" /> Leaving
