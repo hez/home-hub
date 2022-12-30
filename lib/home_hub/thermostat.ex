@@ -30,10 +30,12 @@ defmodule HomeHub.Thermostat do
   def start_heat, do: GenServer.cast(@name, {:set_heating, true})
   def stop_heat, do: GenServer.cast(@name, {:set_heating, false})
 
-  @spec(adjust_target_by(float()) :: :ok, {:error, atom()})
-  def adjust_target_by(value), do: set_target(status().target + value)
+  @spec adjust_target_by(float()) :: :ok | {:error, atom()}
+  def adjust_target_by(value) when is_float(value), do: set_target(status().target + value)
 
-  @spec(set_target(float()) :: :ok, {:error, atom()})
+  @spec set_target(float() | integer()) :: :ok | {:error, atom()}
+  def set_target(target) when is_integer(target), do: set_target(target / 1.0)
+
   def set_target(target) when target > @minimum_target and target <= @maximum_target do
     Logger.debug("#{target}", label: :new_target)
     GenServer.cast(@name, {:set_target, target})
