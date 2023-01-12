@@ -16,7 +16,7 @@ defmodule HomeHub.Thermostat do
   @name __MODULE__
 
   def start_link(_opts),
-    do: GenServer.start_link(@name, %{status: %Thermostat.Status{}}, name: @name)
+    do: GenServer.start_link(@name, %{status: Thermostat.Initializer.start_state()}, name: @name)
 
   @impl true
   def init(state) do
