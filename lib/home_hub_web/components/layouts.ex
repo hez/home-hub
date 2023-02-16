@@ -31,10 +31,7 @@ defmodule HomeHubWeb.Layouts do
     ~H"""
     <div class="text-4xl flex">
       <div><.tree_icon class="h-10 w-10 mr-4" fill="fill-green-600" /></div>
-      <div>
-        <b><%= Float.round(@sensors["outside-temp"].temperature, 1) %>&#176;C</b>
-        at <b><%= @sensors["outside-temp"].humidity |> Float.round(0) |> trunc() %>%</b>
-      </div>
+      <.temperature_display sensor={@sensors["outside-temp"]} />
     </div>
     """
   end
@@ -45,10 +42,7 @@ defmodule HomeHubWeb.Layouts do
     ~H"""
     <div class="text-4xl flex">
       <div><Heroicons.home class="h-10 w-10 mr-4 stroke-amber-600" /></div>
-      <div>
-        <b><%= Float.round(@status.temperature, 1) %>&#176;C</b>
-        at <b><%= @status.humidity |> Float.round(0) |> trunc() %>%</b>
-      </div>
+      <.temperature_display sensor={@status} />
     </div>
     """
   end
@@ -66,6 +60,21 @@ defmodule HomeHubWeb.Layouts do
     >
       <%= render_slot(@inner_block) %>
     </.link>
+    """
+  end
+
+  attr :sensor, :map, required: false
+
+  def temperature_display(assigns) do
+    ~H"""
+    <div>
+      <%= if not is_nil(@sensor) do %>
+        <b><%= Float.round(@sensor.temperature, 1) %>&#176;C</b>
+        at <b><%= @sensor.humidity |> Float.round(0) |> trunc() %>%</b>
+      <% else %>
+        n/a
+      <% end %>
+    </div>
     """
   end
 end
