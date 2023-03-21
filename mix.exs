@@ -33,7 +33,7 @@ defmodule HomeHub.MixProject do
   defp deps do
     [
       # Dev and test
-      {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
       {:floki, ">= 0.30.0", only: :test},
