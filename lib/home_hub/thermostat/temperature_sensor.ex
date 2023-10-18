@@ -31,7 +31,7 @@ defmodule HomeHub.Thermostat.TemperatureSensor do
       GenServer.cast(@name, {:set, measurements.temperature, measurements.humidity})
       Thermostat.PubSub.broadcast(:temperature, measurements)
     else
-      Logger.warn("Got invlaid measurements, throwing them away #{inspect(measurements)}")
+      Logger.warning("Got invlaid measurements, throwing them away #{inspect(measurements)}")
     end
   end
 

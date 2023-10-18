@@ -46,7 +46,7 @@ defmodule HomeHub.Thermostat.Supervisor do
     if HomeHub.ReportingConnection.configured?() do
       [HomeHub.Thermostat.Reporter]
     else
-      Logger.warn("no reporting connection config, not starting it")
+      Logger.warning("no reporting connection config, not starting it")
       []
     end
   end

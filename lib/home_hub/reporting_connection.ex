@@ -12,7 +12,7 @@ defmodule HomeHub.ReportingConnection do
         :ok
 
       error ->
-        Logger.warn(inspect(error))
+        Logger.warning(inspect(error))
         error
     end
   end
