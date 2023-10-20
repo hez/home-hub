@@ -1,14 +1,20 @@
 defmodule HomeHub.MixProject do
   use Mix.Project
 
+  @version "0.3.0"
+
   def project do
     [
       app: :home_hub,
-      version: "0.2.0",
-      elixir: "~> 1.14",
+      version: @version,
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      dialyzer: [
+        plt_add_apps: [:mix, :ex_unit],
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ],
       deps: deps()
     ]
   end
@@ -53,8 +59,8 @@ defmodule HomeHub.MixProject do
       {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_dashboard, "~> 0.7.2"},
-      {:phoenix_live_view, "~> 0.18.3"},
+      {:phoenix_live_dashboard, "~> 0.8"},
+      {:phoenix_live_view, "~> 0.20"},
       {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.6"},
       {:pid_controller, github: "hez/pid_controller", branch: "minmax"},
       {:pidex, github: "hez/pidex", branch: "feature/debug-touchups"},
