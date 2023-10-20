@@ -11,6 +11,10 @@ defmodule HomeHub.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      dialyzer: [
+        plt_add_apps: [:mix, :ex_unit],
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ],
       deps: deps()
     ]
   end
