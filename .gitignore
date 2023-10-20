@@ -46,3 +46,5 @@ home_hub.*
 # Private env file
 .envrc.private
 
+# dialyzer files
+/priv/plts/*.plt*
