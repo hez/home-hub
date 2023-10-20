@@ -45,7 +45,7 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 ### Kiosk
 
 - Set pi to auto login to gui
-- Copy chromium auto start `cp chromium_autostart.desktop ~/.config/autostart/`
+- Copy chromium auto start `cp browser_kiosk_autostart.desktop ~/.config/autostart/`
 - And reboot
 
 ## Pi config
@@ -54,4 +54,6 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 - Packages
 ```
 apt-get install libssl-dev automake autoconf
+# firefox for kiosk
+apt-get install firefox-esr
 ```
