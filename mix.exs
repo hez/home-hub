@@ -45,7 +45,7 @@ defmodule HomeHub.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # Everything else
-      {:circuits_gpio, "~> 1.0"},
+      {:circuits_gpio, "~> 2.0"},
       {:dht, "~> 0.1"},
       {:ecto_sql, "~> 3.6"},
       {:ecto_sqlite3, ">= 0.0.0"},
