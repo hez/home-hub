@@ -58,7 +58,7 @@ defmodule HomeHub.MixProject do
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
-      {:phoenix_html, "~> 3.0"},
+      {:phoenix_html, "~> 4.0"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_live_view, "~> 0.20"},
       {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.6"},
