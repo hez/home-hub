@@ -1,7 +1,9 @@
 defmodule HomeHub.Phoscon do
   require Logger
+
   def fetch, do: PhosconAPI.sensors()
 
+  @spec fetch_all() :: map()
   def fetch_all do
     case fetch() do
       {:ok, results} ->
@@ -9,6 +11,7 @@ defmodule HomeHub.Phoscon do
 
       err ->
         Logger.error(inspect(err))
+        %{}
     end
   end
 
