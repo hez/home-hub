@@ -8,13 +8,11 @@ defmodule HomeHub.ReportingConnection do
     humid_data = %{tags: %{host: tag_host()}, measurement: "humidity", fields: %{value: hum}}
 
     case write([temp_data, humid_data]) do
-      :ok ->
-        :ok
-
-      error ->
-        Logger.warning(inspect(error))
-        error
+      :ok -> Logger.debug("wrote to reporting connection")
+      error -> Logger.warning(inspect(error))
     end
+
+    :ok
   end
 
   def tag_host,
