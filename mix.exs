@@ -68,7 +68,7 @@ defmodule HomeHub.MixProject do
       {:rpi_screen_dimmer, github: "hez/rpi-screen-dimmer", tag: "v0.1.2", only: :prod},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:tzdata, "~> 1.1.0"}
     ]
