@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  armv7_job:
+    # The host should always be Linux
+    runs-on: ubuntu-22.04
+    name: Build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: uraimo/run-on-arch-action@v2
+        name: Run commands
+        id: runcmd
+        with:
+          arch: aarch64
+          distro: bullseye
+
+          # Not required, but speeds up builds by storing container images in
+          # a GitHub package registry.
+          githubToken: ${{ github.token }}
+
+          # Set an output parameter `uname` for use in subsequent steps
+          run: |
+            apt-get update -y
+            apt-get install -y build-essential curl git unzip libssl-dev automake autoconf libncurses5-dev
+            apt-get clean
+            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+            . "$HOME/.asdf/asdf.sh"
+            asdf plugin add elixir
+            asdf plugin add erlang
+            asdf plugin add direnv
+            rm -f /var/lib/apt/lists/*_*
+            asdf install
+            elixir -v
