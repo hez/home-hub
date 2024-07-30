@@ -14,7 +14,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: priv/plts
-          key: ${{runner.os}}-${{matrix.otp}}-${{matrix.elixir}}-plts
+          key: ${{runner.os}}-${{hashFiles('**/.tool-versions')}}-plts
 
       - name: Setup elixir
         uses: erlef/setup-beam@v1
