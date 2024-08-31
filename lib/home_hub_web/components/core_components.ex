@@ -10,10 +10,10 @@ defmodule HomeHubWeb.CoreComponents do
   [heroicons_elixir](https://github.com/mveytsman/heroicons_elixir) project.
   """
   use Phoenix.Component
+  use Gettext, backend: HomeHubWeb.Gettext
 
   alias Phoenix.HTML
   alias Phoenix.LiveView.JS
-  import HomeHubWeb.Gettext
 
   @doc """
   Renders a modal.

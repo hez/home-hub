@@ -43,8 +43,9 @@ defmodule HomeHubWeb do
         formats: [:html, :json],
         layouts: [html: HomeHubWeb.Layouts]
 
+      use Gettext, backend: HomeHubWeb.Gettext
+
       import Plug.Conn
-      import HomeHubWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -82,12 +83,13 @@ defmodule HomeHubWeb do
 
   defp html_helpers do
     quote do
+      use Gettext, backend: HomeHubWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
       import HomeHubWeb.CoreComponents
       import HomeHubWeb.AppComponents
-      import HomeHubWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
