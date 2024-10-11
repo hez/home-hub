@@ -13,10 +13,14 @@ defmodule HomeHub.Thermostat do
   @maximum_target 30
   @poll_interval 30 * 1000
 
+  @winter_start ~D[2000-10-01]
+  @winter_end ~D[2000-04-01]
+  @winter_target_temperature 16.0
+
   @name __MODULE__
 
   def start_link(_opts),
-    do: GenServer.start_link(@name, %{status: Thermostat.Initializer.start_state()}, name: @name)
+    do: GenServer.start_link(@name, %{status: initial_state()}, name: @name)
 
   @impl true
   def init(state) do
@@ -25,6 +29,7 @@ defmodule HomeHub.Thermostat do
     {:ok, state}
   end
 
+  @spec status() :: Thermostat.Status.t()
   def status, do: GenServer.call(@name, :status)
 
   def start_heat, do: GenServer.cast(@name, {:set_heating, true})
@@ -44,6 +49,21 @@ defmodule HomeHub.Thermostat do
 
   def set_target(_), do: {:error, :outside_range}
 
+  @spec initial_state() :: Thermostat.Status.t()
+  def initial_state do
+    if winter_mode?(Date.utc_today()) do
+      %Thermostat.Status{heating: true, target: @winter_target_temperature}
+    else
+      %Thermostat.Status{}
+    end
+  end
+
+  @spec winter_mode?(Date.t()) :: boolean()
+  def winter_mode?(date) do
+    Date.compare(date, %{@winter_start | year: date.year}) === :gt or
+      Date.compare(date, %{@winter_end | year: date.year}) === :lt
+  end
+
   @impl true
   def handle_call(:status, _from, state), do: {:reply, state.status, state}
 
@@ -58,7 +78,7 @@ defmodule HomeHub.Thermostat do
   @impl true
   def handle_cast({:set_target, new_target}, state) do
     state = update_status(state, :target, new_target)
-    Thermostat.PID.impl().update_set_point(new_target)
+    Thermostat.PID.update_set_point(new_target)
     Thermostat.PubSub.broadcast(:thermostat, {:target, new_target})
     Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
     {:noreply, state}
@@ -69,7 +89,7 @@ defmodule HomeHub.Thermostat do
       when heating or heater do
     Logger.debug("poll #{inspect(state)}")
 
-    output = Thermostat.PID.impl().output(status.temperature)
+    output = Thermostat.PID.output(status.temperature)
 
     state =
       state
@@ -100,7 +120,7 @@ defmodule HomeHub.Thermostat do
 
   @spec update_status(map(), atom(), any()) :: map()
   defp update_status(%{status: status} = state, key, value),
-    do: %{state | status: Map.put(status, key, value)}
+    do: %{state | status: Thermostat.Status.update(status, key, value)}
 
   defp queue_poll, do: Process.send_after(self(), :poll, @poll_interval)
 

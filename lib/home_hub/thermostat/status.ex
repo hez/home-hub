@@ -17,4 +17,8 @@ defmodule HomeHub.Thermostat.Status do
           temperature: float(),
           pid: float()
         }
+
+  @spec update(t(), atom(), any()) :: map()
+  def update(%__MODULE__{} = status, key, value),
+    do: Map.put(status, key, value)
 end
