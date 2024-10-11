@@ -14,17 +14,6 @@ defmodule HomeHubWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", HomeHubWeb do
-    pipe_through :api
-
-    scope "/homebridge" do
-      get "/status", HomebridgeController, :status
-      get "/targetHeatingCoolingState/:target", HomebridgeController, :heating_cooling_state
-      get "/targetTemperature/:target", HomebridgeController, :target_temperature
-      get "/targetRelativeHumidity/:target", HomebridgeController, :target_humidity
-    end
-  end
-
   scope "/", HomeHubWeb do
     pipe_through :browser
 
