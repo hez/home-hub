@@ -61,7 +61,7 @@ defmodule HomeHub.MixProject do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_live_view, "~> 0.20"},
-      {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.6"},
+      {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
       {:pid_controller, "~> 0.1.3"},
       {:pigpiox, github: "hez/pigpiox", runtime: false},
       {:plug_cowboy, "~> 2.5"},
