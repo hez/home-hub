@@ -16,7 +16,7 @@ defmodule HomeHub.Thermostat.Supervisor do
         temp_sensor_impl(opts),
         io_impl(opts),
         {Thermostat.PID, Keyword.get(opts, :pid_settings, [])},
-        Thermostat
+        {Thermostat, Keyword.get(opts, :settings, [])}
       ]
 
     Supervisor.init(children, strategy: :one_for_one)
