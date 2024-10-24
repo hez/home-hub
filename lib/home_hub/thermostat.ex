@@ -9,28 +9,37 @@ defmodule HomeHub.Thermostat do
 
   alias HomeHub.Thermostat
 
-  @minimum_target 10
-  @maximum_target 30
-  @poll_interval 30 * 1000
-
-  @winter_start ~D[2000-10-01]
-  @winter_end ~D[2000-04-01]
-  @winter_target_temperature 16.0
+  @default_options [
+    minimum_target: 10,
+    maximum_target: 30,
+    poll_interval: 30 * 1000,
+    winter_start: ~D[2000-10-01],
+    winter_end: ~D[2000-04-01],
+    winter_target_temperature: 16.0
+  ]
 
   @name __MODULE__
 
-  def start_link(_opts),
-    do: GenServer.start_link(@name, %{status: initial_state()}, name: @name)
+  def start_link(opts \\ []),
+    do: GenServer.start_link(@name, %{status: nil, options: opts}, name: @name)
 
   @impl true
   def init(state) do
-    queue_poll()
+    options = Keyword.merge(@default_options, state.options)
+    status = initial_status(options)
+    queue_poll(options)
     Thermostat.PubSub.subscribe(:temperature)
-    {:ok, state}
+    {:ok, %{state | status: status, options: options}}
   end
 
   @spec status() :: Thermostat.Status.t()
   def status, do: GenServer.call(@name, :status)
+
+  @spec options() :: Keyword.t()
+  def options, do: GenServer.call(@name, :options)
+
+  @spec options(atom()) :: any()
+  def options(key), do: Keyword.get(options(), key)
 
   def start_heat, do: GenServer.cast(@name, {:set_heating, true})
   def stop_heat, do: GenServer.cast(@name, {:set_heating, false})
@@ -41,31 +50,36 @@ defmodule HomeHub.Thermostat do
   @spec set_target(float() | integer()) :: :ok | {:error, atom()}
   def set_target(target) when is_integer(target), do: set_target(target / 1.0)
 
-  def set_target(target) when target > @minimum_target and target <= @maximum_target do
-    Logger.debug("#{target}", label: :new_target)
-    GenServer.cast(@name, {:set_target, target})
-    :ok
+  def set_target(target) do
+    if target > options(:minimum_target) and target <= options(:maximum_target) do
+      Logger.debug("#{target}", label: :new_target)
+      GenServer.cast(@name, {:set_target, target})
+      :ok
+    else
+      {:error, :outside_range}
+    end
   end
 
-  def set_target(_), do: {:error, :outside_range}
-
-  @spec initial_state() :: Thermostat.Status.t()
-  def initial_state do
-    if winter_mode?(Date.utc_today()) do
-      %Thermostat.Status{heating: true, target: @winter_target_temperature}
+  @spec initial_status(Keyword.t()) :: Thermostat.Status.t()
+  def initial_status(options) do
+    if winter_mode?(options, Date.utc_today()) do
+      %Thermostat.Status{heating: true, target: Keyword.get(options, :winter_target_temperature)}
     else
       %Thermostat.Status{}
     end
   end
 
-  @spec winter_mode?(Date.t()) :: boolean()
-  def winter_mode?(date) do
-    Date.compare(date, %{@winter_start | year: date.year}) === :gt or
-      Date.compare(date, %{@winter_end | year: date.year}) === :lt
+  @spec winter_mode?(Keyword.t(), Date.t()) :: boolean()
+  def winter_mode?(options, date) do
+    Date.compare(date, %{Keyword.get(options, :winter_start) | year: date.year}) === :gt or
+      Date.compare(date, %{Keyword.get(options, :winter_end) | year: date.year}) === :lt
   end
 
   @impl true
   def handle_call(:status, _from, state), do: {:reply, state.status, state}
+
+  @impl true
+  def handle_call(:options, _from, state), do: {:reply, state.options, state}
 
   @impl true
   def handle_cast({:set_heating, value}, state) when is_boolean(value) do
@@ -98,13 +112,13 @@ defmodule HomeHub.Thermostat do
       |> tap(&Logger.debug(inspect(&1), label: :new_state_from_poll))
 
     Thermostat.PubSub.broadcast(:thermostat_status, {:thermostat, state.status})
-    queue_poll()
+    queue_poll(state.options)
     {:noreply, state}
   end
 
   def handle_info(:poll, state) do
     Logger.debug("Heating, heater_on, fan_on all set to false, nothing to to.")
-    queue_poll()
+    queue_poll(state.options)
     {:noreply, state}
   end
 
@@ -122,7 +136,8 @@ defmodule HomeHub.Thermostat do
   defp update_status(%{status: status} = state, key, value),
     do: %{state | status: Thermostat.Status.update(status, key, value)}
 
-  defp queue_poll, do: Process.send_after(self(), :poll, @poll_interval)
+  defp queue_poll(options),
+    do: Process.send_after(self(), :poll, Keyword.get(options, :poll_interval, 30 * 1000))
 
   # Heating turned ON
   defp update_state_and_broadcast(%{status: %{heating: true, pid: pid_val}} = state)
