@@ -10,9 +10,9 @@ defmodule HomeHub.Thermostat.PID do
     output_limits: {-5.0, 5.0}
   ]
 
-  def start_link(settings) do
-    settings = Keyword.get(settings, :pid_settings, @default)
-    Agent.start_link(fn -> PidController.new(settings) end, name: __MODULE__)
+  def start_link(opts \\ []) do
+    opts = Keyword.merge(@default, opts)
+    Agent.start_link(fn -> PidController.new(opts) end, name: __MODULE__)
   end
 
   def value, do: Agent.get(__MODULE__, & &1)
