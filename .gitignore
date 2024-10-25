@@ -48,3 +48,6 @@ home_hub.*
 
 # dialyzer files
 /priv/plts/*.plt*
+
+# Logs
+/logs/home_hub.log

@@ -27,6 +27,7 @@ defmodule HomeHub.Application do
         HomeHub.Reporter
       ] ++ prod_children()
 
+    Logger.add_handlers(:home_hub)
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: HomeHub.Supervisor]
