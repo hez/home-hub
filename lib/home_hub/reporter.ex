@@ -1,11 +1,13 @@
-defmodule HomeHub.Thermostat.Reporter do
+defmodule HomeHub.Reporter do
   @moduledoc """
   Subscribes to the temperature updates and pushes them up to the InfluxDB.
   """
 
   use GenServer
-  alias HomeHub.Thermostat
   require Logger
+
+  alias HomeHub.ReportingConnection
+  alias HomeHub.Thermostat
 
   @name __MODULE__
 
@@ -21,7 +23,13 @@ defmodule HomeHub.Thermostat.Reporter do
   @impl true
   def handle_info(%{temperature: _, humidity: _} = vals, state) do
     Logger.debug("got new temp and hum, #{inspect(vals)}")
-    HomeHub.ReportingConnection.insert(vals)
+
+    if ReportingConnection.configured?() do
+      ReportingConnection.insert(vals)
+    else
+      Logger.info("Not reporting data, reporting connection not configured")
+    end
+
     {:noreply, state}
   end
 end

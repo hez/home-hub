@@ -13,8 +13,7 @@ defmodule HomeHub.Application do
         HomeHubWeb.Telemetry,
         # Start the Ecto repository
         HomeHub.Repo,
-        {HomeHub.Thermostat.Supervisor,
-         heater_io_config: [fan_pin: 17, heater_pin: 27, dht_pin: 18]},
+        {HomeHub.Thermostat.Supervisor, Application.get_env(:home_hub, :thermostat)},
         # Start the PubSub system
         {Phoenix.PubSub, name: HomeHub.PubSub},
         # Start Finch
@@ -24,7 +23,8 @@ defmodule HomeHub.Application do
         # Start a worker by calling: HomeHub.Worker.start_link(arg)
         # {HomeHub.Worker, arg}
         HomeHub.HAP.Supervisor,
-        HomeHub.Phoscon.Supervisor
+        HomeHub.Phoscon.Supervisor,
+        HomeHub.Reporter
       ] ++ prod_children()
 
     # See https://hexdocs.pm/elixir/Supervisor.html

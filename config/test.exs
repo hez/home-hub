@@ -28,3 +28,7 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :home_hub, :thermostat,
+  io_config: {HomeHub.Thermostat.DummyHeater, []},
+  sensor_config: {HomeHub.Thermostat.DummyTempSensor, []}

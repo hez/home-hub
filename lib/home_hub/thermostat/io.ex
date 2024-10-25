@@ -1,4 +1,4 @@
-defmodule HomeHub.Thermostat.HeaterIO do
+defmodule HomeHub.Thermostat.IO do
   @moduledoc """
   Interface to the GPIO pins that control the heater and fan.
   """
@@ -9,8 +9,8 @@ defmodule HomeHub.Thermostat.HeaterIO do
   @name __MODULE__
 
   def start_link(opts) do
-    {:ok, heater} = opts |> Keyword.get(:heater_pin) |> open_circuit()
-    {:ok, fan} = opts |> Keyword.get(:fan_pin) |> open_circuit()
+    {:ok, heater} = opts |> Keyword.fetch!(:heater_pin) |> open_circuit()
+    {:ok, fan} = opts |> Keyword.fetch!(:fan_pin) |> open_circuit()
 
     GenServer.start_link(@name, %{fan_circuit: fan, heater_circuit: heater}, name: @name)
   end

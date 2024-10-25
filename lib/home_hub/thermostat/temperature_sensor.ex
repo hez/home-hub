@@ -15,7 +15,7 @@ defmodule HomeHub.Thermostat.TemperatureSensor do
   @dht_poll_interval 60
 
   def start_link(opts) do
-    pin = Keyword.get(opts, :dht_pin)
+    pin = Keyword.fetch!(opts, :dht_pin)
     DHT.start_polling(pin, :dht22, @dht_poll_interval)
 
     GenServer.start_link(__MODULE__, %{temperatures: [], humiditys: []}, name: @name)
