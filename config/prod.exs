@@ -17,6 +17,21 @@ config :swoosh, :api_client, HomeHub.Finch
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :home_hub, :logger, [
+  {:handler, :file_log, :logger_std_h,
+   %{
+     config: %{
+       file: ~c"logs/home_hub.log",
+       filesync_repeat_interval: 5000,
+       file_check: 5000,
+       max_no_bytes: 10_000_000,
+       max_no_files: 5,
+       compress_on_rotate: true
+     },
+     formatter: Logger.Formatter.new()
+   }}
+]
+
 io_config = [fan_pin: 17, heater_pin: 27, dht_pin: 18]
 
 config :home_hub, :thermostat,
