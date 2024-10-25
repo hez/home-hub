@@ -13,7 +13,7 @@ defmodule HomeHub.Application do
         HomeHubWeb.Telemetry,
         # Start the Ecto repository
         HomeHub.Repo,
-        {HomeHub.Thermostat.Supervisor, io_config: [fan_pin: 17, heater_pin: 27, dht_pin: 18]},
+        {HomeHub.Thermostat.Supervisor, Application.get_env(:home_hub, :thermostat)},
         # Start the PubSub system
         {Phoenix.PubSub, name: HomeHub.PubSub},
         # Start Finch

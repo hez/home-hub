@@ -63,6 +63,10 @@ config :home_hub, HomeHubWeb.Endpoint,
 # Enable dev routes for dashboard and mailbox
 config :home_hub, dev_routes: true
 
+config :home_hub, :thermostat,
+  io_config: {HomeHub.Thermostat.DummyHeater, []},
+  sensor_config: {HomeHub.Thermostat.DummyTempSensor, []}
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

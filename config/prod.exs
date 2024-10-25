@@ -17,5 +17,11 @@ config :swoosh, :api_client, HomeHub.Finch
 # Do not print debug messages in production
 config :logger, level: :info
 
+io_config = [fan_pin: 17, heater_pin: 27, dht_pin: 18]
+
+config :home_hub, :thermostat,
+  io_config: {HomeHub.Thermostat.IO, io_config},
+  sensor_config: {HomeHub.Thermostat.TemperatureSensor, io_config}
+
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
