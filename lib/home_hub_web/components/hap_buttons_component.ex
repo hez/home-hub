@@ -17,17 +17,23 @@ defmodule HomeHubWeb.HAPButtonsComponent do
     <div class="flex py-6 justify-center">
       <div class="grid grid-cols-3 gap-6">
         <.hap_button name="hap_switch_1" event="0" phx-click="press" phx-target={@myself}>
-          <.exit_icon class="h-7 w-7 mr-3" fill="fill-orange-800" /> Leaving
+          <.sunrise_icon class="h-7 w-7 mr-3" fill="fill-yellow-300" /> Morning
         </.hap_button>
         <.hap_button name="hap_switch_1" event="1" phx-click="press" phx-target={@myself}>
-          <Heroicons.moon outline class="h-7 w-7 mr-3" /> Bed Time
+          <Heroicons.cube outline class="h-7 w-7 mr-3" /> "All"
         </.hap_button>
         <.hap_button name="hap_switch_1" event="2" phx-click="press" phx-target={@myself}>
-          <.sunrise_icon class="h-7 w-7 mr-3" fill="fill-yellow-300" /> Morning
+          <.exit_icon class="h-7 w-7 mr-3" fill="fill-black-500" /> Leaving
         </.hap_button>
 
         <.hap_button name="hap_switch_2" event="0" phx-click="press" phx-target={@myself}>
           <.lamp_icon class="h-7 w-7 mr-3" fill="fill-yellow-500" /> Lamps
+        </.hap_button>
+        <.hap_button name="hap_switch_2" event="1" phx-click="press" phx-target={@myself}>
+          <Heroicons.light_bulb outline class="h-7 w-7 mr-3 stroke-orange-700" /> Entry
+        </.hap_button>
+        <.hap_button name="hap_switch_2" event="2" phx-click="press" phx-target={@myself}>
+          <Heroicons.film outline class="h-7 w-7 mr-3 stroke-yellow-300" /> Movie
         </.hap_button>
       </div>
     </div>
