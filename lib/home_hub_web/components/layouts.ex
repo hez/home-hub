@@ -30,7 +30,7 @@ defmodule HomeHubWeb.Layouts do
   def outside_temperature(assigns) do
     ~H"""
     <div class="text-4xl flex">
-      <div><.tree_icon class="h-10 w-10 mr-4" fill="fill-green-600" /></div>
+      <div><.tree_icon class="h-10 w-10 mr-4 fill-green-600" /></div>
       <.temperature_display sensor={@sensors["outside-temp"]} />
     </div>
     """
