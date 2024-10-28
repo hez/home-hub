@@ -8,7 +8,7 @@ defmodule HomeHubWeb.AppComponents do
   #    router: HomeHubWeb.Router,
   #    statics: HomeHubWeb.static_paths()
 
-  @default_icon_classes "h-12 w-12"
+  @default_icon_size "h-12 w-12"
 
   attr :phx_click, :string, default: "", required: false
   attr :phx_target, :string, default: nil, required: false
@@ -19,9 +19,9 @@ defmodule HomeHubWeb.AppComponents do
     ~H"""
     <div class="px-4 py-2" phx-click={@phx_click} phx-target={@phx_target}>
       <%= if @on do %>
-        <.on_toggle_icon fill="fill-orange-500" />
+        <.on_toggle_icon class="fill-orange-500" />
       <% else %>
-        <.off_toggle_icon fill="fill-blue-500" />
+        <.off_toggle_icon class="fill-blue-500" />
       <% end %>
     </div>
 
@@ -31,13 +31,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def on_toggle_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-toggle-on #{@class} #{@fill}"}
+      class={["bi bi-toggle-on", @class, @icon_size]}
       width="1em"
       height="1em"
       viewBox="0 0 16 16"
@@ -52,13 +52,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def off_toggle_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-toggle-off #{@class} #{@fill}"}
+      class={["bi bi-toggle-off", @class, @icon_size]}
       width="1em"
       height="1em"
       viewBox="0 0 16 16"
@@ -73,13 +73,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def fan_icon(assigns) do
     ~H"""
     <svg
-      class={"#{@class} #{@fill}"}
+      class={[@class, @icon_size]}
       version="1.1"
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
@@ -108,13 +108,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def fire_icon(assigns) do
     ~H"""
     <svg
-      class={"#{@class} #{@fill}"}
+      class={[@class, @icon_size]}
       version="1.1"
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
@@ -143,13 +143,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def caret_down_filled_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-down-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-down-square-fill", @class, @icon_size]}
       width="1em"
       height="1em"
       viewBox="0 0 16 16"
@@ -164,13 +164,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def caret_up_filled_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-up-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-up-square-fill", @class, @icon_size]}
       width="1em"
       height="1em"
       viewBox="0 0 16 16"
@@ -185,13 +185,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def lamp_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-up-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-up-square-fill", @class, @icon_size]}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 451.541 451.541"
@@ -207,13 +207,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def exit_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-up-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-up-square-fill", @class, @icon_size]}
       version="1.1"
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
@@ -240,13 +240,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def sunrise_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-up-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-up-square-fill", @class, @icon_size]}
       viewBox="0 0 16 16"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
@@ -256,13 +256,13 @@ defmodule HomeHubWeb.AppComponents do
     """
   end
 
-  attr :class, :string, default: @default_icon_classes, required: false
-  attr :fill, :string, default: "gray-500", required: false
+  attr :class, :string, default: nil
+  attr :icon_size, :string, default: @default_icon_size
 
   def tree_icon(assigns) do
     ~H"""
     <svg
-      class={"bi bi-caret-up-square-fill #{@class} #{@fill}"}
+      class={["bi bi-caret-up-square-fill", @class, @icon_size]}
       fill="currentColor"
       version="1.1"
       id="Layer_1"

@@ -37,16 +37,16 @@ defmodule HomeHubWeb.ThermostatComponent do
       </.toggle>
 
       <div class="px-4 py-2">
-        <.fire_icon fill={if @status.heater_on, do: "fill-red-600", else: "fill-gray-500"} />
+        <.fire_icon class={if @status.heater_on, do: "fill-red-600", else: "fill-gray-500"} />
       </div>
 
       <div class="px-4 py-2">
-        <.fan_icon fill={if @status.fan_on, do: "fill-blue-600", else: "fill-gray-500"} />
+        <.fan_icon class={if @status.fan_on, do: "fill-blue-600", else: "fill-gray-500"} />
       </div>
 
       <%= if @status.heating do %>
         <div class="px-4 py-2" phx-click="target_down" phx-target={@myself}>
-          <.caret_down_filled_icon fill="fill-blue-600" />
+          <.caret_down_filled_icon class="fill-blue-600" />
         </div>
 
         <div class={"px-4 py-2 text-4xl#{if @status.target > @status.temperature, do: " text-red-600"}"}>
@@ -54,7 +54,7 @@ defmodule HomeHubWeb.ThermostatComponent do
         </div>
 
         <div class="px-4 py-2" phx-click="target_up" phx-target={@myself}>
-          <.caret_up_filled_icon fill="fill-blue-600" />
+          <.caret_up_filled_icon class="fill-blue-600" />
         </div>
       <% end %>
     </div>
