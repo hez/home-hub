@@ -26,7 +26,7 @@ defmodule HomeHubWeb.AppComponents do
     </div>
 
     <div class="px-4 py-2 text-4xl" phx-click={@phx_click} phx-target={@phx_target}>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </div>
     """
   end

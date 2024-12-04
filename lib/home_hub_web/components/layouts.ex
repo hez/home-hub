@@ -58,7 +58,7 @@ defmodule HomeHubWeb.Layouts do
       class={"text-center block rounded text-3xl py-2 px-4 text-blue-300 #{if @active, do: "bg-black-100", else: "bg-gray-800 border-gray-800 hover:border-gray-200 hover:bg-gray-200"}"}
       aria-current={if @active, do: "true", else: "false"}
     >
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </.link>
     """
   end
@@ -69,8 +69,8 @@ defmodule HomeHubWeb.Layouts do
     ~H"""
     <div>
       <%= if not is_nil(@sensor) do %>
-        <b><%= Float.round(@sensor.temperature, 1) %>&#176;C</b>
-        at <b><%= @sensor.humidity |> Float.round(0) |> trunc() %>%</b>
+        <b>{Float.round(@sensor.temperature, 1)}&#176;C</b>
+        at <b>{@sensor.humidity |> Float.round(0) |> trunc()}%</b>
       <% else %>
         n/a
       <% end %>
