@@ -50,7 +50,7 @@ defmodule HomeHubWeb.ThermostatComponent do
         </div>
 
         <div class={"px-4 py-2 text-4xl#{if @status.target > @status.temperature, do: " text-red-600"}"}>
-          <%= @status.target %>&#176;C
+          {@status.target}&#176;C
         </div>
 
         <div class="px-4 py-2" phx-click="target_up" phx-target={@myself}>

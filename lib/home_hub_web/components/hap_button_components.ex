@@ -21,7 +21,7 @@ defmodule HomeHubWeb.HAPButtonComponents do
       {@rest}
     >
       <div class="flex">
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </div>
     </button>
     """
