@@ -1,4 +1,4 @@
-defmodule HomeHub.Thermostat do
+defmodule Thermostat do
   @moduledoc """
   `Thermostat`
   """
@@ -6,8 +6,6 @@ defmodule HomeHub.Thermostat do
   use GenServer
 
   require Logger
-
-  alias HomeHub.Thermostat
 
   @default_options [
     minimum_target: 10,

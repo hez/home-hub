@@ -2,7 +2,6 @@ defmodule HomeHubWeb.CurrentLive do
   @moduledoc false
   use HomeHubWeb, :live_view
   require Logger
-  alias HomeHub.Thermostat
 
   @impl true
   def mount(_params, _session, socket) do

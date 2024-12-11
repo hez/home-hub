@@ -1,15 +1,16 @@
-defmodule HomeHubWeb.ThermostatComponent do
+defmodule ThermostatWeb.LiveComponent do
   @moduledoc false
-  use HomeHubWeb, :live_component
+  use Phoenix.LiveComponent
+  import ThermostatWeb.Components
 
   @adjustment_amount 0.5
 
   @impl true
   def handle_event("furnace_toggle", _, socket) do
     if socket.assigns.status.heating do
-      HomeHub.Thermostat.stop_heat()
+      Thermostat.stop_heat()
     else
-      HomeHub.Thermostat.start_heat()
+      Thermostat.start_heat()
     end
 
     {:noreply, socket}
@@ -17,13 +18,13 @@ defmodule HomeHubWeb.ThermostatComponent do
 
   @impl true
   def handle_event("target_down", _, socket) do
-    HomeHub.Thermostat.adjust_target_by(-@adjustment_amount)
+    Thermostat.adjust_target_by(-@adjustment_amount)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("target_up", _, socket) do
-    HomeHub.Thermostat.adjust_target_by(@adjustment_amount)
+    Thermostat.adjust_target_by(@adjustment_amount)
     {:noreply, socket}
   end
 

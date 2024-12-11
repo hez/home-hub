@@ -1,11 +1,10 @@
-defmodule HomeHub.Thermostat.TemperatureSensor do
+defmodule Thermostat.TemperatureSensor do
   @moduledoc """
   Starts the DHT service and subscribes to the DHT telemetry messages
   rebroadcasting them in to the Thermostat.PubSub.
   """
   use GenServer
   require Logger
-  alias HomeHub.Thermostat
 
   @name __MODULE__
   @max_num_values 10
@@ -59,7 +58,7 @@ defmodule HomeHub.Thermostat.TemperatureSensor do
   defp attach do
     :ok =
       :telemetry.attach(
-        "homehub-tempprob-server",
+        "tempprob-server",
         [:dht, :read],
         &__MODULE__.set_temp/4,
         nil

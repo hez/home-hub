@@ -1,5 +1,15 @@
-defmodule HomeHub.Thermostat.Status do
-  @moduledoc false
+defmodule Thermostat.Status do
+  @moduledoc """
+  Struct representing the thermostats current state.
+
+  fan_on: is the fan running?
+  heater_on: is the furnace running?
+  heating: is heating mode on?
+  humidity: last humidity polled
+  target: target heating/cooling temp
+  temperature: last temperature polled
+  pid: last pid value recorded
+  """
   defstruct fan_on: false,
             heater_on: false,
             heating: false,

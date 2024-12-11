@@ -1,5 +1,5 @@
 if Mix.env() == :test or Mix.env() == :dev do
-  defmodule HomeHub.Thermostat.DummyHeater do
+  defmodule Thermostat.DummyHeater do
     @moduledoc false
     use GenServer
     require Logger

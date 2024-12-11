@@ -18,7 +18,7 @@ defmodule HomeHubWeb.Router do
     pipe_through :browser
 
     live_session :default,
-      on_mount: [HomeHubWeb.Nav, HomeHubWeb.ThermostatStatus, HomeHubWeb.SensorStatus] do
+      on_mount: [HomeHubWeb.Nav, ThermostatWeb.StatusComponent, HomeHubWeb.SensorStatus] do
       live "/", DashboardLive
       live "/current", CurrentLive
     end

@@ -7,7 +7,6 @@ defmodule HomeHub.Reporter do
   require Logger
 
   alias HomeHub.ReportingConnection
-  alias HomeHub.Thermostat
 
   @name __MODULE__
 
