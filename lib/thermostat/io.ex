@@ -1,9 +1,8 @@
-defmodule HomeHub.Thermostat.IO do
+defmodule Thermostat.IO do
   @moduledoc """
   Interface to the GPIO pins that control the heater and fan.
   """
   use GenServer
-  alias HomeHub.Thermostat
   require Logger
 
   @name __MODULE__
@@ -39,5 +38,5 @@ defmodule HomeHub.Thermostat.IO do
   def write(circuit, true), do: Circuits.GPIO.write(circuit, 1)
   def write(circuit, false), do: Circuits.GPIO.write(circuit, 0)
 
-  defp open_circuit(pin), do: Circuits.GPIO.open(pin, :output)
+  def open_circuit(pin), do: Circuits.GPIO.open(pin, :output)
 end

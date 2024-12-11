@@ -1,8 +1,7 @@
-defmodule HomeHub.Thermostat.Supervisor do
+defmodule Thermostat.Supervisor do
   @moduledoc false
   use Supervisor
   require Logger
-  alias HomeHub.Thermostat
 
   @name __MODULE__
 

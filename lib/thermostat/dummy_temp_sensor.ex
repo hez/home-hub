@@ -1,8 +1,7 @@
 if Mix.env() == :test or Mix.env() == :dev do
-  defmodule HomeHub.Thermostat.DummyTempSensor do
+  defmodule Thermostat.DummyTempSensor do
     @moduledoc false
     use GenServer
-    alias HomeHub.Thermostat
 
     @poll_interval 10_000
     @name __MODULE__
@@ -20,7 +19,7 @@ if Mix.env() == :test or Mix.env() == :dev do
       queue_poll()
 
       new_t =
-        case HomeHub.Thermostat.status().heater_on do
+        case Thermostat.status().heater_on do
           true -> state.temperature + :rand.uniform(2) / 10
           false -> state.temperature - :rand.uniform(2) / 10
         end

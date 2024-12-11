@@ -32,11 +32,9 @@ config :home_hub, :logger, [
    }}
 ]
 
-io_config = [fan_pin: 17, heater_pin: 27, dht_pin: 18]
-
 config :home_hub, :thermostat,
-  io_config: {HomeHub.Thermostat.IO, io_config},
-  sensor_config: {HomeHub.Thermostat.TemperatureSensor, io_config}
+  io_config: {Thermostat.SimpleHeaterIO, [heater_pin: 27]},
+  sensor_config: {Thermostat.TemperatureSensor, [dht_pin: 18]}
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.

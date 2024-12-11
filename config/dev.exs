@@ -64,8 +64,8 @@ config :home_hub, HomeHubWeb.Endpoint,
 config :home_hub, dev_routes: true
 
 config :home_hub, :thermostat,
-  io_config: {HomeHub.Thermostat.DummyHeater, []},
-  sensor_config: {HomeHub.Thermostat.DummyTempSensor, []}
+  io_config: {Thermostat.DummyHeater, []},
+  sensor_config: {Thermostat.DummyTempSensor, []}
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console,

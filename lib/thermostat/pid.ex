@@ -1,8 +1,8 @@
-defmodule HomeHub.Thermostat.PID do
+defmodule Thermostat.PID do
   use Agent
 
   @default [
-    # setpoint: 0.0,
+    setpoint: 16.0,
     kp: 0.2,
     ki: 0.1,
     # kd: 0.0

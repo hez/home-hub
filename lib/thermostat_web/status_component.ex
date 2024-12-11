@@ -1,7 +1,6 @@
-defmodule HomeHubWeb.ThermostatStatus do
+defmodule ThermostatWeb.StatusComponent do
   import Phoenix.LiveView
   use Phoenix.Component
-  alias HomeHub.Thermostat
 
   def on_mount(:default, _params, _session, socket) do
     if connected?(socket) do

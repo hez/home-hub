@@ -7,34 +7,33 @@ defmodule HomeHub.HAP.Thermostat do
 
   use GenServer
   require Logger
-  alias HomeHub.Thermostat.PubSub
 
   def start_link(config),
     do: GenServer.start_link(__MODULE__, config, name: __MODULE__)
 
   @impl HAP.ValueStore
   def get_value(:active), do: {:ok, 1}
-  def get_value(:current_temp), do: {:ok, Float.round(HomeHub.Thermostat.status().temperature, 1)}
+  def get_value(:current_temp), do: {:ok, Float.round(Thermostat.status().temperature, 1)}
 
   def get_value(:current_humidity),
-    do: {:ok, Float.round(HomeHub.Thermostat.status().humidity, 0)}
+    do: {:ok, Float.round(Thermostat.status().humidity, 0)}
 
   # 0 Off
   # 1 Heating
   # 2 Cooling
   def get_value(:current_state),
-    do: if(HomeHub.Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
+    do: if(Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
 
   # 0 Off
   # 1 Heat (if current temperature is below the target temperature then turn on heating)
   # 2 Cooling (if current temperature is above the target temperature then turn on cooling)
   # 3 Auto (turn on heating or cooling to maintain temperature within the target temperatures)
   def get_value(:target_state),
-    do: if(HomeHub.Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
+    do: if(Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
 
   def get_value(:temp_display_units), do: {:ok, 0}
 
-  def get_value(:target_temp), do: {:ok, Float.round(HomeHub.Thermostat.status().target, 1)}
+  def get_value(:target_temp), do: {:ok, Float.round(Thermostat.status().target, 1)}
 
   def get_value(opts) do
     Logger.error("illegal get_value #{inspect(opts)}")
@@ -43,17 +42,17 @@ defmodule HomeHub.HAP.Thermostat do
 
   @impl HAP.ValueStore
   def put_value(1, :target_state) do
-    HomeHub.Thermostat.start_heat()
+    Thermostat.start_heat()
     :ok
   end
 
   def put_value(0, :target_state) do
-    HomeHub.Thermostat.stop_heat()
+    Thermostat.stop_heat()
     :ok
   end
 
   def put_value(value, :target_temp) do
-    HomeHub.Thermostat.set_target(value)
+    Thermostat.set_target(value)
     :ok
   end
 
@@ -73,7 +72,7 @@ defmodule HomeHub.HAP.Thermostat do
 
   @impl GenServer
   def init(_) do
-    PubSub.subscribe(:thermostat)
+    Thermostat.PubSub.subscribe(:thermostat)
     {:ok, %{change_tokens: %{}}}
   end
 

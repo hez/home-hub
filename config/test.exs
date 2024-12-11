@@ -30,5 +30,5 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :home_hub, :thermostat,
-  io_config: {HomeHub.Thermostat.DummyHeater, []},
-  sensor_config: {HomeHub.Thermostat.DummyTempSensor, []}
+  io_config: {Thermostat.DummyHeater, []},
+  sensor_config: {Thermostat.DummyTempSensor, []}
