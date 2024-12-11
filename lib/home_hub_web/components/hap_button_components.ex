@@ -27,7 +27,7 @@ defmodule HomeHubWeb.HAPButtonComponents do
     """
   end
 
-  @icon_size "h-7 w-7"
+  @icon_size "h-10 w-10"
   @icon_margin "mr-3"
 
   Enum.each(~w(light_bulb cube film), fn icon_name ->
