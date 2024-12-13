@@ -7,10 +7,15 @@ defmodule Thermostat do
 
   require Logger
 
+  alias Thermostat.Status
+
+  @poll_interval 30 * 1000
   @default_options [
     minimum_target: 10,
     maximum_target: 30,
-    poll_interval: 30 * 1000,
+    # Minimum heater runtime in minutes
+    minimum_runtime: nil,
+    poll_interval: @poll_interval,
     winter_start: ~D[2000-10-01],
     winter_end: ~D[2000-04-01],
     winter_target_temperature: 16.0
@@ -30,7 +35,7 @@ defmodule Thermostat do
     {:ok, %{state | status: status, options: options}}
   end
 
-  @spec status() :: Thermostat.Status.t()
+  @spec status() :: Status.t()
   def status, do: GenServer.call(@name, :status)
 
   @spec options() :: Keyword.t()
@@ -58,12 +63,12 @@ defmodule Thermostat do
     end
   end
 
-  @spec initial_status(Keyword.t()) :: Thermostat.Status.t()
+  @spec initial_status(Keyword.t()) :: Status.t()
   def initial_status(options) do
     if winter_mode?(options, Date.utc_today()) do
-      %Thermostat.Status{heating: true, target: Keyword.get(options, :winter_target_temperature)}
+      %Status{heating: true, target: Keyword.get(options, :winter_target_temperature)}
     else
-      %Thermostat.Status{}
+      %Status{}
     end
   end
 
@@ -97,8 +102,7 @@ defmodule Thermostat do
   end
 
   @impl true
-  def handle_info(:poll, %{status: %{heating: heating, heater_on: heater} = status} = state)
-      when heating or heater do
+  def handle_info(:poll, %{status: %Status{heating: true} = status} = state) do
     Logger.debug("poll #{inspect(state)}")
 
     output = Thermostat.PID.output(status.temperature)
@@ -114,14 +118,14 @@ defmodule Thermostat do
     {:noreply, state}
   end
 
-  def handle_info(:poll, state) do
+  def handle_info(:poll, %{} = state) do
     Logger.debug("Heating, heater_on, fan_on all set to false, nothing to to.")
     queue_poll(state.options)
     {:noreply, state}
   end
 
   @impl true
-  def handle_info(%{temperature: new_t, humidity: new_h}, state) do
+  def handle_info(%{temperature: new_t, humidity: new_h}, %{} = state) do
     Logger.debug("got new temp and hum, #{new_t} / #{new_h}")
     state = state |> update_status(:temperature, new_t) |> update_status(:humidity, new_h)
     Thermostat.PubSub.broadcast(:thermostat, {:humidity, new_t})
@@ -131,21 +135,47 @@ defmodule Thermostat do
   end
 
   @spec update_status(map(), atom(), any()) :: map()
-  defp update_status(%{status: status} = state, key, value),
+  defp update_status(%{status: %Status{} = status} = state, key, value) when is_atom(key),
     do: %{state | status: Thermostat.Status.update(status, key, value)}
 
-  defp queue_poll(options),
-    do: Process.send_after(self(), :poll, Keyword.get(options, :poll_interval, 30 * 1000))
+  defp queue_poll(options) when is_list(options),
+    do: Process.send_after(self(), :poll, Keyword.get(options, :poll_interval, @poll_interval))
 
   # Heating turned ON
-  defp update_state_and_broadcast(%{status: %{heating: true, pid: pid_val}} = state)
+  defp update_state_and_broadcast(%{status: %Status{heating: true, pid: pid_val}} = state)
        when pid_val > 0 do
     Thermostat.PubSub.broadcast(:heater, {:heater, true})
-    state |> update_status(:heater_on, true)
+
+    state.status.heater_on
+    |> case do
+      false -> state |> update_status(:heater_started_at, DateTime.utc_now())
+      _ -> state
+    end
+    |> update_status(:heater_on, true)
   end
 
-  defp update_state_and_broadcast(state) do
-    Thermostat.PubSub.broadcast(:heater, {:heater, false})
-    state |> update_status(:heater_on, false)
+  defp update_state_and_broadcast(%{} = state) do
+    case can_shutdown?(state) do
+      true ->
+        Thermostat.PubSub.broadcast(:heater, {:heater, false})
+        state |> update_status(:heater_on, false) |> update_status(:heater_started_at, nil)
+
+      false ->
+        Logger.warning("Can't shutdown heater yet")
+        state
+    end
+  end
+
+  defp can_shutdown?(%{options: options, status: %Status{} = status}) do
+    with true <- status.heating,
+         true <- status.heater_on,
+         heater_started_at when not is_nil(heater_started_at) <- status.heater_started_at,
+         min_rt when not is_nil(min_rt) <- Keyword.get(options, :minimum_runtime) do
+      heater_started_at
+      |> DateTime.shift(minute: min_rt)
+      |> DateTime.compare(DateTime.utc_now()) == :lt
+    else
+      _ -> true
+    end
   end
 end

@@ -12,6 +12,7 @@ defmodule Thermostat.Status do
   """
   defstruct fan_on: false,
             heater_on: false,
+            heater_started_at: nil,
             heating: false,
             humidity: 0.0,
             target: 15.0,
@@ -21,6 +22,7 @@ defmodule Thermostat.Status do
   @type t :: %__MODULE__{
           fan_on: boolean(),
           heater_on: boolean(),
+          heater_started_at: nil | DateTime.t(),
           heating: boolean(),
           humidity: float(),
           target: float(),

@@ -9,6 +9,7 @@ defmodule Thermostat.PubSub do
   }
 
   def subscribe(topic), do: Phoenix.PubSub.subscribe(__MODULE__, topic_name(topic))
-  def topic_name(name), do: @topics[name]
+  def topic_name(name) when is_atom(name), do: @topics[name]
+  def topic_name(name) when is_binary(name), do: name
   def broadcast(topic, event), do: Phoenix.PubSub.broadcast(__MODULE__, topic_name(topic), event)
 end
