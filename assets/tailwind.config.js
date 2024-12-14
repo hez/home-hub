@@ -8,7 +8,7 @@ module.exports = {
     "./js/**/*.js",
     "../lib/*_web.ex",
     "../lib/*_web/**/*.*ex",
-    "../lib/thermostat/*.ex"
+    "../lib/thermostat_web/*.ex"
   ],
   theme: {
     extend: {
