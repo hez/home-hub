@@ -2,8 +2,17 @@
   <.navigation_tabs active_tab={@active_tab} />
   <section class="container">
     <div class="flex justify-between m-4">
-      <.outside_temperature sensors={@sensors} />
-      <.thermostat_temperature status={@status} />
+      <div class="text-4xl flex">
+        <div><.tree_icon class="h-10 w-10 mr-4 fill-green-600" /></div>
+        <.temperature_display sensor={@sensors["outside-temp"]} />
+      </div>
+
+      <div class="text-4xl flex">
+        <div>
+          <.icon name="hero-home-solid" class="h-10 w-10 mr-4 text-amber-600" />
+        </div>
+        <.temperature_display sensor={@status} />
+      </div>
     </div>
   </section>
 </header>

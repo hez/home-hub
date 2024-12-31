@@ -1,5 +1,6 @@
 defmodule HomeHubWeb.Layouts do
   use HomeHubWeb, :html
+  import ExThermostatWeb.LiveComponent, only: [temperature_display: 1]
 
   embed_templates "layouts/*"
 
@@ -25,28 +26,6 @@ defmodule HomeHubWeb.Layouts do
     """
   end
 
-  attr :sensors, :map, required: false
-
-  def outside_temperature(assigns) do
-    ~H"""
-    <div class="text-4xl flex">
-      <div><.tree_icon class="h-10 w-10 mr-4 fill-green-600" /></div>
-      <.temperature_display sensor={@sensors["outside-temp"]} />
-    </div>
-    """
-  end
-
-  attr :status, :map, required: false
-
-  def thermostat_temperature(assigns) do
-    ~H"""
-    <div class="text-4xl flex">
-      <div><Heroicons.home class="h-10 w-10 mr-4 stroke-amber-600" /></div>
-      <.temperature_display sensor={@status} />
-    </div>
-    """
-  end
-
   slot :inner_block, required: true
   attr :to, :string, required: true
   attr :active, :boolean, default: false, required: false
@@ -60,21 +39,6 @@ defmodule HomeHubWeb.Layouts do
     >
       {render_slot(@inner_block)}
     </.link>
-    """
-  end
-
-  attr :sensor, :map, required: false
-
-  def temperature_display(assigns) do
-    ~H"""
-    <div>
-      <%= if not is_nil(@sensor) do %>
-        <b>{Float.round(@sensor.temperature, 1)}&#176;C</b>
-        at <b>{@sensor.humidity |> Float.round(0) |> trunc()}%</b>
-      <% else %>
-        n/a
-      <% end %>
-    </div>
     """
   end
 end

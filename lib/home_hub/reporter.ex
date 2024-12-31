@@ -15,7 +15,7 @@ defmodule HomeHub.Reporter do
   @impl true
   def init(state) do
     Logger.debug("Starting")
-    Thermostat.PubSub.subscribe(:temperature)
+    ExThermostat.PubSub.subscribe(:temperature)
     {:ok, state}
   end
 

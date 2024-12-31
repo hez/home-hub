@@ -360,7 +360,7 @@ defmodule HomeHubWeb.CoreComponents do
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
-      ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -447,8 +447,8 @@ defmodule HomeHubWeb.CoreComponents do
   ## Examples
 
       <.table id="users" rows={@users}>
-        <:col :let={user} label="id"><%= user.id %></:col>
-        <:col :let={user} label="username"><%= user.username %></:col>
+        <:col :let={user} label="id">{user.id}</:col>
+        <:col :let={user} label="username">{user.username}</:col>
       </.table>
   """
   attr :id, :string, required: true
@@ -525,8 +525,8 @@ defmodule HomeHubWeb.CoreComponents do
   ## Examples
 
       <.list>
-        <:item title="Title"><%= @post.title %></:item>
-        <:item title="Views"><%= @post.views %></:item>
+        <:item title="Title">{@post.title}</:item>
+        <:item title="Views">{@post.views}</:item>
       </.list>
   """
   slot :item, required: true do
@@ -661,9 +661,9 @@ defmodule HomeHubWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(TestTestWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(HomeHubWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(TestTestWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(HomeHubWeb.Gettext, "errors", msg, opts)
     end
   end
 

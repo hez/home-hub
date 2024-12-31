@@ -30,17 +30,6 @@ defmodule HomeHubWeb.HAPButtonComponents do
   @icon_size "h-10 w-10"
   @icon_margin "mr-3"
 
-  Enum.each(~w(light_bulb cube film), fn icon_name ->
-    attr :icon_size, :string, default: @icon_size
-    attr :icon_margin, :string, default: @icon_margin
-    attr :class, :string, default: nil
-
-    @function String.to_atom(icon_name)
-
-    def unquote(:"hap_icon_#{icon_name}")(assigns),
-      do: apply(Heroicons, @function, [assign_merge(assigns, :class, [:icon_size, :icon_margin])])
-  end)
-
   Enum.each(~w(lamp exit sunrise), fn icon_name ->
     attr :icon_size, :string, default: @icon_size
     attr :icon_margin, :string, default: @icon_margin

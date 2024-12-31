@@ -7,21 +7,24 @@ defmodule HomeHub.Application do
 
   @impl true
   def start(_type, _args) do
+    # Start the Telemetry supervisor
+    # Start the Ecto repository
+    # Start the PubSub system
+    # Start Finch
+    # Start the Endpoint (http/https)
+    # Start a worker by calling: HomeHub.Worker.start_link(arg)
+    # {HomeHub.Worker, arg}
+    thermostat_settings =
+      Application.get_env(:home_hub, :thermostat) |> append_thermostat_status()
+
     children =
       [
-        # Start the Telemetry supervisor
         HomeHubWeb.Telemetry,
-        # Start the Ecto repository
         HomeHub.Repo,
-        {Thermostat.Supervisor, Application.get_env(:home_hub, :thermostat)},
-        # Start the PubSub system
+        {ExThermostat.Supervisor, thermostat_settings},
         {Phoenix.PubSub, name: HomeHub.PubSub},
-        # Start Finch
         {Finch, name: HomeHub.Finch},
-        # Start the Endpoint (http/https)
         HomeHubWeb.Endpoint,
-        # Start a worker by calling: HomeHub.Worker.start_link(arg)
-        # {HomeHub.Worker, arg}
         HomeHub.HAP.Supervisor,
         HomeHub.Phoscon.Supervisor,
         HomeHub.Reporter
@@ -40,6 +43,31 @@ defmodule HomeHub.Application do
   def config_change(changed, _new, removed) do
     HomeHubWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  @spec append_thermostat_status(Keyword.t()) :: Keyword.t()
+  def append_thermostat_status(options) do
+    options = Keyword.put_new(options, :settings, [])
+
+    status =
+      if Keyword.get(options, :winter_mode_enabled, true) and
+           winter_mode?(options, Date.utc_today()) do
+        %ExThermostat.Status{
+          heating: true,
+          target: Keyword.get(options, :winter_target_temperature)
+        }
+      else
+        %ExThermostat.Status{}
+      end
+
+    put_in(options, [:settings, :status], status)
+  end
+
+  @spec winter_mode?(Keyword.t(), Date.t()) :: boolean()
+  def winter_mode?(options, date) do
+    winter_start = %{Keyword.get(options, :winter_start) | year: date.year}
+    winter_end = %{Keyword.get(options, :winter_end) | year: date.year}
+    Date.compare(date, winter_start) === :gt or Date.compare(date, winter_end) === :lt
   end
 
   if Mix.env() == :prod do
