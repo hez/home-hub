@@ -1,11 +1,18 @@
-<.live_component module={ThermostatWeb.LiveComponent} id={:thermostat} status={@status} />
+<.live_component
+  module={ExThermostatWeb.LiveComponent}
+  thermostat_implementation={@thermostat_implementation}
+  status={@status}
+  id={:heater_thermostat}
+/>
 
 <div class="pt-5 flex py-6 justify-center">
   <div class="grid grid-cols-3 gap-6">
     <.hap_button name="hap_switch_1" event="0">
       <.hap_icon_sunrise class="fill-yellow-300" /> Morning
     </.hap_button>
-    <.hap_button name="hap_switch_1" event="1"><.hap_icon_cube /> "All"</.hap_button>
+    <.hap_button name="hap_switch_1" event="1">
+      <.icon name="hero-cube" class="h-10 w-10 mr-3" /> "All"
+    </.hap_button>
     <.hap_button name="hap_switch_1" event="2">
       <.hap_icon_exit class="fill-black-500" /> Leaving
     </.hap_button>
@@ -14,10 +21,10 @@
       <.hap_icon_lamp class="fill-yellow-500" /> Lamps
     </.hap_button>
     <.hap_button name="hap_switch_2" event="1">
-      <.hap_icon_light_bulb class="stroke-orange-700" /> Entry
+      <.icon name="hero-light-bulb" class="h-10 w-10 mr-3 text-orange-700" /> Entry
     </.hap_button>
     <.hap_button name="hap_switch_2" event="2">
-      <.hap_icon_film class="stroke-yellow-300" /> Movie
+      <.icon name="hero-film" class="h-10 w-10 mr-3 text-yellow-300" /> Movie
     </.hap_button>
   </div>
 </div>

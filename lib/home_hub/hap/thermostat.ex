@@ -2,38 +2,42 @@ defmodule HomeHub.HAP.Thermostat do
   @moduledoc """
   Responsible for representing a HAP thermostat
   """
-
   @behaviour HAP.ValueStore
 
   use GenServer
+
   require Logger
 
   def start_link(config),
     do: GenServer.start_link(__MODULE__, config, name: __MODULE__)
 
+  @impl GenServer
+  def init(_) do
+    ExThermostat.PubSub.subscribe(:thermostat)
+    {:ok, %{change_tokens: %{}}}
+  end
+
   @impl HAP.ValueStore
   def get_value(:active), do: {:ok, 1}
-  def get_value(:current_temp), do: {:ok, Float.round(Thermostat.status().temperature, 1)}
-
-  def get_value(:current_humidity),
-    do: {:ok, Float.round(Thermostat.status().humidity, 0)}
+  def get_value(:current_temp), do: {:ok, Float.round(ExThermostat.status().temperature, 1)}
+  def get_value(:current_humidity), do: {:ok, Float.round(ExThermostat.status().humidity, 0)}
 
   # 0 Off
   # 1 Heating
   # 2 Cooling
   def get_value(:current_state),
-    do: if(Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
+    do: if(ExThermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
 
   # 0 Off
   # 1 Heat (if current temperature is below the target temperature then turn on heating)
   # 2 Cooling (if current temperature is above the target temperature then turn on cooling)
   # 3 Auto (turn on heating or cooling to maintain temperature within the target temperatures)
   def get_value(:target_state),
-    do: if(Thermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
+    do: if(ExThermostat.status().heating, do: {:ok, 1}, else: {:ok, 0})
 
   def get_value(:temp_display_units), do: {:ok, 0}
 
-  def get_value(:target_temp), do: {:ok, Float.round(Thermostat.status().target, 1)}
+  def get_value(:target_temp), do: {:ok, Float.round(ExThermostat.status().target, 1)}
 
   def get_value(opts) do
     Logger.error("illegal get_value #{inspect(opts)}")
@@ -42,17 +46,17 @@ defmodule HomeHub.HAP.Thermostat do
 
   @impl HAP.ValueStore
   def put_value(1, :target_state) do
-    Thermostat.start_heat()
+    ExThermostat.start_heat()
     :ok
   end
 
   def put_value(0, :target_state) do
-    Thermostat.stop_heat()
+    ExThermostat.stop_heat()
     :ok
   end
 
   def put_value(value, :target_temp) do
-    Thermostat.set_target(value)
+    ExThermostat.set_target(value)
     :ok
   end
 
@@ -69,12 +73,6 @@ defmodule HomeHub.HAP.Thermostat do
   @impl HAP.ValueStore
   def set_change_token(change_token, event),
     do: GenServer.call(__MODULE__, {:set_change_token, change_token, event})
-
-  @impl GenServer
-  def init(_) do
-    Thermostat.PubSub.subscribe(:thermostat)
-    {:ok, %{change_tokens: %{}}}
-  end
 
   ### Thermostat Pubsub callbacks
   @impl true

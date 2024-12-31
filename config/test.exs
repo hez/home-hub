@@ -30,5 +30,9 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :home_hub, :thermostat,
-  io_config: {Thermostat.DummyHeater, []},
-  sensor_config: {Thermostat.DummyTempSensor, []}
+  winter_end: ~D[2000-04-01],
+  winter_mode_enabled: true,
+  winter_start: ~D[2000-10-01],
+  winter_target_temperature: 16.0,
+  io_config: {ExThermostat.DummyHeater, []},
+  sensor_config: {ExThermostat.DummyTempSensor, []}
