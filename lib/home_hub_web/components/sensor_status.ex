@@ -5,7 +5,7 @@ defmodule HomeHubWeb.SensorStatus do
 
   def on_mount(:default, _params, _session, socket) do
     if connected?(socket) do
-      Phoscon.PubSub.subscribe(:sensor_status)
+      HomeHub.SensorsPubSub.subscribe(:sensor_status)
     end
 
     {:cont, assign(socket, sensors: Phoscon.fetch_all())}

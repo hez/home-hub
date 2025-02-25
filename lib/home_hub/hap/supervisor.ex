@@ -7,12 +7,12 @@ defmodule HomeHub.HAP.Supervisor do
   def start_link(opts), do: Supervisor.start_link(@name, opts, name: @name)
 
   @impl true
-  def init(_opts) do
+  def init(opts) do
     children =
       switch_children() ++
         [
-          HomeHub.HAP.Thermostat,
-          {HAP, accessory_server_definition()}
+          Keyword.get(opts, :hap_thermostat_module),
+          {HAP, accessory_server_definition(opts)}
         ]
 
     Supervisor.init(children, strategy: :one_for_one)
@@ -31,27 +31,19 @@ defmodule HomeHub.HAP.Supervisor do
     end)
   end
 
-  def accessory_server_definition do
+  def accessory_server_definition(opts) do
+    hap_thermostat_module = Keyword.get(opts, :hap_thermostat_module)
+    identifier = Keyword.get(opts, :identifier)
+    name = Keyword.get(opts, :name, "Home Hub")
+    model = Keyword.get(opts, :model, "Home Hub")
+
     %HAP.AccessoryServer{
-      name: "Home Hub",
-      model: "HomeHub",
-      identifier: "11:22:33:44:12:78",
+      name: name,
+      model: model,
+      identifier: identifier,
       accessory_type: 9,
       accessories: [
-        %HAP.Accessory{
-          name: "Thermostat",
-          services: [
-            %HAP.Services.Thermostat{
-              name: "Thermostat",
-              current_state: {HomeHub.HAP.Thermostat, :current_state},
-              current_temp: {HomeHub.HAP.Thermostat, :current_temp},
-              current_humidity: {HomeHub.HAP.Thermostat, :current_humidity},
-              target_state: {HomeHub.HAP.Thermostat, :target_state},
-              target_temp: {HomeHub.HAP.Thermostat, :target_temp},
-              temp_display_units: {HomeHub.HAP.Thermostat, :temp_display_units}
-            }
-          ]
-        },
+        hap_thermostat_module.hap_accessory_definition(),
         %HAP.Accessory{
           name: "Virtual Switches",
           services:

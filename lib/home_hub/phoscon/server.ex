@@ -27,7 +27,7 @@ defmodule HomeHub.Phoscon.Server do
   @impl true
   def handle_info(:poll, state) do
     new_values = fetch_sensors()
-    Phoscon.PubSub.broadcast(:sensor_status, {:sensor_status, new_values})
+    HomeHub.SensorsPubSub.broadcast(:sensor_status, {:sensor_status, new_values})
     queue_poll()
     {:noreply, %{state | sensors: new_values}}
   end

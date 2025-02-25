@@ -31,6 +31,15 @@ config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 # at the `config/runtime.exs`.
 config :home_hub, HomeHub.Mailer, adapter: Swoosh.Adapters.Local
 
+# config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Dev
+config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Daikin
+
+config :home_hub, :hap_config,
+  hap_thermostat_module: HomeHub.HAP.DaikinThermostat,
+  identifier: "11:22:33:44:12:78",
+  name: "Home Hub",
+  model: "HomeHub"
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.41",

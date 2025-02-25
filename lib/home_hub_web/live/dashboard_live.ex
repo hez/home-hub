@@ -8,7 +8,7 @@ defmodule HomeHubWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, assign_show_heater_cooler(socket)}
   end
 
   @impl true
@@ -23,10 +23,26 @@ defmodule HomeHubWeb.DashboardLive do
 
   ### Thermostat Pubsub callbacks
   @impl true
-  def handle_info({:thermostat, status}, socket), do: {:noreply, assign(socket, status: status)}
+  def handle_info(%ExThermostat.Status{} = status, socket),
+    do: {:noreply, socket |> assign(status: status) |> assign_show_heater_cooler()}
 
   ### Phoscon Pubsub callbacks
   @impl true
   def handle_info({:sensor_status, status}, socket),
     do: {:noreply, assign(socket, sensors: status)}
+
+  def assign_show_heater_cooler(%{assigns: %{status: status}} = socket) do
+    today = Date.utc_today()
+
+    {show_heater, show_cooler} =
+      cond do
+        HomeHub.winter_mode?(today) -> {true, false}
+        status.mode == :heat -> {true, false}
+        true -> {false, true}
+      end
+
+    socket
+    |> assign(:show_heater, show_heater)
+    |> assign(:show_cooler, show_cooler)
+  end
 end

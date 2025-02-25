@@ -64,12 +64,16 @@ config :home_hub, HomeHubWeb.Endpoint,
 config :home_hub, dev_routes: true
 
 config :home_hub, :thermostat,
-  winter_end: ~D[2000-04-01],
-  winter_mode_enabled: true,
-  winter_start: ~D[2000-10-01],
-  winter_target_temperature: 16.0,
   io_config: {ExThermostat.DummyHeater, []},
   sensor_config: {ExThermostat.DummyTempSensor, []}
+
+config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Dev
+
+config :home_hub, :hap_config,
+  hap_thermostat_module: HomeHub.HAP.DevThermostat,
+  identifier: "22:22:33:44:99:78",
+  name: "Home Hub Dev",
+  model: "HomeHubDev"
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console,
