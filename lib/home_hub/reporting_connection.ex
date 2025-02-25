@@ -4,8 +4,8 @@ defmodule HomeHub.ReportingConnection do
   require Logger
 
   def insert(%{name: name, temperature: temp, humidity: hum}) do
-    temp_data = %{tags: %{host: name}, measurement: "temperature", fields: %{value: temp}}
-    humid_data = %{tags: %{host: name}, measurement: "humidity", fields: %{value: hum}}
+    temp_data = %{tags: %{host: name}, measurement: "temperature", fields: %{value: temp * 1.0}}
+    humid_data = %{tags: %{host: name}, measurement: "humidity", fields: %{value: hum * 1.0}}
 
     case write([temp_data, humid_data]) do
       :ok -> Logger.debug("wrote to reporting connection")
