@@ -3,9 +3,9 @@ defmodule HomeHub.ReportingConnection do
   use Instream.Connection, otp_app: :home_hub
   require Logger
 
-  def insert(%{temperature: temp, humidity: hum}) do
-    temp_data = %{tags: %{host: tag_host()}, measurement: "temperature", fields: %{value: temp}}
-    humid_data = %{tags: %{host: tag_host()}, measurement: "humidity", fields: %{value: hum}}
+  def insert(%{name: name, temperature: temp, humidity: hum}) do
+    temp_data = %{tags: %{host: name}, measurement: "temperature", fields: %{value: temp}}
+    humid_data = %{tags: %{host: name}, measurement: "humidity", fields: %{value: hum}}
 
     case write([temp_data, humid_data]) do
       :ok -> Logger.debug("wrote to reporting connection")
@@ -14,6 +14,9 @@ defmodule HomeHub.ReportingConnection do
 
     :ok
   end
+
+  def insert(%{temperature: _, humidity: _} = vals),
+    do: vals |> Map.put(:name, tag_host()) |> insert()
 
   def tag_host,
     do: :home_hub |> Application.get_env(HomeHub.ReportingConnection) |> Keyword.get(:tag_host)

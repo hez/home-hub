@@ -15,12 +15,12 @@ defmodule HomeHub.Reporter do
   @impl true
   def init(state) do
     Logger.debug("Starting")
-    ExThermostat.PubSub.subscribe(:temperature)
+    HomeHub.SensorsPubSub.subscribe(:thermostat_sensors)
     {:ok, state}
   end
 
   @impl true
-  def handle_info(%{temperature: _, humidity: _} = vals, state) do
+  def handle_info(%{} = vals, state) do
     Logger.debug("got new temp and hum, #{inspect(vals)}")
 
     if ReportingConnection.configured?() do

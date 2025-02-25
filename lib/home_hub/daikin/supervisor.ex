@@ -1,4 +1,4 @@
-defmodule HomeHub.Phoscon.Supervisor do
+defmodule HomeHub.Daikin.Supervisor do
   @moduledoc false
   use Supervisor
   require Logger
@@ -8,8 +8,12 @@ defmodule HomeHub.Phoscon.Supervisor do
   def start_link(opts), do: Supervisor.start_link(@name, opts, name: @name)
 
   @impl true
-  def init(_opts) do
-    children = [HomeHub.Phoscon.Server]
+  def init(opts) do
+    children = [
+      {DaikinOne.TokenCache, []},
+      {DaikinOne.DeviceServer, opts}
+    ]
+
     Supervisor.init(children, strategy: :one_for_one)
   end
 end

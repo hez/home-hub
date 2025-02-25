@@ -32,13 +32,9 @@ config :home_hub, :logger, [
    }}
 ]
 
-config :home_hub, :thermostat,
-  winter_end: ~D[2000-04-01],
-  winter_mode_enabled: true,
-  winter_start: ~D[2000-10-01],
-  winter_target_temperature: 16.0,
-  io_config: {ExThermostat.SimpleHeaterIO, [heater_pin: 27]},
-  sensor_config: {ExThermostat.TemperatureSensor, [dht_pin: 18]}
+# config :home_hub, :thermostat,
+#   io_config: {ExThermostat.SimpleHeaterIO, [heater_pin: 27]},
+#   sensor_config: {ExThermostat.TemperatureSensor, [dht_pin: 18]}
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.

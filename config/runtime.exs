@@ -39,6 +39,10 @@ config :home_hub, HomeHub.ReportingConnection,
     password: System.get_env("INFLUXDB_PASSWORD")
   ]
 
+config :daikin_one, :integrator_api_key, System.get_env("DAIKIN_ONE_INTEGRATOR_KEY")
+config :daikin_one, :integrator_email, System.get_env("DAIKIN_ONE_INTEGRATOR_EMAIL")
+config :daikin_one, :integrator_token, System.get_env("DAIKIN_ONE_OPEN_API_TOKEN")
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||

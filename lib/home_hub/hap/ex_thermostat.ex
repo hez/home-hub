@@ -1,4 +1,4 @@
-defmodule HomeHub.HAP.Thermostat do
+defmodule HomeHub.HAP.ExThermostat do
   @moduledoc """
   Responsible for representing a HAP thermostat
   """

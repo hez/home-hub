@@ -1,6 +1,8 @@
-defmodule HomeHub.Phoscon.PubSub do
+defmodule HomeHub.SensorsPubSub do
   @moduledoc false
   @topics %{
+    thermostat_changes: "thermostat_changes",
+    thermostat_sensors: "thermostat_sensors",
     sensor_status: "sensor_status"
   }
 

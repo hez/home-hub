@@ -10,7 +10,7 @@ defmodule HomeHub.Phoscon do
         parse_results(results)
 
       err ->
-        Logger.error(inspect(err))
+        Logger.error("fetching phoscon #{inspect(err)}")
         %{}
     end
   end
