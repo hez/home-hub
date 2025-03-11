@@ -45,6 +45,7 @@ defmodule HomeHub.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # Everything else
+      {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.2.1"},
       {:circuits_gpio, "~> 2.0"},
       # {:dht, "~> 0.1"},
       {:ecto_sql, "~> 3.6"},
@@ -73,7 +74,6 @@ defmodule HomeHub.MixProject do
       {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
       {:pigpiox, github: "hez/pigpiox", runtime: false},
       {:plug_cowboy, "~> 2.5"},
-      {:rpi_screen_dimmer, github: "hez/rpi-screen-dimmer", tag: "v0.1.2", only: :prod},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.3.1", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
