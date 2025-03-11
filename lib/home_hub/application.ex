@@ -50,7 +50,7 @@ defmodule HomeHub.Application do
 
   if Mix.env() == :prod do
     def prod_children do
-      [{RpiScreenDimmer, []}]
+      [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
     end
   else
     def prod_children, do: []
