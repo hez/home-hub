@@ -19,7 +19,7 @@ defmodule HomeHub.Thermostat.Daikin do
   @impl ExThermostat
   def set_mode(mode) do
     status = device_info()
-    DeviceServer.push_update(mode, status.heat_setpoint, status.cool_setpoint)
+    DeviceServer.push_update(mode, to_f(status.heat_setpoint), to_f(status.cool_setpoint))
     :ok
   end
 
@@ -30,17 +30,15 @@ defmodule HomeHub.Thermostat.Daikin do
   end
 
   @impl ExThermostat
-  def set_target(target) when is_integer(target), do: set_target(target * 1.0)
-
   def set_target(target) when is_float(target) do
     status = DaikinThermostat.state()
 
     case status.mode do
       :heat ->
-        DeviceServer.push_update(status.mode, target, status.cool_setpoint)
+        DeviceServer.push_update(status.mode, to_f(target), to_f(status.cool_setpoint))
 
       :cool ->
-        DeviceServer.push_update(status.mode, status.heat_setpoint, target)
+        DeviceServer.push_update(status.mode, to_f(status.heat_setpoint), to_f(target))
 
       other ->
         Logger.warning("Unsupported starget in mode #{inspect(other)} for #{inspect(target)}")
@@ -87,10 +85,13 @@ defmodule HomeHub.Thermostat.Daikin do
       mode: state.mode,
       equipment_state: state.equipment_status,
       started_at: nil,
-      humidity: state.hum_indoor * 1.0,
-      target: target,
-      temperature: state.temp_indoor * 1.0,
+      humidity: to_f(state.hum_indoor),
+      target: to_f(target),
+      temperature: to_f(state.temp_indoor),
       pid: 0.0
     }
   end
+
+  def to_f(val) when is_float(val), do: val
+  def to_f(val) when is_integer(val), do: val * 1.0
 end
