@@ -30,7 +30,7 @@ defmodule HomeHub.Thermostat.Daikin do
   end
 
   @impl ExThermostat
-  def set_target(target) when is_float(target) do
+  def set_target(target) do
     status = DaikinThermostat.state()
 
     case status.mode do
