@@ -36,9 +36,9 @@ defmodule HomeHubWeb.DashboardLive do
 
     {show_heater, show_cooler} =
       cond do
-        HomeHub.winter_mode?(today) -> {true, false}
         status.mode == :heat -> {true, false}
-        true -> {false, true}
+        status.mode == :cool -> {false, true}
+        true -> {true, true}
       end
 
     socket
