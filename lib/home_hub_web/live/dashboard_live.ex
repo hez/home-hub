@@ -32,8 +32,6 @@ defmodule HomeHubWeb.DashboardLive do
     do: {:noreply, assign(socket, sensors: status)}
 
   def assign_show_heater_cooler(%{assigns: %{status: status}} = socket) do
-    today = Date.utc_today()
-
     {show_heater, show_cooler} =
       cond do
         status.mode == :heat -> {true, false}
