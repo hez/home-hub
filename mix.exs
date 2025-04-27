@@ -52,7 +52,7 @@ defmodule HomeHub.MixProject do
       {:ecto_sqlite3, ">= 0.0.0"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       # {:daikin_one, path: "../ex_daikin_one"},
-      {:daikin_one, github: "Beam-Maintenance/ex-daikin-one", tag: "v0.1.1"},
+      {:daikin_one, github: "Beam-Maintenance/ex-daikin-one", tag: "v0.1.2"},
       {:ex_thermostat, github: "hez/ex-thermostat", tag: "v0.2.1"},
       {:finch, "~> 0.13"},
       {:gettext, "~> 0.20"},
