@@ -25,7 +25,6 @@ defmodule HomeHubWeb.Router do
         HomeHubWeb.SensorStatus
       ] do
       live "/", DashboardLive
-      live "/current", CurrentLive
     end
   end
 

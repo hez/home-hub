@@ -15,9 +15,6 @@ defmodule HomeHubWeb.Layouts do
             <.nav_link to={~p"/"} active={@active_tab == :dashboard}>Home</.nav_link>
           </li>
           <li class="flex-1 mr-2">
-            <.nav_link to={~p"/current"} active={@active_tab == :current}>Current</.nav_link>
-          </li>
-          <li class="flex-1 mr-2">
             <.nav_link to={~p"/"} active={@active_tab == :history}>History</.nav_link>
           </li>
         </ul>
