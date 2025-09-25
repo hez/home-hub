@@ -49,6 +49,7 @@ defmodule HomeHub.HAP.DaikinThermostat do
   # 3 Auto
   def get_value(:current_state) do
     case state().equipment_status do
+      :off -> {:ok, 0}
       :idle -> {:ok, 0}
       :heat -> {:ok, 1}
       :cool -> {:ok, 2}
