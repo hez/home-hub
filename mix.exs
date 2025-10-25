@@ -15,7 +15,9 @@ defmodule HomeHub.MixProject do
         plt_add_apps: [:mix, :ex_unit],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
-      deps: deps()
+      deps: deps(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -29,6 +31,12 @@ defmodule HomeHub.MixProject do
     ]
   end
 
+  def cli do
+    [
+      preferred_envs: [precommit: :test]
+    ]
+  end
+
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -38,24 +46,19 @@ defmodule HomeHub.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      # Dev and test
+      # dev
       {:credo, "~> 1.7.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
-      {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      # Everything else
+      # everything else
       {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.2.1"},
-      {:circuits_gpio, "~> 2.0"},
-      # {:dht, "~> 0.1"},
-      {:ecto_sql, "~> 3.6"},
-      {:ecto_sqlite3, ">= 0.0.0"},
-      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
-      # {:daikin_one, path: "../ex_daikin_one"},
+      {:bandit, "~> 1.5"},
       {:daikin_one, github: "Beam-Maintenance/ex-daikin-one", tag: "v0.1.2"},
-      {:ex_thermostat, github: "hez/ex-thermostat", tag: "v0.2.1"},
-      {:finch, "~> 0.13"},
-      {:gettext, "~> 1.0"},
+      {:dns_cluster, "~> 0.2.0"},
+      {:ecto_sql, "~> 3.13"},
+      {:ecto_sqlite3, ">= 0.0.0"},
+      {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
+      {:ex_thermostat, github: "hez/ex-thermostat", tag: "v0.2.2"},
       {:hap, "~> 0.4"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -66,16 +69,13 @@ defmodule HomeHub.MixProject do
        depth: 1},
       {:instream, "~> 2.2"},
       {:jason, "~> 1.2"},
-      {:phoenix, "~> 1.8.0"},
-      {:phoenix_ecto, "~> 4.4"},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:phoenix, "~> 1.8.1"},
+      {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
-      {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_live_view, "~> 1.1.0"},
       {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
-      {:pigpiox, github: "hez/pigpiox", runtime: false},
-      {:plug_cowboy, "~> 2.5"},
-      {:swoosh, "~> 1.3"},
-      {:tailwind, "~> 0.3.1", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:tzdata, "~> 1.1.0"}
@@ -90,12 +90,26 @@ defmodule HomeHub.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
+      build: [
+        "deps.get",
+        "compile",
+        "assets.setup",
+        "assets.build",
+        "assets.deploy",
+        "release --overwrite"
+      ],
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
-      build: ["deps.get", "compile", "assets.deploy", "release --overwrite"]
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["compile", "tailwind home_hub", "esbuild home_hub"],
+      "assets.deploy": [
+        "tailwind home_hub --minify",
+        "esbuild home_hub --minify",
+        "phx.digest"
+      ],
+      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 end

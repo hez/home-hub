@@ -70,12 +70,14 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
+  config :home_hub, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+
   config :home_hub, HomeHubWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
-      # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
+      # See the documentation on https://hexdocs.pm/bandit/Bandit.html#t:options/0
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
@@ -106,29 +108,11 @@ if config_env() == :prod do
   # "priv/ssl/server.key". For all supported SSL configuration
   # options, see https://hexdocs.pm/plug/Plug.SSL.html#configure/1
   #
-  # We also recommend setting `force_ssl` in your endpoint, ensuring
-  # no data is ever sent via http, always redirecting to https:
+  # We also recommend setting `force_ssl` in your config/prod.exs,
+  # ensuring no data is ever sent via http, always redirecting to https:
   #
   #     config :home_hub, HomeHubWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
-
-  # ## Configuring the mailer
-  #
-  # In production you need to configure the mailer to use a different adapter.
-  # Also, you may need to configure the Swoosh API client of your choice if you
-  # are not using SMTP. Here is an example of the configuration:
-  #
-  #     config :home_hub, HomeHub.Mailer,
-  #       adapter: Swoosh.Adapters.Mailgun,
-  #       api_key: System.get_env("MAILGUN_API_KEY"),
-  #       domain: System.get_env("MAILGUN_DOMAIN")
-  #
-  # For this example you need include a HTTP client required by Swoosh API client.
-  # Swoosh supports Hackney and Finch out of the box:
-  #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
-  #
-  # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end

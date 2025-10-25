@@ -136,7 +136,6 @@
           {Credo.Check.Refactor.Nesting, []},
           {Credo.Check.Refactor.UnlessWithElse, []},
           {Credo.Check.Refactor.WithClauses, []},
-          {Credo.Check.Refactor.FilterFilter, []},
           {Credo.Check.Refactor.RejectReject, []},
           {Credo.Check.Refactor.RedundantWithClauseResult, []},
 
@@ -190,6 +189,7 @@
           {Credo.Check.Refactor.AppendSingleItem, []},
           {Credo.Check.Refactor.DoubleBooleanNegation, []},
           {Credo.Check.Refactor.FilterReject, []},
+          {Credo.Check.Refactor.FilterFilter, []},
           {Credo.Check.Refactor.IoPuts, []},
           {Credo.Check.Refactor.MapMap, []},
           {Credo.Check.Refactor.ModuleDependencies, []},

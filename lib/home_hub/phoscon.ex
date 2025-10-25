@@ -1,6 +1,14 @@
 defmodule HomeHub.Phoscon do
   require Logger
 
+  @types_map %{
+    ["ZHAOpenClose"] => :door,
+    ["ZHASwitch"] => :switch,
+    ["ZHAWater"] => :water,
+    ["ZHALightLevel", "ZHAPresence"] => :motion,
+    ["ZHAHumidity", "ZHAPressure", "ZHATemperature"] => :temperature_humidity
+  }
+
   def fetch, do: PhosconAPI.sensors()
 
   @spec fetch_all() :: map()
@@ -21,7 +29,11 @@ defmodule HomeHub.Phoscon do
     |> Enum.group_by(& &1["name"])
     |> Map.new(fn {name, sensors} ->
       sensors =
-        %{} |> merge_all_sensors(sensors) |> merge_battery(sensors) |> merge_lastseen(sensors)
+        %{}
+        |> merge_all_sensors(sensors)
+        |> merge_battery(sensors)
+        |> merge_lastseen(sensors)
+        |> merge_type(sensors)
 
       {name, sensors}
     end)
@@ -41,8 +53,15 @@ defmodule HomeHub.Phoscon do
     |> Map.merge(map)
   end
 
+  def merge_type(map, sensors) do
+    types = Enum.map(sensors, & &1["type"]) |> Enum.sort()
+    Map.put(map, :type, parse_type(types))
+  end
+
   def merge_all_sensors(map, sensors),
     do: sensors |> Enum.map(&parse_sensor/1) |> Enum.reduce(&Map.merge/2) |> Map.merge(map)
+
+  def parse_type(type), do: Map.get(@types_map, type, :unknown)
 
   defp parse_sensor(%{"state" => %{"humidity" => v}}), do: %{humidity: v / 100.0}
   defp parse_sensor(%{"state" => %{"temperature" => v}}), do: %{temperature: v / 100.0}

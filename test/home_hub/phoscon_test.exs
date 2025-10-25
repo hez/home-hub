@@ -397,7 +397,8 @@ defmodule HomeHub.PhosconTest do
                lastseen: ~U[2022-12-29 16:38:00Z],
                humidity: 87.39,
                pressure: 997,
-               temperature: 7.05
+               temperature: 7.05,
+               type: :temperature_humidity
              }
     end
   end

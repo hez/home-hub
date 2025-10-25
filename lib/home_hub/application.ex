@@ -25,8 +25,10 @@ defmodule HomeHub.Application do
         HomeHubWeb.Telemetry,
         HomeHub.Repo,
         Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
+        {Ecto.Migrator,
+         repos: Application.fetch_env!(:home_hub, :ecto_repos), skip: skip_migrations?()},
+        {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: HomeHub.PubSub},
-        {Finch, name: HomeHub.Finch},
         HomeHubWeb.Endpoint,
         HomeHub.Phoscon.Supervisor,
         HomeHub.Reporter,
@@ -34,6 +36,7 @@ defmodule HomeHub.Application do
       ] ++ daikin ++ prod_children()
 
     Logger.add_handlers(:home_hub)
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: HomeHub.Supervisor]
@@ -46,6 +49,11 @@ defmodule HomeHub.Application do
   def config_change(changed, _new, removed) do
     HomeHubWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp skip_migrations? do
+    # By default, sqlite migrations are run when using a release
+    System.get_env("RELEASE_NAME") == nil
   end
 
   if Mix.env() == :prod do

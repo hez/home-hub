@@ -10,10 +10,11 @@ defmodule HomeHubWeb.Nav do
     active_tab =
       case {socket.view, socket.assigns.live_action} do
         {HomeHubWeb.DashboardLive, _} -> :dashboard
-        {HomeHubWeb.CurrentLive, _} -> :current
+        {HomeHubWeb.SensorsLive, _} -> :sensors
+        {HomeHubWeb.SettingsLive, _} -> :settings
         {_, _} -> nil
       end
 
-    {:cont, assign(socket, active_tab: active_tab)}
+    {:cont, assign(socket, nav: %{active_tab: active_tab})}
   end
 end
