@@ -3,8 +3,11 @@ defmodule HomeHubWeb.DashboardLive do
   use HomeHubWeb, :live_view
   require Logger
   import HomeHubWeb.HAPButtonComponents
+  import HomeHubWeb.AppComponents
+  import ExThermostatWeb.LiveComponent, only: [temperature_display: 1]
 
   alias HomeHub.HAP.StatelessSwitch
+  alias HomeHubWeb.Layouts
 
   @impl true
   def mount(_params, _session, socket) do

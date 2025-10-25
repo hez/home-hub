@@ -1,36 +1,51 @@
-<.live_component
-  module={ExThermostatWeb.LiveComponent}
-  thermostat_implementation={@thermostat_implementation}
-  status={@status}
-  id={:heater_thermostat}
-  show_cooler={@show_cooler}
-  show_heater={@show_heater}
-/>
+<Layouts.dashboard flash={@flash} nav={@nav} sensors={@sensors}>
+  <section class="container">
+    <div class="flex justify-between m-4">
+      <div class="text-4xl flex">
+        <div><.tree_icon class="h-10 w-10 mr-4 fill-green-600" /></div>
+        <.temperature_display sensor={@sensors["outside-temp"]} />
+      </div>
 
-<div class="pt-5 flex py-6 justify-center">
-  <div class="grid grid-cols-3 gap-6">
-    <.hap_button name="hap_switch_1" event="0">
-      <.hap_icon_sunrise class="fill-yellow-300" /> Morning
-    </.hap_button>
-    <.hap_button name="hap_switch_1" event="1">
-      <.icon name="hero-cube" class="h-10 w-10 mr-3" /> "All"
-    </.hap_button>
-    <.hap_button name="hap_switch_1" event="2">
-      <.hap_icon_exit class="fill-black-500" /> Leaving
-    </.hap_button>
+      <div class="text-4xl flex">
+        <div>
+          <.icon name="hero-home-solid" class="h-10 w-10 mr-4 text-amber-600" />
+        </div>
+        <.temperature_display sensor={@status} />
+      </div>
+    </div>
+  </section>
 
-    <.hap_button name="hap_switch_2" event="0">
-      <.hap_icon_lamp class="fill-yellow-500" /> Lamps
-    </.hap_button>
-    <.hap_button name="hap_switch_2" event="1">
-      <.icon name="hero-light-bulb" class="h-10 w-10 mr-3 text-orange-700" /> Entry
-    </.hap_button>
-    <.hap_button name="hap_switch_2" event="2">
-      <.icon name="hero-film" class="h-10 w-10 mr-3 text-yellow-300" /> Movie
-    </.hap_button>
+  <.live_component
+    module={ExThermostatWeb.LiveComponent}
+    thermostat_implementation={@thermostat_implementation}
+    status={@status}
+    id={:heater_thermostat}
+    show_cooler={@show_cooler}
+    show_heater={@show_heater}
+    class="justify-evenly"
+  />
+
+  <div class="pt-10 flex py-6 justify-center">
+    <div class="grid grid-cols-3 gap-6">
+      <.hap_button name="hap_switch_1" event="0">
+        <.hap_icon_sunrise class="fill-yellow-300" /> Morning
+      </.hap_button>
+      <.hap_button name="hap_switch_1" event="1">
+        <.icon name="hero-cube" class="h-10 w-10 mr-3" /> "All"
+      </.hap_button>
+      <.hap_button name="hap_switch_1" event="2">
+        <.hap_icon_exit class="fill-black-500" /> Leaving
+      </.hap_button>
+
+      <.hap_button name="hap_switch_2" event="0">
+        <.hap_icon_lamp class="fill-yellow-500" /> Lamps
+      </.hap_button>
+      <.hap_button name="hap_switch_2" event="1">
+        <.icon name="hero-light-bulb" class="h-10 w-10 mr-3 text-orange-700" /> Entry
+      </.hap_button>
+      <.hap_button name="hap_switch_2" event="2">
+        <.icon name="hero-film" class="h-10 w-10 mr-3 text-yellow-300" /> Movie
+      </.hap_button>
+    </div>
   </div>
-</div>
-
-<div class="flex justify-end">
-  {Float.round(@status.pid, 3)}
-</div>
+</Layouts.dashboard>

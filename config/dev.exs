@@ -2,7 +2,7 @@ import Config
 
 # Configure your database
 config :home_hub, HomeHub.Repo,
-  database: Path.expand("../data/home_hub_dev.db", Path.dirname(__ENV__.file)),
+  database: Path.expand("../home_hub_dev.db", __DIR__),
   pool_size: 5,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
@@ -11,19 +11,19 @@ config :home_hub, HomeHub.Repo,
 # debugging and code reloading.
 #
 # The watchers configuration can be used to run external
-# watchers to your application. For example, we use it
-# with esbuild to bundle .js and .css sources.
+# watchers to your application. For example, we can use it
+# to bundle .js and .css sources.
 config :home_hub, HomeHubWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "mqnSRQLKNH2KJmr+MB/Gwb10N8IpM2LWG4Frs4UE3Kqn0YcTf1CJBh/j+BRZslV2",
+  secret_key_base: "+ryBvUoUxNLzqJ+wQSn3acucST9do8WS7a1duC8JNmKK4b8jMruAYbyHptYu+8Yq",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:home_hub, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:home_hub, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -52,16 +52,33 @@ config :home_hub, HomeHubWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :home_hub, HomeHubWeb.Endpoint,
   live_reload: [
+    web_console_logger: true,
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
-      ~r"lib/home_hub_web/(live|views)/.*(ex)$",
-      ~r"lib/home_hub_web/templates/.*(eex)$"
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"lib/home_hub_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
 config :home_hub, dev_routes: true
+
+# Do not include metadata nor timestamps in development logs
+config :logger, :default_formatter, format: "[$level] $message\n"
+
+# Set a higher stacktrace during development. Avoid configuring such
+# in production as building large stacktraces may be expensive.
+config :phoenix, :stacktrace_depth, 20
+
+# Initialize plugs at runtime for faster development compilation
+config :phoenix, :plug_init_mode, :runtime
+
+config :phoenix_live_view,
+  # Include debug annotations and locations in rendered markup.
+  # Changing this configuration will require mix clean and a full recompile.
+  debug_heex_annotations: true,
+  debug_attributes: true,
+  # Enable helpful, but potentially expensive runtime checks
+  enable_expensive_runtime_checks: true
 
 config :home_hub, :thermostat,
   io_config: {ExThermostat.DummyHeater, []},
@@ -74,18 +91,3 @@ config :home_hub, :hap_config,
   identifier: "22:22:33:44:99:78",
   name: "Home Hub Dev",
   model: "HomeHubDev"
-
-# Do not include metadata nor timestamps in development logs
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id, :mfa]
-
-# Set a higher stacktrace during development. Avoid configuring such
-# in production as building large stacktraces may be expensive.
-config :phoenix, :stacktrace_depth, 20
-
-# Initialize plugs at runtime for faster development compilation
-config :phoenix, :plug_init_mode, :runtime
-
-# Disable swoosh api client as it is only required for production adapters.
-config :swoosh, :api_client, false

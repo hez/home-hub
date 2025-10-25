@@ -1,0 +1,28 @@
+<Layouts.dashboard flash={@flash} nav={@nav} sensors={@sensors}>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Battery</th>
+          <th>Last Seen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr :for={{name, sensor} <- Enum.reject(@sensors, fn {_, s} -> s.type == :unknown end)}>
+          <th>
+            <.icon
+              :if={HomeHub.Sensors.alertable?({name, sensor})}
+              name="hero-exclamation-triangle"
+              class="h-8 w-8 mr-3 text-red-500"
+            />
+          </th>
+          <td>{name}</td>
+          <td>{inspect(sensor.battery)}%</td>
+          <td>{HomeHub.Sensors.local_lastseen(sensor)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</Layouts.dashboard>

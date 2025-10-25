@@ -14,15 +14,13 @@ defmodule HomeHubWeb.HAPButtonComponents do
     <button
       type="button"
       aria-label=""
-      class="inline-block px-10 py-6 bg-blue-600 text-white text-2xl leading-tight rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+      class="btn btn-xl p-8 btn-primary rounded-selector"
       phx-click="hap_press"
       phx-value-name={@name}
       phx-value-event={@event}
       {@rest}
     >
-      <div class="flex">
-        {render_slot(@inner_block)}
-      </div>
+      {render_slot(@inner_block)}
     </button>
     """
   end

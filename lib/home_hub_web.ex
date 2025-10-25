@@ -38,12 +38,7 @@ defmodule HomeHubWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller,
-        namespace: HomeHubWeb,
-        formats: [:html, :json],
-        layouts: [html: HomeHubWeb.Layouts]
-
-      use Gettext, backend: HomeHubWeb.Gettext
+      use Phoenix.Controller, formats: [:html, :json]
 
       import Plug.Conn
 
@@ -53,8 +48,7 @@ defmodule HomeHubWeb do
 
   def live_view do
     quote do
-      use Phoenix.LiveView,
-        layout: {HomeHubWeb.Layouts, :app}
+      use Phoenix.LiveView
 
       unquote(html_helpers())
     end
@@ -83,15 +77,13 @@ defmodule HomeHubWeb do
 
   defp html_helpers do
     quote do
-      use Gettext, backend: HomeHubWeb.Gettext
-
       # HTML escaping functionality
       import Phoenix.HTML
-      # Core UI components and translation
+      # Core UI components
       import HomeHubWeb.CoreComponents
-      import HomeHubWeb.AppComponents
 
-      # Shortcut for generating JS commands
+      # Common modules used in templates
+      alias HomeHubWeb.Layouts
       alias Phoenix.LiveView.JS
 
       # Routes generation with the ~p sigil
@@ -109,7 +101,7 @@ defmodule HomeHubWeb do
   end
 
   @doc """
-  When used, dispatch to the appropriate controller/view/etc.
+  When used, dispatch to the appropriate controller/live_view/etc.
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])

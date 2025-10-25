@@ -18,7 +18,12 @@ defmodule HomeHub.Phoscon.Server do
   @impl true
   def init(state) do
     queue_poll()
-    {:ok, %{state | sensors: fetch_sensors()}}
+    {:ok, state, {:continue, :init_sensors}}
+  end
+
+  @impl GenServer
+  def handle_continue(:init_sensors, state) do
+    {:noreply, %{state | sensors: fetch_sensors()}}
   end
 
   @impl true
