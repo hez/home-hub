@@ -30,7 +30,6 @@ defmodule HomeHub.Application do
         {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: HomeHub.PubSub},
         HomeHubWeb.Endpoint,
-        HomeHub.Phoscon.Supervisor,
         HomeHub.Reporter,
         {HomeHub.HAP.Supervisor, hap_config}
       ] ++ daikin ++ prod_children()

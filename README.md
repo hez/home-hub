@@ -18,7 +18,7 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 - API for possible REST based triggers
 - Van build and features
   - PWM controlled lights
-  - Raw button integration with Phoscon
+  - Raw button integration with zigbee2mqtt
 
 ## Installing
 

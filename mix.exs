@@ -74,10 +74,11 @@ defmodule HomeHub.MixProject do
       {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_view, "~> 1.1.0"},
-      {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
+      # {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
+      {:tortoise311, "~> 0.12"},
       {:tzdata, "~> 1.1.0"}
     ]
   end
