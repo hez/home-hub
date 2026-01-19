@@ -38,6 +38,10 @@ config :daikin_one, :integrator_api_key, System.get_env("DAIKIN_ONE_INTEGRATOR_K
 config :daikin_one, :integrator_email, System.get_env("DAIKIN_ONE_INTEGRATOR_EMAIL")
 config :daikin_one, :integrator_token, System.get_env("DAIKIN_ONE_OPEN_API_TOKEN")
 
+config :home_hub, :tortoise311_config,
+  host: "MQTT_HOSTNAME" |> System.get_env("localhost") |> String.to_charlist(),
+  port: "MQTT_PORT" |> System.get_env("1883") |> String.to_integer()
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||

@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr :for={{name, sensor} <- Enum.reject(@sensors, fn {_, s} -> s.type == :unknown end)}>
+        <tr :for={{name, sensor} <- @sensors}>
           <th>
             <.icon
               :if={HomeHub.Sensors.alertable?({name, sensor})}

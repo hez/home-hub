@@ -22,6 +22,7 @@ defmodule HomeHub.Application do
 
     children =
       [
+        HomeHub.SensorsServer,
         HomeHubWeb.Telemetry,
         HomeHub.Repo,
         Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
@@ -33,6 +34,13 @@ defmodule HomeHub.Application do
         HomeHub.Reporter,
         {HomeHub.HAP.Supervisor, hap_config}
       ] ++ daikin ++ prod_children()
+
+    Tortoise311.Supervisor.start_child(
+      client_id: "home_hub_client_id",
+      handler: {HomeHub.Tortoise311Handler, []},
+      server: {Tortoise311.Transport.Tcp, Application.get_env(:home_hub, :tortoise311_config)},
+      subscriptions: [{"zigbee2mqtt/#", 0}]
+    )
 
     Logger.add_handlers(:home_hub)
 
