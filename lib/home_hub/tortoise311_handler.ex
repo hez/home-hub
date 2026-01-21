@@ -1,6 +1,7 @@
 defmodule HomeHub.Tortoise311Handler do
   # zigbee2mqtt/temperature bedroom "{\"battery\":90,\"humidity\":73.38,\"linkquality\":102,\"power_outage_count\":178,\"pressure\":1022.8,\"temperature\":17.33,\"voltage\":2985}"
   use Tortoise311.Handler
+  require Logger
 
   def init(args) do
     {:ok, args}
@@ -19,15 +20,18 @@ defmodule HomeHub.Tortoise311Handler do
     with {:ok, payload} <- Jason.decode(payload) do
       sensor =
         %HomeHub.TemperatureSensor{
-          temperature: payload["temperature"],
-          humidity: payload["humidity"],
-          pressure: payload["pressure"],
+          temperature: to_float(payload["temperature"]),
+          humidity: to_float(payload["humidity"]),
+          pressure: to_float(payload["pressure"]),
           battery: payload["battery"],
           lastseen: DateTime.utc_now(),
           type: :temp_humidity
         }
 
       HomeHub.SensorsServer.set(name, sensor) |> dbg()
+    else
+      error ->
+        Logger.warning("Error in MQTT #{inspect(error)}")
     end
 
     {:ok, state}
@@ -40,9 +44,7 @@ defmodule HomeHub.Tortoise311Handler do
     {:ok, state}
   end
 
-  def subscription(_status, _topic_filter, state) do
-    {:ok, state}
-  end
+  def subscription(_status, _topic_filter, state), do: {:ok, state}
 
   def terminate(_reason, _state) do
     # tortoise doesn't care about what you return from terminate/2,
@@ -50,4 +52,6 @@ defmodule HomeHub.Tortoise311Handler do
     # terminate-callback
     :ok
   end
+
+  defp to_float(num) when is_float(num) or is_integer(num), do: num * 1.0
 end
