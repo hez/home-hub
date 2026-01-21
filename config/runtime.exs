@@ -20,20 +20,6 @@ if System.get_env("PHX_SERVER") do
   config :home_hub, HomeHubWeb.Endpoint, server: true
 end
 
-# InfluxDB v1.x
-config :home_hub, HomeHub.ReportingConnection,
-  tag_host: "thermostat",
-  version: :v1,
-  database: "climate",
-  host: System.get_env("INFLUXDB_HOST"),
-  port: 8086,
-  scheme: "http",
-  auth: [
-    method: :basic,
-    username: System.get_env("INFLUXDB_USERNAME"),
-    password: System.get_env("INFLUXDB_PASSWORD")
-  ]
-
 config :daikin_one, :integrator_api_key, System.get_env("DAIKIN_ONE_INTEGRATOR_KEY")
 config :daikin_one, :integrator_email, System.get_env("DAIKIN_ONE_INTEGRATOR_EMAIL")
 config :daikin_one, :integrator_token, System.get_env("DAIKIN_ONE_OPEN_API_TOKEN")
