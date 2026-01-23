@@ -78,7 +78,8 @@ defmodule HomeHub.MixProject do
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:tortoise311, "~> 0.12"},
-      {:tzdata, "~> 1.1.0"}
+      {:tzdata, "~> 1.1.0"},
+      {:websockex, "~> 0.5.1"}
     ]
   end
 
