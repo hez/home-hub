@@ -6,7 +6,7 @@ defmodule HomeHubWeb.DashboardLive do
   import HomeHubWeb.AppComponents
   import ExThermostatWeb.LiveComponent, only: [temperature_display: 1]
 
-  alias HomeHub.HAP.StatelessSwitch
+  alias HomeAssistant.MQTTDevice
   alias HomeHubWeb.Layouts
 
   @impl true
@@ -16,11 +16,7 @@ defmodule HomeHubWeb.DashboardLive do
 
   @impl true
   def handle_event("hap_press", params, socket) do
-    StatelessSwitch.press(
-      String.to_existing_atom(params["name"]),
-      String.to_integer(params["event"])
-    )
-
+    MQTTDevice.Button.fire("action#{params["event"]}")
     {:noreply, socket}
   end
 
@@ -33,6 +29,10 @@ defmodule HomeHubWeb.DashboardLive do
   @impl true
   def handle_info({:sensor_status, status}, socket),
     do: {:noreply, assign(socket, sensors: status)}
+
+  # Tortoise311 callbacks
+  @impl true
+  def handle_info({{Tortoise311, _id}, _, _ok}, socket), do: {:noreply, socket}
 
   def assign_show_heater_cooler(%{assigns: %{status: status}} = socket) do
     {show_heater, show_cooler} =

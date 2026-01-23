@@ -28,6 +28,8 @@ config :home_hub, :tortoise311_config,
   host: "MQTT_HOSTNAME" |> System.get_env("localhost") |> String.to_charlist(),
   port: "MQTT_PORT" |> System.get_env("1883") |> String.to_integer()
 
+config :home_hub, :home_assistant_token, System.get_env("HOME_ASSISTANT_TOKEN")
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||
