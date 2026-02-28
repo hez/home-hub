@@ -51,7 +51,7 @@ defmodule HomeHub.Application do
   if Mix.env() == :prod do
     def prod_children do
       [
-        {BacklightAutomation.Server,
+        {BacklightAutomation,
          [pubsub: HomeHub.PubSub, active_level: 100, inactive_level: 30, dim_interval: 60]}
       ]
     end
