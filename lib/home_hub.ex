@@ -12,4 +12,9 @@ defmodule HomeHub do
     winter_end = %{Keyword.get(options, :winter_end, ~D[2000-04-01]) | year: date.year}
     Date.compare(date, winter_start) === :gt or Date.compare(date, winter_end) === :lt
   end
+
+  def to_f("unknown"), do: nil
+  def to_f(val) when is_binary(val), do: val |> Float.parse() |> elem(0)
+  def to_f(val) when is_float(val), do: val
+  def to_f(val) when is_integer(val), do: val * 1.0
 end

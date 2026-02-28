@@ -95,17 +95,17 @@ defmodule HomeHubWeb.Layouts do
               <.nav_link to={~p"/"} active={@active_tab == :dashboard}>Home</.nav_link>
             </li>
             <li class="flex-1 mr-2">
+              <.nav_link to={~p"/scenes"} active={@active_tab == :scenes}>
+                Scenes
+              </.nav_link>
+            </li>
+            <li class="flex-1 mr-2">
               <.nav_link to={~p"/sensors"} active={@active_tab == :sensors}>
                 <.icon
                   :if={HomeHub.Sensors.alertable?(@sensors)}
                   name="hero-exclamation-triangle"
                   class="h-8 w-8 mr-3 text-red-500"
                 /> Sensors
-              </.nav_link>
-            </li>
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/settings"} active={@active_tab == :settings}>
-                Settings
               </.nav_link>
             </li>
           </ul>

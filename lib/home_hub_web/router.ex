@@ -24,11 +24,12 @@ defmodule HomeHubWeb.Router do
         HomeHubWeb.Nav,
         {ExThermostatWeb.StatusComponent,
          [thermostat_implementation: HomeHub.thermostat_implementation()]},
-        HomeHubWeb.SensorStatus
+        HomeHubWeb.SensorStatusHandler,
+        HomeHubWeb.InactivityHandler
       ] do
       live "/", DashboardLive
       live "/sensors", SensorsLive
-      live "/settings", SettingsLive
+      live "/scenes", ScenesLive
     end
   end
 

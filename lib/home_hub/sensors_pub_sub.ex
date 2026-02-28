@@ -2,7 +2,7 @@ defmodule HomeHub.SensorsPubSub do
   @moduledoc false
   @topics %{
     thermostat_changes: "thermostat_changes",
-    thermostat_sensors: "thermostat_sensors",
+    thermostat_sensor: "thermostat_sensor",
     sensor_status: "sensor_status"
   }
 

@@ -7,34 +7,25 @@ defmodule HomeHub.Application do
 
   @impl true
   def start(_type, _args) do
-    hap_config = Application.get_env(:home_hub, :hap_config)
-
-    daikin =
-      if hap_config[:hap_thermostat_module] == HomeHub.HAP.DaikinThermostat do
-        [
-          {HomeHub.Daikin.Supervisor,
-           location_name: "Shearwater",
-           update_hook: {HomeHub.Daikin.CallBackHandler, :update_hook}}
-        ]
-      else
-        []
-      end
-
     children =
       [
+        {Phoenix.PubSub, name: HomeHub.PubSub},
+        Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
+        Supervisor.child_spec({Phoenix.PubSub, name: Homex.PubSub}, id: :homex_pub_sub),
         HomeHub.SensorsServer,
         HomeHubWeb.Telemetry,
         HomeHub.Repo,
-        Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
         {Ecto.Migrator,
          repos: Application.fetch_env!(:home_hub, :ecto_repos), skip: skip_migrations?()},
         {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
-        {Phoenix.PubSub, name: HomeHub.PubSub},
         HomeHubWeb.Endpoint,
-        {HomeHub.HAP.Supervisor, hap_config}
-      ] ++ daikin ++ prod_children()
-
-    HomeAssistant.Conn.start()
+        Homex,
+        HomeHub.Thermostat.Homex,
+        {Homex.WebsocketClient,
+         token: Application.get_env(:home_hub, :home_assistant_access_token),
+         host: Application.get_env(:home_hub, :home_assistant_host),
+         port: Application.get_env(:home_hub, :home_assistant_port, 8123)}
+      ] ++ prod_children()
 
     Logger.add_handlers(:home_hub)
 
@@ -59,7 +50,10 @@ defmodule HomeHub.Application do
 
   if Mix.env() == :prod do
     def prod_children do
-      [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
+      [
+        {BacklightAutomation.Server,
+         [pubsub: HomeHub.PubSub, active_level: 100, inactive_level: 30, dim_interval: 60]}
+      ]
     end
   else
     def prod_children, do: []

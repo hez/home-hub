@@ -54,3 +54,6 @@ home_hub.*
 
 # Logs
 /logs/home_hub.log
+
+# sample files
+home_assistant_examples/
