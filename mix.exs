@@ -77,7 +77,7 @@ defmodule HomeHub.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:tzdata, "~> 1.1.0"},
       {:websockex, "~> 0.5.1"},
-      {:homex, github: "hez/homex", branch: "next"}
+      {:homex, github: "hez/homex", branch: "cutting-edge"}
     ]
   end
 
