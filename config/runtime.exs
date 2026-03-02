@@ -20,10 +20,6 @@ if System.get_env("PHX_SERVER") do
   config :home_hub, HomeHubWeb.Endpoint, server: true
 end
 
-config :daikin_one, :integrator_api_key, System.get_env("DAIKIN_ONE_INTEGRATOR_KEY")
-config :daikin_one, :integrator_email, System.get_env("DAIKIN_ONE_INTEGRATOR_EMAIL")
-config :daikin_one, :integrator_token, System.get_env("DAIKIN_ONE_OPEN_API_TOKEN")
-
 config :homex,
   device: [
     name: "Home Hub Soft Buttons" <> System.get_env("HOMEX_SUFFIX", ""),

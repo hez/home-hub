@@ -16,8 +16,8 @@ defmodule HomeHub.Thermostat.Homex do
 
   @impl true
   def init(state) do
-    Phoenix.PubSub.subscribe(Homex.PubSub, "state_changed")
-    Phoenix.PubSub.subscribe(Homex.PubSub, "state_current")
+    Homex.WebsocketClient.register("state_changed")
+    Homex.WebsocketClient.register("state_current")
     schedule_current_state_call(@initial_current_state_call_delay)
     {:ok, state}
   end

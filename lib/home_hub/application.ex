@@ -11,7 +11,6 @@ defmodule HomeHub.Application do
       [
         {Phoenix.PubSub, name: HomeHub.PubSub},
         Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
-        Supervisor.child_spec({Phoenix.PubSub, name: Homex.PubSub}, id: :homex_pub_sub),
         HomeHub.SensorsServer,
         HomeHubWeb.Telemetry,
         HomeHub.Repo,
@@ -24,8 +23,9 @@ defmodule HomeHub.Application do
         {Homex.WebsocketClient,
          token: Application.get_env(:home_hub, :home_assistant_access_token),
          host: Application.get_env(:home_hub, :home_assistant_host),
-         port: Application.get_env(:home_hub, :home_assistant_port, 8123)}
-      ] ++ prod_children()
+         port: Application.get_env(:home_hub, :home_assistant_port, 8123)},
+        {BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}
+      ]
 
     Logger.add_handlers(:home_hub)
 
@@ -46,16 +46,5 @@ defmodule HomeHub.Application do
   defp skip_migrations? do
     # By default, sqlite migrations are run when using a release
     System.get_env("RELEASE_NAME") == nil
-  end
-
-  if Mix.env() == :prod do
-    def prod_children do
-      [
-        {BacklightAutomation,
-         [pubsub: HomeHub.PubSub, active_level: 100, inactive_level: 30, dim_interval: 60]}
-      ]
-    end
-  else
-    def prod_children, do: []
   end
 end
