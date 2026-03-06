@@ -22,8 +22,7 @@ defmodule HomeHubWeb.Router do
     live_session :default,
       on_mount: [
         HomeHubWeb.Nav,
-        {ExThermostatWeb.StatusComponent,
-         [thermostat_implementation: HomeHub.thermostat_implementation()]},
+        ThermostatWeb.StatusHandler,
         HomeHubWeb.SensorStatusHandler,
         HomeHubWeb.InactivityHandler
       ] do

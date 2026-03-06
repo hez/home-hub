@@ -80,8 +80,4 @@ config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
 
-config :home_hub, :thermostat,
-  io_config: {ExThermostat.DummyHeater, []},
-  sensor_config: {ExThermostat.DummyTempSensor, []}
-
 config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Homex

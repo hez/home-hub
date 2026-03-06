@@ -58,7 +58,7 @@ defmodule HomeHub.MixProject do
       {:ecto_sql, "~> 3.13"},
       {:ecto_sqlite3, ">= 0.0.0"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
-      {:ex_thermostat, github: "hez/ex-thermostat", tag: "v0.2.2"},
+      {:thermostat, github: "Beam-Maintenance/thermostat", tag: "v0.3.0"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.2.0",

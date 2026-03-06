@@ -26,7 +26,3 @@ config :phoenix, :plug_init_mode, :runtime
 # Enable helpful, but potentially expensive runtime checks
 config :phoenix_live_view,
   enable_expensive_runtime_checks: true
-
-config :home_hub, :thermostat,
-  io_config: {ExThermostat.DummyHeater, []},
-  sensor_config: {ExThermostat.DummyTempSensor, []}
