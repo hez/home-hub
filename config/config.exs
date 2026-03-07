@@ -53,13 +53,7 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Daikin
-
-config :home_hub, :hap_config,
-  hap_thermostat_module: HomeHub.HAP.DaikinThermostat,
-  identifier: "11:22:33:44:12:78",
-  name: "Home Hub",
-  model: "HomeHub"
+config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Homex
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

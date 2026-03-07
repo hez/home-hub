@@ -3,7 +3,7 @@
     <div class="flex justify-between m-4">
       <div class="text-4xl flex">
         <div><.tree_icon class="h-10 w-10 mr-4 fill-green-600" /></div>
-        <.temperature_display sensor={@sensors["outside"]} />
+        <.temperature_display sensor={@sensors[@outside_sensor]} />
       </div>
 
       <div class="text-4xl flex">
@@ -16,8 +16,7 @@
   </section>
 
   <.live_component
-    module={ExThermostatWeb.LiveComponent}
-    thermostat_implementation={@thermostat_implementation}
+    module={ThermostatWeb.LiveComponent}
     status={@status}
     id={:heater_thermostat}
     show_cooler={@show_cooler}
@@ -25,27 +24,5 @@
     class="justify-evenly"
   />
 
-  <div class="pt-10 flex py-6 justify-center">
-    <div class="grid grid-cols-3 gap-6">
-      <.hap_button name="hap_switch_1" event="1">
-        <.hap_icon_sunrise class="fill-yellow-300" /> Morning
-      </.hap_button>
-      <.hap_button name="hap_switch_1" event="2">
-        <.icon name="hero-cube" class="h-10 w-10 mr-3" /> "All"
-      </.hap_button>
-      <.hap_button name="hap_switch_1" event="3">
-        <.hap_icon_exit class="fill-black-500" /> Leaving
-      </.hap_button>
-
-      <.hap_button name="hap_switch_1" event="4">
-        <.hap_icon_lamp class="fill-yellow-500" /> Lamps
-      </.hap_button>
-      <.hap_button name="hap_switch_1" event="4">
-        <.icon name="hero-light-bulb" class="h-10 w-10 mr-3 text-orange-700" /> Entry
-      </.hap_button>
-      <.hap_button name="hap_switch_1" event="6">
-        <.icon name="hero-film" class="h-10 w-10 mr-3 text-yellow-300" /> Movie
-      </.hap_button>
-    </div>
-  </div>
+  <div class="pt-10 flex py-6 justify-center"></div>
 </Layouts.dashboard>

@@ -8,10 +8,12 @@ defmodule HomeHub.Sensors do
     |> Enum.count() != 0
   end
 
-  def alertable?({_, sensor}) do
+  def alertable?({_, %{battery: battery} = sensor}) when not is_nil(battery) do
     stale_date = DateTime.utc_now() |> DateTime.shift(day: -@days_for_sensor_stale)
-    sensor.battery < 20 or DateTime.before?(sensor.lastseen || DateTime.utc_now(), stale_date)
+    battery < 20 or DateTime.before?(sensor.lastseen || DateTime.utc_now(), stale_date)
   end
+
+  def alertable?({_, _}), do: false
 
   def local_lastseen(%{lastseen: %DateTime{} = lastseen}),
     do: DateTime.shift_zone!(lastseen, @local_tz)

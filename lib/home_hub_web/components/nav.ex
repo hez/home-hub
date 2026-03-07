@@ -11,6 +11,7 @@ defmodule HomeHubWeb.Nav do
       case {socket.view, socket.assigns.live_action} do
         {HomeHubWeb.DashboardLive, _} -> :dashboard
         {HomeHubWeb.SensorsLive, _} -> :sensors
+        {HomeHubWeb.ScenesLive, _} -> :scenes
         {HomeHubWeb.SettingsLive, _} -> :settings
         {_, _} -> nil
       end

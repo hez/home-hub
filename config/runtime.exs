@@ -20,15 +20,33 @@ if System.get_env("PHX_SERVER") do
   config :home_hub, HomeHubWeb.Endpoint, server: true
 end
 
-config :daikin_one, :integrator_api_key, System.get_env("DAIKIN_ONE_INTEGRATOR_KEY")
-config :daikin_one, :integrator_email, System.get_env("DAIKIN_ONE_INTEGRATOR_EMAIL")
-config :daikin_one, :integrator_token, System.get_env("DAIKIN_ONE_OPEN_API_TOKEN")
+config :homex,
+  device: [
+    name: "Home Hub Soft Buttons" <> System.get_env("HOMEX_SUFFIX", ""),
+    model: "SoftButton",
+    manufacturer: "BeamMaintenance"
+  ],
+  origin: [
+    name: "HomeAssistantEx"
+  ],
+  broker: [
+    host: "MQTT_HOSTNAME" |> System.get_env("localhost"),
+    port: "MQTT_PORT" |> System.get_env("1883") |> String.to_integer()
+  ],
+  entities: [
+    [name: :button1, impl: HomeHub.HomexDevice.Button1],
+    [name: :button2, impl: HomeHub.HomexDevice.Button2],
+    [name: :button3, impl: HomeHub.HomexDevice.Button3],
+    [name: :button4, impl: HomeHub.HomexDevice.Button4],
+    [name: :button5, impl: HomeHub.HomexDevice.Button5],
+    [name: :button6, impl: HomeHub.HomexDevice.Button6]
+  ]
 
-config :home_hub, :tortoise311_config,
-  host: "MQTT_HOSTNAME" |> System.get_env("localhost") |> String.to_charlist(),
-  port: "MQTT_PORT" |> System.get_env("1883") |> String.to_integer()
-
-config :home_hub, :home_assistant_token, System.get_env("HOME_ASSISTANT_TOKEN")
+config :home_hub,
+  home_assistant_host: System.get_env("HOME_ASSISTANT_HOST"),
+  home_assistant_port: 8123,
+  home_assistant_access_token: System.get_env("HOME_ASSISTANT_TOKEN"),
+  home_assistant_token: System.get_env("HOME_ASSISTANT_TOKEN")
 
 if config_env() == :prod do
   database_path =

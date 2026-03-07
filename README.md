@@ -5,7 +5,6 @@ A smart thermostat and home hub written in Elixir for the Raspberry Pi.
 ### Features
 
 - Thermostat
-  - Integrate with DaikinOne Smart thermostats
   - Present a web UI on a Raspberry Pi touch screen with [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view)
     - Day time dependent dimming via [rpi-screen-dimmer](https://github.com/hez/rpi-screen-dimmer)
     - Layout and styling via simple [Tailwindcss](https://tailwindcss.com)

@@ -4,37 +4,25 @@ defmodule HomeHub.Application do
   @moduledoc false
 
   use Application
+  require Logger
 
   @impl true
   def start(_type, _args) do
-    hap_config = Application.get_env(:home_hub, :hap_config)
-
-    daikin =
-      if hap_config[:hap_thermostat_module] == HomeHub.HAP.DaikinThermostat do
-        [
-          {HomeHub.Daikin.Supervisor,
-           location_name: "Shearwater",
-           update_hook: {HomeHub.Daikin.CallBackHandler, :update_hook}}
-        ]
-      else
-        []
-      end
-
     children =
       [
+        {Phoenix.PubSub, name: HomeHub.PubSub},
+        Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
         HomeHub.SensorsServer,
         HomeHubWeb.Telemetry,
         HomeHub.Repo,
-        Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
         {Ecto.Migrator,
          repos: Application.fetch_env!(:home_hub, :ecto_repos), skip: skip_migrations?()},
         {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
-        {Phoenix.PubSub, name: HomeHub.PubSub},
         HomeHubWeb.Endpoint,
-        {HomeHub.HAP.Supervisor, hap_config}
-      ] ++ daikin ++ prod_children()
-
-    HomeAssistant.Conn.start()
+        Thermostat,
+        Homex,
+        HomeHub.Thermostat.Homex
+      ] ++ backlight_automation() ++ homex_websocket_client()
 
     Logger.add_handlers(:home_hub)
 
@@ -57,11 +45,24 @@ defmodule HomeHub.Application do
     System.get_env("RELEASE_NAME") == nil
   end
 
-  if Mix.env() == :prod do
-    def prod_children do
-      [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
+  defp homex_websocket_client do
+    if Application.get_env(:home_hub, :home_assistant_host) do
+      [
+        {Homex.WebsocketClient,
+         token: Application.get_env(:home_hub, :home_assistant_access_token),
+         host: Application.get_env(:home_hub, :home_assistant_host),
+         port: Application.get_env(:home_hub, :home_assistant_port, 8123)}
+      ]
+    else
+      Logger.warning("Invalid or missing Homex Websocket config, not starting client")
+      []
     end
+  end
+
+  if Mix.env() != :test and Mix.env() != :dev do
+    def backlight_automation,
+      do: [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
   else
-    def prod_children, do: []
+    def backlight_automation, do: []
   end
 end

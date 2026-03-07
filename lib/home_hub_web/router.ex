@@ -22,13 +22,13 @@ defmodule HomeHubWeb.Router do
     live_session :default,
       on_mount: [
         HomeHubWeb.Nav,
-        {ExThermostatWeb.StatusComponent,
-         [thermostat_implementation: HomeHub.thermostat_implementation()]},
-        HomeHubWeb.SensorStatus
+        ThermostatWeb.StatusHandler,
+        HomeHubWeb.SensorStatusHandler,
+        HomeHubWeb.InactivityHandler
       ] do
       live "/", DashboardLive
       live "/sensors", SensorsLive
-      live "/settings", SettingsLive
+      live "/scenes", ScenesLive
     end
   end
 

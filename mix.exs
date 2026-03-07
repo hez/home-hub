@@ -51,15 +51,13 @@ defmodule HomeHub.MixProject do
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # everything else
-      {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.2.1"},
+      {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.4.0"},
       {:bandit, "~> 1.5"},
-      {:daikin_one, github: "Beam-Maintenance/ex-daikin-one", tag: "v0.1.2"},
       {:dns_cluster, "~> 0.2.0"},
       {:ecto_sql, "~> 3.13"},
       {:ecto_sqlite3, ">= 0.0.0"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
-      {:ex_thermostat, github: "hez/ex-thermostat", tag: "v0.2.2"},
-      {:hap, "~> 0.4"},
+      {:thermostat, github: "Beam-Maintenance/thermostat", tag: "v0.3.0"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.2.0",
@@ -73,13 +71,12 @@ defmodule HomeHub.MixProject do
       {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_view, "~> 1.1.0"},
-      # {:phoscon_api, github: "hez/phoscon_api", tag: "v0.3.7"},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:tortoise311, "~> 0.12"},
       {:tzdata, "~> 1.1.0"},
-      {:websockex, "~> 0.5.1"}
+      {:websockex, "~> 0.5.1"},
+      {:homex, github: "hez/homex", branch: "cutting-edge"}
     ]
   end
 
