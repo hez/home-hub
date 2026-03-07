@@ -4,6 +4,7 @@ defmodule HomeHub.Application do
   @moduledoc false
 
   use Application
+  require Logger
 
   @impl true
   def start(_type, _args) do
@@ -21,12 +22,8 @@ defmodule HomeHub.Application do
         Thermostat,
         Homex,
         HomeHub.Thermostat.Homex,
-        {Homex.WebsocketClient,
-         token: Application.get_env(:home_hub, :home_assistant_access_token),
-         host: Application.get_env(:home_hub, :home_assistant_host),
-         port: Application.get_env(:home_hub, :home_assistant_port, 8123)},
         {BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}
-      ]
+      ] ++ homex_websocket_client()
 
     Logger.add_handlers(:home_hub)
 
@@ -47,5 +44,19 @@ defmodule HomeHub.Application do
   defp skip_migrations? do
     # By default, sqlite migrations are run when using a release
     System.get_env("RELEASE_NAME") == nil
+  end
+
+  defp homex_websocket_client do
+    if Application.get_env(:home_hub, :home_assistant_host) do
+      [
+        {Homex.WebsocketClient,
+         token: Application.get_env(:home_hub, :home_assistant_access_token),
+         host: Application.get_env(:home_hub, :home_assistant_host),
+         port: Application.get_env(:home_hub, :home_assistant_port, 8123)}
+      ]
+    else
+      Logger.warning("Invalid or missing Homex Websocket config, not starting client")
+      []
+    end
   end
 end
