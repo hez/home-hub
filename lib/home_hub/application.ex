@@ -21,9 +21,8 @@ defmodule HomeHub.Application do
         HomeHubWeb.Endpoint,
         Thermostat,
         Homex,
-        HomeHub.Thermostat.Homex,
-        {BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}
-      ] ++ homex_websocket_client()
+        HomeHub.Thermostat.Homex
+      ] ++ backlight_automation() ++ homex_websocket_client()
 
     Logger.add_handlers(:home_hub)
 
@@ -58,5 +57,12 @@ defmodule HomeHub.Application do
       Logger.warning("Invalid or missing Homex Websocket config, not starting client")
       []
     end
+  end
+
+  if Mix.env() != :test and Mix.env() != :dev do
+    def backlight_automation,
+      do: [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
+  else
+    def backlight_automation, do: []
   end
 end
