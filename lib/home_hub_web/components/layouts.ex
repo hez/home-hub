@@ -42,23 +42,21 @@ defmodule HomeHubWeb.Layouts do
           <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
         </a>
       </div>
-      <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
-            <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
-        </ul>
+
+      <div class="flex-none flex items-center gap-4">
+        <button onclick="location.href='/'" aria-label="Home" class="btn btn-ghost btn-square">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M10.707 1.707a1 1 0 0 0-1.414 0l-7 7A1 1 0 0 0 2.293 10H3v6a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3h2v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6h.707a1 1 0 0 0 .707-1.707l-7-7z" />
+          </svg>
+        </button>
+
+        <.theme_toggle />
       </div>
     </header>
 
@@ -123,6 +121,33 @@ defmodule HomeHubWeb.Layouts do
     """
   end
 
+  slot :inner_block, required: true
+  attr :to, :string, required: true
+  attr :active, :boolean, default: false
+
+  def nav_link(assigns) do
+    assigns =
+      assigns
+      |> assign(
+        class:
+          if assigns.active do
+            "dark:bg-black-100"
+          else
+            "dark:bg-gray-800 border-gray-800 hover:border-gray-200 hover:bg-gray-200"
+          end
+      )
+
+    ~H"""
+    <.link
+      navigate={@to}
+      class={["text-center block rounded text-3xl py-2 px-4 text-blue-300 ", @class]}
+      aria-current={if @active, do: "true", else: "false"}
+    >
+      {render_slot(@inner_block)}
+    </.link>
+    """
+  end
+
   @doc """
   Shows the flash group with standard titles and content.
 
@@ -142,24 +167,24 @@ defmodule HomeHubWeb.Layouts do
       <.flash
         id="client-error"
         kind={:error}
-        title="We can't find the internet"
+        title={gettext("We can't find the internet")}
         phx-disconnected={show(".phx-client-error #client-error") |> JS.remove_attribute("hidden")}
         phx-connected={hide("#client-error") |> JS.set_attribute({"hidden", ""})}
         hidden
       >
-        Attempting to reconnect
+        {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
 
       <.flash
         id="server-error"
         kind={:error}
-        title="Something went wrong!"
+        title={gettext("Something went wrong!")}
         phx-disconnected={show(".phx-server-error #server-error") |> JS.remove_attribute("hidden")}
         phx-connected={hide("#server-error") |> JS.set_attribute({"hidden", ""})}
         hidden
       >
-        Attempting to reconnect
+        {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
     </div>
@@ -200,33 +225,6 @@ defmodule HomeHubWeb.Layouts do
         <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
     </div>
-    """
-  end
-
-  slot :inner_block, required: true
-  attr :to, :string, required: true
-  attr :active, :boolean, default: false
-
-  def nav_link(assigns) do
-    assigns =
-      assigns
-      |> assign(
-        class:
-          if assigns.active do
-            "dark:bg-black-100"
-          else
-            "dark:bg-gray-800 border-gray-800 hover:border-gray-200 hover:bg-gray-200"
-          end
-      )
-
-    ~H"""
-    <.link
-      navigate={@to}
-      class={["text-center block rounded text-3xl py-2 px-4 text-blue-300 ", @class]}
-      aria-current={if @active, do: "true", else: "false"}
-    >
-      {render_slot(@inner_block)}
-    </.link>
     """
   end
 end

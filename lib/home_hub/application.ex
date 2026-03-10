@@ -6,25 +6,18 @@ defmodule HomeHub.Application do
   use Application
   require Logger
 
-  @impl true
+  alias Nerves.Runtime.KV
+
+  @impl Application
   def start(_type, _args) do
+    setup_wifi()
+
     children =
       [
-        {Phoenix.PubSub, name: HomeHub.PubSub},
-        Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
-        HomeHub.SensorsServer,
-        HomeHubWeb.Telemetry,
-        HomeHub.Repo,
-        {Ecto.Migrator,
-         repos: Application.fetch_env!(:home_hub, :ecto_repos), skip: skip_migrations?()},
-        {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
-        HomeHubWeb.Endpoint,
-        Thermostat,
-        Homex,
-        HomeHub.Thermostat.Homex
-      ] ++ backlight_automation() ++ homex_websocket_client()
-
-    Logger.add_handlers(:home_hub)
+        # Children for all targets
+        # Starts a worker by calling: HomeHub.Worker.start_link(arg)
+        # {HomeHub.Worker, arg},
+      ] ++ phoenix_children() ++ children() ++ app_children()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -32,23 +25,66 @@ defmodule HomeHub.Application do
     Supervisor.start_link(children, opts)
   end
 
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
-  @impl true
-  def config_change(changed, _new, removed) do
-    HomeHubWeb.Endpoint.config_change(changed, removed)
-    :ok
+  # List all child processes to be supervised
+  if Mix.target() == :host do
+    defp children() do
+      [
+        # Children that only run on the host
+        # Starts a worker by calling: HomeHub.Worker.start_link(arg)
+        # {HomeHub.Worker, arg},
+      ]
+    end
+  else
+    defp children() do
+      # NOTE: work around to stop watchers on targets
+      Application.get_env(:home_hub, HomeHubWeb.Endpoint)
+      |> Keyword.put(:watchers, [])
+      |> then(&Application.put_env(:home_hub, HomeHubWeb.Endpoint, &1))
+
+      start_node()
+
+      [
+        # Children for all targets except host
+        # Starts a worker by calling: HomeHub.Worker.start_link(arg)
+        # {HomeHub.Worker, arg},
+        {HomeHub.DisplaySupervisor, []}
+      ]
+    end
+
+    defp start_node() do
+      {_, 0} = System.cmd("epmd", ~w"-daemon")
+      _ = Node.start(:"home_hub@homehub.local")
+      Node.set_cookie(Application.get_env(:mix_tasks_upload_hotswap, :cookie))
+    end
   end
 
-  defp skip_migrations? do
-    # By default, sqlite migrations are run when using a release
-    System.get_env("RELEASE_NAME") == nil
+  defp phoenix_children() do
+    [
+      HomeHubWeb.Telemetry,
+      {DNSCluster, query: Application.get_env(:home_hub, :dns_cluster_query) || :ignore},
+      {Phoenix.PubSub, name: HomeHub.PubSub},
+      # Start a worker by calling: HomeHub.Worker.start_link(arg)
+      # {HomeHub.Worker, arg},
+      # Start to serve requests, typically the last entry
+      HomeHubWeb.Endpoint
+    ]
+  end
+
+  defp app_children() do
+    [
+      Supervisor.child_spec({Phoenix.PubSub, name: HomeHub.SensorsPubSub}, id: :sensors_pub_sub),
+      {BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]},
+      Thermostat,
+      HomeHub.Sensors,
+      Homex,
+      HomeHub.Thermostat.Homex
+    ] ++ homex_websocket_client()
   end
 
   defp homex_websocket_client do
     if Application.get_env(:home_hub, :home_assistant_host) do
       [
-        {Homex.WebsocketClient,
+        {Homex.Websocket,
          token: Application.get_env(:home_hub, :home_assistant_access_token),
          host: Application.get_env(:home_hub, :home_assistant_host),
          port: Application.get_env(:home_hub, :home_assistant_port, 8123)}
@@ -59,10 +95,39 @@ defmodule HomeHub.Application do
     end
   end
 
-  if Mix.env() != :test and Mix.env() != :dev do
-    def backlight_automation,
-      do: [{BacklightAutomation, [active_level: 100, inactive_level: 30, dim_interval: 60]}]
+  if Mix.target() == :host do
+    defp setup_wifi() do
+      :ok
+    end
   else
-    def backlight_automation, do: []
+    defp setup_wifi() do
+      kv = KV.get_all()
+
+      if true?(kv["wifi_force"]) or not wlan0_configured?() do
+        ssid = kv["wifi_ssid"]
+        passphrase = kv["wifi_passphrase"]
+
+        if not empty?(ssid) do
+          _ = VintageNetWiFi.quick_configure(ssid, passphrase)
+          :ok
+        end
+      end
+    end
+
+    defp wlan0_configured?() do
+      VintageNet.get_configuration("wlan0") |> VintageNetWiFi.network_configured?()
+    catch
+      _, _ -> false
+    end
+
+    defp true?(""), do: false
+    defp true?(nil), do: false
+    defp true?("false"), do: false
+    defp true?("FALSE"), do: false
+    defp true?(_), do: true
+
+    defp empty?(""), do: true
+    defp empty?(nil), do: true
+    defp empty?(_), do: false
   end
 end

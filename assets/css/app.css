@@ -18,6 +18,11 @@
   themes: false;
 }
 
+@font-face {
+  font-family: "Vera";
+  src: url("/assets/fonts/Vera.ttf");
+}
+
 /* daisyUI theme plugin. You can update this file by fetching the latest version with:
   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
   We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
@@ -63,6 +68,7 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
+  font-family: "Vera", sans-serif;
   --color-base-100: oklch(98% 0 0);
   --color-base-200: oklch(96% 0.001 286.375);
   --color-base-300: oklch(92% 0.004 286.32);
@@ -98,6 +104,7 @@
   default: true;
   prefersdark: true;
   color-scheme: "dark";
+  font-family: "Vera", sans-serif;
   --color-base-100: oklch(0.059 0.000 17.3);
   --color-base-200: oklch(23.26% 0.014 253.1);
   --color-base-300: oklch(21.15% 0.012 254.09);
@@ -144,7 +151,6 @@
 /*
 #class="inline-block px-10 py-6 bg-blue-600 text-white text-2xl leading-tight rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
 */
-
 @utility btn-xl {
   @apply text-3xl;
 }

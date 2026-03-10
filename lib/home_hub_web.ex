@@ -40,6 +40,8 @@ defmodule HomeHubWeb do
     quote do
       use Phoenix.Controller, formats: [:html, :json]
 
+      use Gettext, backend: HomeHubWeb.Gettext
+
       import Plug.Conn
 
       unquote(verified_routes())
@@ -77,14 +79,17 @@ defmodule HomeHubWeb do
 
   defp html_helpers do
     quote do
+      # Translation
+      use Gettext, backend: HomeHubWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components
       import HomeHubWeb.CoreComponents
 
       # Common modules used in templates
-      alias HomeHubWeb.Layouts
       alias Phoenix.LiveView.JS
+      alias HomeHubWeb.Layouts
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())

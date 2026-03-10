@@ -5,7 +5,7 @@ defmodule HomeHub.Thermostat.Homex do
 
   @thermostat_entity_id "climate.daikin"
   @sensor_device_classes ["temperature", "humidity", "battery"]
-  @initial_current_state_call_delay 30 * 1000
+  @initial_current_state_call_delay 15 * 1000
   @current_state_call_delay 1 * 60 * 60 * 1000
 
   def start_link(__opts) do
@@ -15,8 +15,8 @@ defmodule HomeHub.Thermostat.Homex do
   @impl GenServer
   def init(state) do
     {:ok, _} = Thermostat.register()
-    Homex.WebsocketClient.register("state_changed")
-    Homex.WebsocketClient.register("state_current")
+    Homex.Websocket.register("state_changed")
+    Homex.Websocket.register("state_current")
     schedule_current_state_call(@initial_current_state_call_delay)
     {:ok, state}
   end
@@ -32,7 +32,7 @@ defmodule HomeHub.Thermostat.Homex do
   @impl GenServer
   # Request current stat from Homex.Websocket
   def handle_info(:do_current_state_call, state) do
-    Homex.WebsocketClient.get_states()
+    Homex.Websocket.get_states()
     schedule_current_state_call()
     {:noreply, state}
   end
@@ -58,7 +58,7 @@ defmodule HomeHub.Thermostat.Homex do
     thermostat =
       if thermostat.mode == mode, do: %{thermostat | mode: :off}, else: %{thermostat | mode: mode}
 
-    send_homex_thermostat_update(%{mode: thermostat.mode})
+    send_homex_thermostat_update(%{hvac_mode: thermostat.mode})
     Thermostat.dispatch(:thermostat_status, thermostat)
     {:noreply, %{state | thermostat: thermostat}}
   end
@@ -69,7 +69,7 @@ defmodule HomeHub.Thermostat.Homex do
         state
       ) do
     thermostat = to_thermostat(new_state)
-    Thermostat.dispatch(:thermostat_status, thermostat) |> dbg()
+    Thermostat.dispatch(:thermostat_status, thermostat)
     {:noreply, %{state | thermostat: thermostat}}
   end
 
@@ -118,7 +118,7 @@ defmodule HomeHub.Thermostat.Homex do
 
   defp update_sensor(entity_id, state) do
     name = state["attributes"]["friendly_name"] |> unify_sensor_name()
-    current = HomeHub.SensorsServer.find_or_new(name)
+    current = HomeHub.Sensors.find_or_new(name)
 
     attrs =
       case state["attributes"]["device_class"] do
@@ -128,7 +128,7 @@ defmodule HomeHub.Thermostat.Homex do
       end
       |> Map.merge(%{entity_id: entity_id})
 
-    HomeHub.SensorsServer.set(name, Map.merge(current, attrs))
+    HomeHub.Sensors.set(name, Map.merge(current, attrs))
   end
 
   defp to_thermostat(state) do
@@ -164,17 +164,21 @@ defmodule HomeHub.Thermostat.Homex do
     end
   end
 
-  defp send_homex_thermostat_update(service_data) do
+  defp send_homex_thermostat_update(%{hvac_mode: _} = service_data),
+    do: send_homex_thermostat_update(:set_hvac_mode, service_data)
+
+  defp send_homex_thermostat_update(%{temperature: _} = service_data),
+    do: send_homex_thermostat_update(:set_temperature, service_data)
+
+  defp send_homex_thermostat_update(service, %{} = service_data) do
     msg = %{
       type: :call_service,
       domain: :climate,
-      service: :set_temperature,
-      target: %{
-        entity_id: @thermostat_entity_id
-      },
+      service: service,
+      target: %{entity_id: @thermostat_entity_id},
       service_data: service_data
     }
 
-    Homex.WebsocketClient.send(msg)
+    Homex.Websocket.send(msg)
   end
 end

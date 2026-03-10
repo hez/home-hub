@@ -1,22 +1,47 @@
 defmodule HomeHub.Sensors do
-  @days_for_sensor_stale 2
-  @local_tz "America/Vancouver"
+  use GenServer
+  alias HomeHub.Model
 
-  def alertable?(%{} = sensors) do
-    sensors
-    |> Enum.filter(&alertable?/1)
-    |> Enum.count() != 0
+  @name __MODULE__
+
+  def start_link(_opts), do: GenServer.start_link(@name, %{sensors: %{}}, name: @name)
+
+  def alertable?(%{} = sensors), do: Enum.any?(sensors, &alertable?/1)
+  def alertable?({_, sensor}), do: Model.TemperatureSensor.alertable?(sensor)
+
+  def all, do: GenServer.call(@name, :sensors)
+  def find(name), do: all()[name]
+
+  def find_or_new(name) do
+    all()[name] ||
+      Model.TemperatureSensor.new(%{
+        name: name,
+        temperature: 0.0,
+        humidity: 0.0,
+        battery: nil,
+        lastseen: DateTime.utc_now()
+      })
   end
 
-  def alertable?({_, %{battery: battery} = sensor}) when not is_nil(battery) do
-    stale_date = DateTime.utc_now() |> DateTime.shift(day: -@days_for_sensor_stale)
-    battery < 20 or DateTime.before?(sensor.lastseen || DateTime.utc_now(), stale_date)
+  def set(name, value), do: GenServer.cast(@name, {:set, name, value})
+
+  @impl true
+  def init(state) do
+    HomeHub.SensorsPubSub.subscribe(:thermostat_sensor)
+    {:ok, state}
   end
 
-  def alertable?({_, _}), do: false
+  @impl true
+  def handle_call(:sensors, _from, state), do: {:reply, state.sensors, state}
 
-  def local_lastseen(%{lastseen: %DateTime{} = lastseen}),
-    do: DateTime.shift_zone!(lastseen, @local_tz)
+  @impl true
+  def handle_cast({:set, name, value}, state) do
+    new_values = Map.put(state.sensors, name, value)
+    HomeHub.SensorsPubSub.broadcast(:sensor_status, {:sensor_status, new_values})
+    {:noreply, %{state | sensors: new_values}}
+  end
 
-  def local_lastseen(_), do: nil
+  @impl true
+  def handle_info(%Model.TemperatureSensor{} = sensor, state),
+    do: handle_cast({:set, sensor.name, sensor}, state)
 end

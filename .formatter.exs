@@ -1,6 +1,13 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+#
+# Used by "mix format"
 [
-  import_deps: [:ecto, :ecto_sql, :phoenix],
-  subdirectories: ["priv/*/migrations"],
+  import_deps: [:phoenix],
   plugins: [Phoenix.LiveView.HTMLFormatter],
-  inputs: ["*.{heex,ex,exs}", "{config,lib,test}/**/*.{heex,ex,exs}", "priv/*/seeds.exs"]
+  inputs: [
+    "{mix,.formatter,.credo}.exs",
+    "{config,lib,test}/**/*.{heex,ex,exs}",
+    "rootfs_overlay/etc/iex.exs"
+  ]
 ]

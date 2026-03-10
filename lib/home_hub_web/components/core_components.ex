@@ -27,8 +27,14 @@ defmodule HomeHubWeb.CoreComponents do
 
   """
   use Phoenix.Component
+  use Gettext, backend: HomeHubWeb.Gettext
 
   alias Phoenix.LiveView.JS
+
+  use Phoenix.VerifiedRoutes,
+    endpoint: HomeHubWeb.Endpoint,
+    router: HomeHubWeb.Router,
+    statics: HomeHubWeb.static_paths()
 
   @doc """
   Renders flash notices.
@@ -70,7 +76,7 @@ defmodule HomeHubWeb.CoreComponents do
           <p>{msg}</p>
         </div>
         <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label="close">
+        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
           <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>
@@ -338,7 +344,7 @@ defmodule HomeHubWeb.CoreComponents do
         <tr>
           <th :for={col <- @col}>{col[:label]}</th>
           <th :if={@action != []}>
-            <span class="sr-only">Actions</span>
+            <span class="sr-only">{gettext("Actions")}</span>
           </th>
         </tr>
       </thead>
@@ -418,6 +424,35 @@ defmodule HomeHubWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a screensaver overlay.
+
+  ## Examples
+
+      <.screensaver_overlay :if={@screensaver_active} />
+  """
+  attr :rest, :global
+
+  def screensaver_overlay(assigns) do
+    ~H"""
+    <div
+      id="screensaver"
+      class="fixed inset-0 bg-black z-50 cursor-pointer"
+      phx-click="user_activity"
+      phx-hook="Screensaver"
+      {@rest}
+    >
+      <img
+        id="screensaver-logo"
+        src={~p"/images/nerves-logo.svg"}
+        alt="Nerves Logo"
+        class="absolute"
+        style="left: 50%; top: 50%; width: 200px; height: 43px;"
+      />
+    </div>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do
@@ -445,18 +480,21 @@ defmodule HomeHubWeb.CoreComponents do
   Translates an error message using gettext.
   """
   def translate_error({msg, opts}) do
-    # You can make use of gettext to translate error messages by
-    # uncommenting and adjusting the following code:
-
-    # if count = opts[:count] do
-    #   Gettext.dngettext(HomeHubWeb.Gettext, "errors", msg, msg, count, opts)
-    # else
-    #   Gettext.dgettext(HomeHubWeb.Gettext, "errors", msg, opts)
-    # end
-
-    Enum.reduce(opts, msg, fn {key, value}, acc ->
-      String.replace(acc, "%{#{key}}", fn _ -> to_string(value) end)
-    end)
+    # When using gettext, we typically pass the strings we want
+    # to translate as a static argument:
+    #
+    #     # Translate the number of files with plural rules
+    #     dngettext("errors", "1 file", "%{count} files", count)
+    #
+    # However the error messages in our forms and APIs are generated
+    # dynamically, so we need to translate them by calling Gettext
+    # with our gettext backend as first argument. Translations are
+    # available in the errors.po file (as we use the "errors" domain).
+    if count = opts[:count] do
+      Gettext.dngettext(HomeHubWeb.Gettext, "errors", msg, msg, count, opts)
+    else
+      Gettext.dgettext(HomeHubWeb.Gettext, "errors", msg, opts)
+    end
   end
 
   @doc """
