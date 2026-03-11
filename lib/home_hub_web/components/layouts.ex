@@ -85,30 +85,38 @@ defmodule HomeHubWeb.Layouts do
     assigns = assigns |> assign(:active_tab, assigns.nav.active_tab)
 
     ~H"""
-    <header class="px-4 sm:px-6 lg:px-8">
-      <section class="container">
-        <nav role="navigation">
-          <ul class="flex">
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/"} active={@active_tab == :dashboard}>Home</.nav_link>
-            </li>
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/scenes"} active={@active_tab == :scenes}>
-                Scenes
-              </.nav_link>
-            </li>
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/sensors"} active={@active_tab == :sensors}>
-                <.icon
-                  :if={HomeHub.Sensors.alertable?(@sensors)}
-                  name="hero-exclamation-triangle"
-                  class="h-8 w-8 mr-3 text-red-500"
-                /> Sensors
-              </.nav_link>
-            </li>
-          </ul>
-        </nav>
-      </section>
+    <header class="bg-base-200 px-4 sm:px-6 lg:px-8">
+      <nav role="navigation">
+        <ul class="flex items-center gap-1 justify-center">
+          <li class="flex items-center">
+            <.nav_link to={~p"/"} active={@active_tab == :dashboard}>
+              <.icon name="hero-home" class="size-7" />
+              <span class="pt-4">Home</span>
+            </.nav_link>
+          </li>
+          <li class="flex items-center">
+            <.nav_link to={~p"/scenes"} active={@active_tab == :scenes}>
+              <.icon name="hero-sparkles" class="size-7" />
+              <span class="pt-4">Scenes</span>
+            </.nav_link>
+          </li>
+          <li class="flex items-center">
+            <.nav_link to={~p"/sensors"} active={@active_tab == :sensors}>
+              <.icon
+                :if={HomeHub.Sensors.alertable?(@sensors)}
+                name="hero-exclamation-triangle"
+                class="size-7 text-error"
+              />
+              <.icon
+                :if={not HomeHub.Sensors.alertable?(@sensors)}
+                name="hero-signal"
+                class="size-5"
+              />
+              <span class="pt-4">Sensors</span>
+            </.nav_link>
+          </li>
+        </ul>
+      </nav>
     </header>
 
     <main class="px-4 py-5 sm:px-6 lg:px-8">
@@ -126,22 +134,17 @@ defmodule HomeHubWeb.Layouts do
   attr :active, :boolean, default: false
 
   def nav_link(assigns) do
-    assigns =
-      assigns
-      |> assign(
-        class:
-          if assigns.active do
-            "dark:bg-black-100"
-          else
-            "dark:bg-gray-800 border-gray-800 hover:border-gray-200 hover:bg-gray-200"
-          end
-      )
-
     ~H"""
     <.link
       navigate={@to}
-      class={["text-center block rounded text-3xl py-2 px-4 text-blue-300 ", @class]}
-      aria-current={if @active, do: "true", else: "false"}
+      class={[
+        "flex content-center items-center gap-2 px-6 text-3xl rounded-t-lg transition-colors duration-150",
+        if(@active,
+          do: "bg-base-100",
+          else: "bg-base-300 text-base-content/50 hover:text-base-content/80 hover:bg-base-200"
+        )
+      ]}
+      aria-current={if @active, do: "page", else: "false"}
     >
       {render_slot(@inner_block)}
     </.link>
