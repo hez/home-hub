@@ -25,9 +25,16 @@ config :mix_tasks_upload_hotswap,
   nodes: [:"home_hub@homehub.local"],
   cookie: :nerves_is_awesome
 
+button_suffix =
+  if Mix.env() == :dev or Mix.env() == :test do
+    System.get_env("HOMEX_SUFFIX", "")
+  else
+    ""
+  end
+
 config :homex,
   device: [
-    name: "Home Hub Soft Buttons" <> System.get_env("HOMEX_SUFFIX", ""),
+    name: "Home Hub Soft Buttons" <> button_suffix,
     model: "SoftButton",
     manufacturer: "BeamMaintenance"
   ],
