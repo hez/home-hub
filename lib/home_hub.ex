@@ -12,7 +12,14 @@ defmodule HomeHub do
   end
 
   def to_f("unknown"), do: nil
-  def to_f(val) when is_binary(val), do: val |> Float.parse() |> elem(0)
+  def to_f("unavailable"), do: nil
+  def to_f(val) when is_binary(val) do
+    case Float.parse(val) do
+      {num, _} -> num
+      :error -> nil
+    end
+  end
+
   def to_f(val) when is_float(val), do: val
   def to_f(val) when is_integer(val), do: val * 1.0
   def to_f(_), do: nil
