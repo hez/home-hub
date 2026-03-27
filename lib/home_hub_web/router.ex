@@ -17,11 +17,10 @@ defmodule HomeHubWeb.Router do
   scope "/", HomeHubWeb do
     pipe_through :browser
 
-    get "/page", PageController, :home
-
     live_session :default,
       on_mount: [
         HomeHubWeb.Nav,
+        HomeHubWeb.ThermostatHandler,
         ThermostatWeb.StatusHandler,
         HomeHubWeb.SensorStatusHandler,
         HomeHubWeb.InactivityHandler
@@ -30,10 +29,23 @@ defmodule HomeHubWeb.Router do
       live "/sensors", SensorsLive
       live "/scenes", ScenesLive
     end
+
+    live "/kiosk_dashboard", DashboardLive
+    live "/gpio", GPIOLive
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", HomeHubWeb do
   #   pipe_through :api
   # end
+
+  # Enable LiveDashboard for demonstration purposes
+  #
+  import Phoenix.LiveDashboard.Router
+
+  scope "/dev" do
+    pipe_through :browser
+
+    live_dashboard "/dashboard", metrics: HomeHubWeb.Telemetry
+  end
 end

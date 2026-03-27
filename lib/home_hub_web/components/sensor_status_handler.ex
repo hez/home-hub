@@ -9,7 +9,7 @@ defmodule HomeHubWeb.SensorStatusHandler do
 
     socket =
       socket
-      |> assign(sensors: HomeHub.SensorsServer.all())
+      |> assign_new(:sensors, fn -> HomeHub.Sensors.all() end)
       |> attach_hook(:sensor_status_handle_info, :handle_info, &hooked_info/2)
 
     {:cont, socket}

@@ -1,60 +1,70 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Config module.
+# This file is responsible for configuring your application and its
+# dependencies.
 #
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
-
-# General application configuration
+# This configuration file is loaded before any dependency and is restricted to
+# this project.
 import Config
 
-config :home_hub,
-  ecto_repos: [HomeHub.Repo],
-  generators: [timestamp_type: :utc_datetime]
+# Enable the Nerves integration with Mix
+Application.start(:nerves_bootstrap)
 
-config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+# Customize non-Elixir parts of the firmware. See
+# https://hexdocs.pm/nerves/advanced-configuration.html for details.
 
-# Configures the endpoint
-config :home_hub, HomeHubWeb.Endpoint,
-  url: [host: "localhost"],
-  adapter: Bandit.PhoenixAdapter,
-  render_errors: [
-    formats: [html: HomeHubWeb.ErrorHTML, json: HomeHubWeb.ErrorJSON],
-    layout: false
+config :nerves, :firmware,
+  rootfs_overlay: "rootfs_overlay",
+  provisioning: "config/provisioning.conf"
+
+# Set the SOURCE_DATE_EPOCH date for reproducible builds.
+# See https://reproducible-builds.org/docs/source-date-epoch/ for more information
+
+config :nerves, source_date_epoch: "1721520436"
+
+config :mix_tasks_upload_hotswap,
+  app_name: :home_hub,
+  nodes: [:"home_hub@homehub.local"],
+  cookie: :nerves_is_awesome
+
+button_suffix =
+  if Mix.env() == :dev or Mix.env() == :test do
+    System.get_env("HOMEX_SUFFIX", "")
+  else
+    ""
+  end
+
+config :homex,
+  device: [
+    name: "Home Hub Soft Buttons" <> button_suffix,
+    model: "SoftButton",
+    manufacturer: "BeamMaintenance"
   ],
-  pubsub_server: HomeHub.PubSub,
-  live_view: [signing_salt: "NdwWaPym"]
-
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.25.4",
-  home_hub: [
-    args:
-      ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => [Path.expand("../deps", __DIR__), Mix.Project.build_path()]}
+  origin: [
+    name: "HomeAssistantEx"
+  ],
+  broker: [
+    host: "MQTT_HOSTNAME" |> System.get_env("localhost"),
+    port: "MQTT_PORT" |> System.get_env("1883") |> String.to_integer()
+  ],
+  entities: [
+    [name: :button1, impl: HomeHub.HomexDevice.Button1],
+    [name: :button2, impl: HomeHub.HomexDevice.Button2],
+    [name: :button3, impl: HomeHub.HomexDevice.Button3],
+    [name: :button4, impl: HomeHub.HomexDevice.Button4],
+    [name: :button5, impl: HomeHub.HomexDevice.Button5],
+    [name: :button6, impl: HomeHub.HomexDevice.Button6]
   ]
 
-# Configure tailwind (the version is required)
-config :tailwind,
-  version: "4.1.7",
-  home_hub: [
-    args: ~w(
-      --input=assets/css/app.css
-      --output=priv/static/assets/css/app.css
-    ),
-    cd: Path.expand("..", __DIR__)
-  ]
+# Homex.WebsocketClient will use these to connect to Home Assistant's Websocket API
+config :home_hub,
+  home_assistant_host: System.get_env("HOME_ASSISTANT_HOST"),
+  home_assistant_port: 8123,
+  home_assistant_access_token: System.get_env("HOME_ASSISTANT_TOKEN"),
+  home_assistant_token: System.get_env("HOME_ASSISTANT_TOKEN")
 
-# Configures Elixir's Logger
-config :logger, :default_formatter,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id, :mfa]
+import_config "phoenix/config.exs"
 
-# Use Jason for JSON parsing in Phoenix
-config :phoenix, :json_library, Jason
-
-config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Homex
-
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{config_env()}.exs"
+if Mix.target() == :host do
+  import_config "host.exs"
+else
+  import_config "target.exs"
+end

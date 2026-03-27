@@ -1,12 +1,5 @@
 import Config
 
-# Configure your database
-config :home_hub, HomeHub.Repo,
-  database: Path.expand("../home_hub_dev.db", __DIR__),
-  pool_size: 5,
-  stacktrace: true,
-  show_sensitive_data_on_connection_error: true
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -16,11 +9,12 @@ config :home_hub, HomeHub.Repo,
 config :home_hub, HomeHubWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
+  server: true,
+  http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "+ryBvUoUxNLzqJ+wQSn3acucST9do8WS7a1duC8JNmKK4b8jMruAYbyHptYu+8Yq",
+  secret_key_base: "hb/peKNv21ttmBwvr+/YTwyJ4FJUJzsyteDrKT16A/4WFRm16GuOBd3rYa2KpGNk",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:home_hub, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:home_hub, ~w(--watch)]}
@@ -52,10 +46,10 @@ config :home_hub, HomeHubWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :home_hub, HomeHubWeb.Endpoint,
   live_reload: [
-    web_console_logger: true,
     patterns: [
-      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"lib/home_hub_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$"E,
+      ~r"priv/gettext/.*(po)$"E,
+      ~r"lib/home_hub_web/(controllers|live|components)/.*(ex|heex)$"E
     ]
   ]
 
@@ -63,7 +57,7 @@ config :home_hub, HomeHubWeb.Endpoint,
 config :home_hub, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :default_formatter, format: "[$level] $message\n"
+config :logger, :console, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -73,11 +67,7 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :phoenix_live_view,
-  # Include debug annotations and locations in rendered markup.
-  # Changing this configuration will require mix clean and a full recompile.
+  # Include HEEx debug annotations as HTML comments in rendered markup
   debug_heex_annotations: true,
-  debug_attributes: true,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
-
-config :home_hub, :thermostat_implementation, HomeHub.Thermostat.Homex

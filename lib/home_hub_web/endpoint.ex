@@ -7,7 +7,7 @@ defmodule HomeHubWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_home_hub_key",
-    signing_salt: "cHEBQJEC",
+    signing_salt: "HlOaOtDV",
     same_site: "Lax"
   ]
 
@@ -32,8 +32,11 @@ defmodule HomeHubWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :home_hub
   end
+
+  plug Phoenix.LiveDashboard.RequestLogger,
+    param_key: "request_logger",
+    cookie_key: "request_logger"
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]

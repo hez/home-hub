@@ -42,23 +42,21 @@ defmodule HomeHubWeb.Layouts do
           <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
         </a>
       </div>
-      <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
-            <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
-        </ul>
+
+      <div class="flex-none flex items-center gap-4">
+        <button onclick="location.href='/'" aria-label="Home" class="btn btn-ghost btn-square">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M10.707 1.707a1 1 0 0 0-1.414 0l-7 7A1 1 0 0 0 2.293 10H3v6a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3h2v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6h.707a1 1 0 0 0 .707-1.707l-7-7z" />
+          </svg>
+        </button>
+
+        <.theme_toggle />
       </div>
     </header>
 
@@ -87,30 +85,38 @@ defmodule HomeHubWeb.Layouts do
     assigns = assigns |> assign(:active_tab, assigns.nav.active_tab)
 
     ~H"""
-    <header class="px-4 sm:px-6 lg:px-8">
-      <section class="container">
-        <nav role="navigation">
-          <ul class="flex">
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/"} active={@active_tab == :dashboard}>Home</.nav_link>
-            </li>
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/scenes"} active={@active_tab == :scenes}>
-                Scenes
-              </.nav_link>
-            </li>
-            <li class="flex-1 mr-2">
-              <.nav_link to={~p"/sensors"} active={@active_tab == :sensors}>
-                <.icon
-                  :if={HomeHub.Sensors.alertable?(@sensors)}
-                  name="hero-exclamation-triangle"
-                  class="h-8 w-8 mr-3 text-red-500"
-                /> Sensors
-              </.nav_link>
-            </li>
-          </ul>
-        </nav>
-      </section>
+    <header class="bg-base-200 px-4 sm:px-6 lg:px-8">
+      <nav role="navigation">
+        <ul class="flex items-center gap-1 justify-center">
+          <li class="flex items-center">
+            <.nav_link to={~p"/"} active={@active_tab == :dashboard}>
+              <.icon name="hero-home" class="size-7" />
+              <span class="pt-4">Home</span>
+            </.nav_link>
+          </li>
+          <li class="flex items-center">
+            <.nav_link to={~p"/scenes"} active={@active_tab == :scenes}>
+              <.icon name="hero-sparkles" class="size-7" />
+              <span class="pt-4">Scenes</span>
+            </.nav_link>
+          </li>
+          <li class="flex items-center">
+            <.nav_link to={~p"/sensors"} active={@active_tab == :sensors}>
+              <.icon
+                :if={HomeHub.Sensors.alertable?(@sensors)}
+                name="hero-exclamation-triangle"
+                class="size-7 text-error"
+              />
+              <.icon
+                :if={not HomeHub.Sensors.alertable?(@sensors)}
+                name="hero-signal"
+                class="size-5"
+              />
+              <span class="pt-4">Sensors</span>
+            </.nav_link>
+          </li>
+        </ul>
+      </nav>
     </header>
 
     <main class="px-4 py-5 sm:px-6 lg:px-8">
@@ -120,6 +126,28 @@ defmodule HomeHubWeb.Layouts do
     </main>
 
     <.flash_group flash={@flash} />
+    """
+  end
+
+  slot :inner_block, required: true
+  attr :to, :string, required: true
+  attr :active, :boolean, default: false
+
+  def nav_link(assigns) do
+    ~H"""
+    <.link
+      navigate={@to}
+      class={[
+        "flex content-center items-center gap-2 px-6 text-3xl rounded-t-lg transition-colors duration-150",
+        if(@active,
+          do: "bg-base-100",
+          else: "bg-base-300 text-base-content/50 hover:text-base-content/80 hover:bg-base-200"
+        )
+      ]}
+      aria-current={if @active, do: "page", else: "false"}
+    >
+      {render_slot(@inner_block)}
+    </.link>
     """
   end
 
@@ -142,24 +170,24 @@ defmodule HomeHubWeb.Layouts do
       <.flash
         id="client-error"
         kind={:error}
-        title="We can't find the internet"
+        title={gettext("We can't find the internet")}
         phx-disconnected={show(".phx-client-error #client-error") |> JS.remove_attribute("hidden")}
         phx-connected={hide("#client-error") |> JS.set_attribute({"hidden", ""})}
         hidden
       >
-        Attempting to reconnect
+        {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
 
       <.flash
         id="server-error"
         kind={:error}
-        title="Something went wrong!"
+        title={gettext("Something went wrong!")}
         phx-disconnected={show(".phx-server-error #server-error") |> JS.remove_attribute("hidden")}
         phx-connected={hide("#server-error") |> JS.set_attribute({"hidden", ""})}
         hidden
       >
-        Attempting to reconnect
+        {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
     </div>
@@ -200,33 +228,6 @@ defmodule HomeHubWeb.Layouts do
         <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
     </div>
-    """
-  end
-
-  slot :inner_block, required: true
-  attr :to, :string, required: true
-  attr :active, :boolean, default: false
-
-  def nav_link(assigns) do
-    assigns =
-      assigns
-      |> assign(
-        class:
-          if assigns.active do
-            "dark:bg-black-100"
-          else
-            "dark:bg-gray-800 border-gray-800 hover:border-gray-200 hover:bg-gray-200"
-          end
-      )
-
-    ~H"""
-    <.link
-      navigate={@to}
-      class={["text-center block rounded text-3xl py-2 px-4 text-blue-300 ", @class]}
-      aria-current={if @active, do: "true", else: "false"}
-    >
-      {render_slot(@inner_block)}
-    </.link>
     """
   end
 end

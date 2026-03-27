@@ -5,12 +5,11 @@ defmodule HomeHub.HomexDevice.FurnaceOutsideHumidity do
     device_class: "humidity"
 
   def handle_init(entity) do
-    HomeHub.SensorsPubSub.subscribe(:thermostat_sensor) |> dbg()
+    HomeHub.SensorsPubSub.subscribe(:thermostat_sensor)
     super(entity)
   end
 
   def handle_info(%{name: "thermostat_outdoor", humidity: hum}, entity) do
-    dbg(hum)
     set_value(entity, hum)
   end
 end
