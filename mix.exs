@@ -51,7 +51,7 @@ defmodule HomeHub.MixProject do
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # everything else
-      {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.4.0"},
+      {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.4.1"},
       {:bandit, "~> 1.5"},
       {:dns_cluster, "~> 0.2.0"},
       {:ecto_sql, "~> 3.13"},
