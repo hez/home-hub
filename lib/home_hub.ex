@@ -13,6 +13,7 @@ defmodule HomeHub do
 
   def to_f("unknown"), do: nil
   def to_f("unavailable"), do: nil
+
   def to_f(val) when is_binary(val) do
     case Float.parse(val) do
       {num, _} -> num

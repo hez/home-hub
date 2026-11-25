@@ -33,12 +33,9 @@ defmodule HomeHubWeb.DashboardLive do
       </section>
 
       <.live_component
-        module={ThermostatWeb.LiveComponent}
+        module={HomeHubWeb.ThermostatComponent}
         thermostat={@thermostat}
         id={:heater_thermostat}
-        show_cooler={@show_cooler}
-        show_heater={@show_heater}
-        class="justify-evenly"
       />
 
       <div class="pt-10 flex py-6 justify-center"></div>

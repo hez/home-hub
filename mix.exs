@@ -134,6 +134,7 @@ defmodule HomeHub.MixProject do
 
   defp project_deps do
     [
+      {:tidewave, "~> 0.5", only: :dev},
       {:backlight_automation, github: "hez/elixir-backlight-automation", tag: "v0.4.1"},
       {:thermostat, github: "Beam-Maintenance/thermostat", branch: "feature/cog-browser"},
       {:tzdata, "~> 1.1.0"},
